@@ -1,4 +1,4 @@
-name: squady
+name: squady-ivr
 
 services:
   backend:
