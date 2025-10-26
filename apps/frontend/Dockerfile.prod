@@ -1,0 +1,78 @@
+FROM node:22-alpine AS base
+
+ENV NODE_ENV=production
+
+# Uncomment the following line in case you want to disable telemetry during runtime.
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Install dependencies only when needed
+FROM base AS deps
+WORKDIR /app
+
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+RUN apk add --no-cache libc6-compat
+
+# Copy package files
+COPY package.json pnpm-lock.yaml ./
+
+# Enable corepack and install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Install and cache dependencies
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile --ignore-scripts
+
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+
+# Copy package files and node_modules from deps stage
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Read server build args (check https://github.com/vercel/next.js/issues/77539 to understand why this is needed)
+ARG API_URL
+
+# Read client build args (check https://github.com/vercel/next.js/issues/77539 to understand why this is needed)
+ARG NEXT_PUBLIC_SQUADY_API_USER_USERNAME_MIN_LENGTH
+ARG NEXT_PUBLIC_SQUADY_API_USER_USERNAME_MAX_LENGTH
+ARG NEXT_PUBLIC_SQUADY_API_USER_USERNAME_PATTERN
+ARG NEXT_PUBLIC_SQUADY_API_USER_PASSWORD_MIN_LENGTH
+ARG NEXT_PUBLIC_SQUADY_API_USER_PASSWORD_MAX_LENGTH
+ARG NEXT_PUBLIC_SQUADY_API_USER_PASSWORD_PATTERN
+ARG NEXT_PUBLIC_SQUADY_API_USER_FULL_NAME_PATTERN
+ARG NEXT_PUBLIC_SQUADY_API_USER_BIRTH_DATE_MAX_YEARS
+ARG NEXT_PUBLIC_SQUADY_API_USER_BIRTH_DATE_MIN_YEARS
+ARG NEXT_PUBLIC_SQUADY_API_USER_CITY_MAX_LENGTH
+ARG NEXT_PUBLIC_SQUADY_API_USER_TELEGRAM_PATTERN
+ARG NEXT_PUBLIC_SQUADY_API_USER_ABOUT_MAX_LENGTH
+ARG NEXT_PUBLIC_SQUADY_OTP_LENGTH
+ARG NEXT_PUBLIC_SQUADY_OTP_RESEND_SECONDS
+
+# Enable corepack and install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Build the source code
+RUN pnpm build
+
+# Production image, copy all the files and run node server
+FROM base AS runner
+WORKDIR /app
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# COPY --from=builder /app/public ./public
+
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
+# Expose port
+EXPOSE $PORT
+
+# server.js is created by next build from the standalone output
+# https://nextjs.org/docs/pages/api-reference/config/next-config-js/output
+CMD ["node", "server.js"]

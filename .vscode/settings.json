@@ -1,0 +1,12 @@
+{
+  "tailwindCSS.classAttributes": [".*class.*", ".*Class.*"],
+  "tailwindCSS.classFunctions": ["cn", "cva", "clsx", "tv"],
+  "[javascript][javascriptreact][typescript][typescriptreact][json][markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "files.associations": {
+    ".env*": "properties",
+    ".prettierrc": "jsonc",
+    "*.css": "tailwindcss"
+  }
+}

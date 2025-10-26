@@ -1,0 +1,61 @@
+name: Build Frontend Docker Image
+
+on:
+  workflow_call:
+    secrets:
+      DOCKER_USERNAME:
+        required: true
+      DOCKER_PASSWORD:
+        required: true
+      IMAGE_NAME:
+        required: true
+
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Copy .env
+        run: cp .env.example .env
+
+      - name: Build frontend image
+        working-directory: apps/frontend
+        run: |
+          source ../../.env
+      
+          docker build \
+            -f Dockerfile.prod \
+            --build-arg API_URL=http://backend:8000/api/ \
+            --build-arg NEXT_PUBLIC_SQUADY_API_USER_USERNAME_MIN_LENGTH=$SQUADY_API_USER_USERNAME_MIN_LENGTH \
+            --build-arg NEXT_PUBLIC_SQUADY_API_USER_USERNAME_MAX_LENGTH=$SQUADY_API_USER_USERNAME_MAX_LENGTH \
+            --build-arg NEXT_PUBLIC_SQUADY_API_USER_USERNAME_PATTERN=$"SQUADY_API_USER_USERNAME_PATTERN" \
+            --build-arg NEXT_PUBLIC_SQUADY_API_USER_PASSWORD_MIN_LENGTH=$SQUADY_API_USER_PASSWORD_MIN_LENGTH \
+            --build-arg NEXT_PUBLIC_SQUADY_API_USER_PASSWORD_MAX_LENGTH=$SQUADY_API_USER_PASSWORD_MAX_LENGTH \
+            --build-arg NEXT_PUBLIC_SQUADY_API_USER_PASSWORD_PATTERN=$"SQUADY_API_USER_PASSWORD_PATTERN" \
+            --build-arg NEXT_PUBLIC_SQUADY_API_USER_FULL_NAME_PATTERN=$"SQUADY_API_USER_FULL_NAME_PATTERN" \
+            --build-arg NEXT_PUBLIC_SQUADY_API_USER_BIRTH_DATE_MAX_YEARS=$SQUADY_API_USER_BIRTH_DATE_MAX_YEARS \
+            --build-arg NEXT_PUBLIC_SQUADY_API_USER_BIRTH_DATE_MIN_YEARS=$SQUADY_API_USER_BIRTH_DATE_MIN_YEARS \
+            --build-arg NEXT_PUBLIC_SQUADY_API_USER_CITY_MAX_LENGTH=$SQUADY_API_USER_CITY_MAX_LENGTH \
+            --build-arg NEXT_PUBLIC_SQUADY_API_USER_TELEGRAM_PATTERN=$"SQUADY_API_USER_TELEGRAM_PATTERN" \
+            --build-arg NEXT_PUBLIC_SQUADY_API_USER_ABOUT_MAX_LENGTH=$SQUADY_API_USER_ABOUT_MAX_LENGTH \
+            --build-arg NEXT_PUBLIC_SQUADY_OTP_LENGTH=$SQUADY_OTP_LENGTH \
+            --build-arg NEXT_PUBLIC_SQUADY_OTP_RESEND_SECONDS=$SQUADY_OTP_RESEND_SECONDS \
+            -t ${{ secrets.IMAGE_NAME }}-frontend:${{ github.sha }} .
+
+      - name: Tag frontend image
+        run: |
+          docker tag ${{ secrets.IMAGE_NAME }}-frontend:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}-frontend:latest
+          docker tag ${{ secrets.IMAGE_NAME }}-frontend:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}-frontend:${{ github.sha }}
+
+      - name: Push frontend image
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}-frontend:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}-frontend:${{ github.sha }}

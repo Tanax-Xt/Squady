@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Run migrations
+alembic upgrade head 
+
+# Create superuser
+python -m cli superuser create \
+  --username $SQUADY_SUPERUSER_USERNAME \
+  --email $SQUADY_SUPERUSER_EMAIL \
+  --password $SQUADY_SUPERUSER_PASSWORD
+
+# Populate users
+python -m cli populate users
+
+# Start staging server
+uvicorn src.app:app --host 0.0.0.0 --port 8000

@@ -1,0 +1,46 @@
+{
+	"Function Component": {
+		"scope": "javascriptreact,typescriptreact",
+		"prefix": "fc",
+		"body": [
+			"export interface ${TM_FILENAME_BASE}Props extends React.ComponentProps<$1> {",
+			"\t$2",
+			"}",
+			"",
+			"const $TM_FILENAME_BASE: React.FunctionComponent<${TM_FILENAME_BASE}Props> = (${3:props}) => {",
+			"\treturn $0;",
+			"}",
+			"",
+			"export default $TM_FILENAME_BASE;",
+			""
+		],
+		"description": "React function component",
+	},
+	"Context": {
+		"scope": "javascriptreact,typescriptreact",
+		"prefix": "ctx",
+		"body": [
+			"\"use client\";",
+			"",
+			"import { createContext, useContext } from \"react\";",
+			"",
+			"export interface $1ContextValue {",
+			"\t$2",
+			"}",
+			"",
+			"export const $1Context = createContext<$1ContextValue | null>(null);",
+			"",
+			"export const use$1Context = (): $1ContextValue => {",
+			"\tconst context = useContext($1Context);",
+			"\t",
+			"\tif (context === null) {",
+			"\t\tthrow new Error(\"The 'use$1Context' hook must be used within a <${3:$1} /> component.\");",
+			"\t}",
+			"\t",
+			"\treturn context;",
+			"}",
+			""
+		],
+		"description": "React context"
+	},
+}

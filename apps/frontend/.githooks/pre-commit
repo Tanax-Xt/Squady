@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cd ./apps/frontend
+
+pnpm lint-staged

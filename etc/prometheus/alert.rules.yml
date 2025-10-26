@@ -1,0 +1,22 @@
+groups:
+  - name: alert
+    rules:
+      - alert: InstanceDown
+        expr: up == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:  
+          summary: "🛑 Instance Down!"
+          description: |
+            Instance <code>{{ .Labels.instance }}</code> has been unavailable for more than <b>30</b> seconds!
+
+      - alert: HighMemoryUsage
+        expr: node_memory_Active_bytes / node_memory_MemTotal_bytes > 0.9
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "📈 High Memory Usage!"
+          description: |
+            Memory usage exceeded <b>90%</b> on <code>{{ .Labels.instance }}</code>!

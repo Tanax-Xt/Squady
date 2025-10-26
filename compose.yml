@@ -1,0 +1,562 @@
+name: squady
+
+services:
+  backend:
+    container_name: squady-backend
+    image: ${DOCKER_USERNAME}/${IMAGE_NAME}-backend:${TAG:-latest}
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: true
+    depends_on:
+      postgres:
+        restart: false
+        required: true
+        condition: service_started
+      redis:
+        restart: false
+        required: true
+        condition: service_started
+    networks:
+      - squady-network
+    profiles:
+      - prod
+
+  backend-staging:
+    container_name: squady-backend-staging
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile.staging
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: true
+    depends_on:
+      postgres:
+        restart: false
+        required: true
+        condition: service_started
+      redis:
+        restart: false
+        required: true
+        condition: service_started
+    networks:
+      - squady-network
+    profiles:
+      - staging
+
+  backend-dev:
+    container_name: squady-backend-dev
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: true
+    ports:
+      - 127.0.0.1:8000:8000
+    depends_on:
+      postgres:
+        restart: false
+        required: true
+        condition: service_started
+      redis:
+        restart: false
+        required: true
+        condition: service_started
+    volumes:
+      - type: bind
+        source: ./apps/backend/src
+        target: /app/src
+    networks:
+      - squady-network
+    profiles:
+      - dev
+      - dev-backend
+
+  backend-test:
+    container_name: squady-backend-test
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile.test
+    restart: no
+    command: |
+      pytest --cov=src --cov-report=term-missing tests
+    env_file:
+      - path: .env
+        required: true
+    depends_on:
+      postgres-test:
+        restart: false
+        required: true
+        condition: service_started
+    networks:
+      - squady-network
+    profiles:
+      - test
+
+  backend-test-e2e:
+    container_name: squady-backend-test-e2e
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile.test
+    restart: no
+    command: |
+      pytest --cov=src --cov-report=term-missing tests/e2e
+    env_file:
+      - path: .env
+        required: true
+    depends_on:
+      postgres-test:
+        restart: false
+        required: true
+        condition: service_started
+    networks:
+      - squady-network
+    profiles:
+      - test-e2e
+
+  backend-test-unit:
+    container_name: squady-backend-test-unit
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile.test
+    restart: no
+    command: |
+      pytest --cov=src --cov-report=term-missing tests/unit
+    env_file:
+      - path: .env
+        required: true
+    depends_on:
+      postgres-test:
+        restart: false
+        required: true
+        condition: service_started
+    networks:
+      - squady-network
+    profiles:
+      - test-unit
+
+  frontend:
+    container_name: squady-frontend
+    image: ${DOCKER_USERNAME}/${IMAGE_NAME}-frontend:${TAG:-latest}
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: true
+    environment:
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      # frontend server environment
+      - API_URL=http://backend:8000/api/
+      - SESSION_SECRET=${SQUADY_SESSION_SECRET}
+      - SESSION_COOKIE_NAME=${SQUADY_SESSION_COOKIE_NAME}
+    depends_on:
+      backend:
+        restart: false
+        required: true
+        condition: service_started
+    networks:
+      - squady-network
+    profiles:
+      - prod
+
+  frontend-staging:
+    container_name: squady-frontend-staging
+    build:
+      args:
+        # frontend server environment
+        - API_URL=http://backend-staging:8000/api/
+        - SESSION_SECRET=${SQUADY_SESSION_SECRET}
+        - SESSION_COOKIE_NAME=${SQUADY_SESSION_COOKIE_NAME}
+        # frontend client environment
+        - NEXT_PUBLIC_SQUADY_API_USER_USERNAME_MIN_LENGTH=${SQUADY_API_USER_USERNAME_MIN_LENGTH}
+        - NEXT_PUBLIC_SQUADY_API_USER_USERNAME_MAX_LENGTH=${SQUADY_API_USER_USERNAME_MAX_LENGTH}
+        - NEXT_PUBLIC_SQUADY_API_USER_USERNAME_PATTERN=${SQUADY_API_USER_USERNAME_PATTERN}
+        - NEXT_PUBLIC_SQUADY_API_USER_PASSWORD_MIN_LENGTH=${SQUADY_API_USER_PASSWORD_MIN_LENGTH}
+        - NEXT_PUBLIC_SQUADY_API_USER_PASSWORD_MAX_LENGTH=${SQUADY_API_USER_PASSWORD_MAX_LENGTH}
+        - NEXT_PUBLIC_SQUADY_API_USER_PASSWORD_PATTERN=${SQUADY_API_USER_PASSWORD_PATTERN}
+        - NEXT_PUBLIC_SQUADY_API_USER_FULL_NAME_PATTERN=${SQUADY_API_USER_FULL_NAME_PATTERN}
+        - NEXT_PUBLIC_SQUADY_API_USER_BIRTH_DATE_MAX_YEARS=${SQUADY_API_USER_BIRTH_DATE_MAX_YEARS}
+        - NEXT_PUBLIC_SQUADY_API_USER_BIRTH_DATE_MIN_YEARS=${SQUADY_API_USER_BIRTH_DATE_MIN_YEARS}
+        - NEXT_PUBLIC_SQUADY_API_USER_CITY_MAX_LENGTH=${SQUADY_API_USER_CITY_MAX_LENGTH}
+        - NEXT_PUBLIC_SQUADY_API_USER_TELEGRAM_PATTERN=${SQUADY_API_USER_TELEGRAM_PATTERN}
+        - NEXT_PUBLIC_SQUADY_API_USER_ABOUT_MAX_LENGTH=${SQUADY_API_USER_ABOUT_MAX_LENGTH}
+        - NEXT_PUBLIC_SQUADY_OTP_LENGTH=${SQUADY_OTP_LENGTH}
+        - NEXT_PUBLIC_SQUADY_OTP_RESEND_SECONDS=${SQUADY_OTP_RESEND_SECONDS}
+      context: ./apps/frontend
+      dockerfile: Dockerfile.prod
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: true
+    environment:
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      # frontend server environment
+      - API_URL=http://backend-staging:8000/api/
+      - SESSION_SECRET=${SQUADY_SESSION_SECRET}
+      - SESSION_COOKIE_NAME=${SQUADY_SESSION_COOKIE_NAME}
+    depends_on:
+      backend-staging:
+        restart: false
+        required: true
+        condition: service_started
+    networks:
+      - squady-network
+    profiles:
+      - staging
+
+  frontend-dev:
+    container_name: squady-frontend-dev
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: true
+    environment:
+      # frontend server environment
+      - API_URL=http://backend-dev:8000/api/
+      - SESSION_SECRET=${SQUADY_SESSION_SECRET}
+      - SESSION_COOKIE_NAME=${SQUADY_SESSION_COOKIE_NAME}
+      # frontend client environment
+      - NEXT_PUBLIC_SQUADY_API_USER_USERNAME_MIN_LENGTH=${SQUADY_API_USER_USERNAME_MIN_LENGTH}
+      - NEXT_PUBLIC_SQUADY_API_USER_USERNAME_MAX_LENGTH=${SQUADY_API_USER_USERNAME_MAX_LENGTH}
+      - NEXT_PUBLIC_SQUADY_API_USER_USERNAME_PATTERN=${SQUADY_API_USER_USERNAME_PATTERN}
+      - NEXT_PUBLIC_SQUADY_API_USER_PASSWORD_MIN_LENGTH=${SQUADY_API_USER_PASSWORD_MIN_LENGTH}
+      - NEXT_PUBLIC_SQUADY_API_USER_PASSWORD_MAX_LENGTH=${SQUADY_API_USER_PASSWORD_MAX_LENGTH}
+      - NEXT_PUBLIC_SQUADY_API_USER_PASSWORD_PATTERN=${SQUADY_API_USER_PASSWORD_PATTERN}
+      - NEXT_PUBLIC_SQUADY_API_USER_FULL_NAME_PATTERN=${SQUADY_API_USER_FULL_NAME_PATTERN}
+      - NEXT_PUBLIC_SQUADY_API_USER_BIRTH_DATE_MAX_YEARS=${SQUADY_API_USER_BIRTH_DATE_MAX_YEARS}
+      - NEXT_PUBLIC_SQUADY_API_USER_BIRTH_DATE_MIN_YEARS=${SQUADY_API_USER_BIRTH_DATE_MIN_YEARS}
+      - NEXT_PUBLIC_SQUADY_API_USER_CITY_MAX_LENGTH=${SQUADY_API_USER_CITY_MAX_LENGTH}
+      - NEXT_PUBLIC_SQUADY_API_USER_TELEGRAM_PATTERN=${SQUADY_API_USER_TELEGRAM_PATTERN}
+      - NEXT_PUBLIC_SQUADY_API_USER_ABOUT_MAX_LENGTH=${SQUADY_API_USER_ABOUT_MAX_LENGTH}
+      - NEXT_PUBLIC_SQUADY_OTP_LENGTH=${SQUADY_OTP_LENGTH}
+      - NEXT_PUBLIC_SQUADY_OTP_RESEND_SECONDS=${SQUADY_OTP_RESEND_SECONDS}
+    depends_on:
+      backend-dev:
+        restart: false
+        required: true
+        condition: service_started
+    volumes:
+      - type: bind
+        source: ./apps/frontend/.next
+        target: /app/.next
+      - type: bind
+        source: ./apps/frontend/app
+        target: /app/app
+      - type: bind
+        source: ./apps/frontend/pages
+        target: /app/pages
+      # - type: bind
+      #   source: ./apps/frontend/public
+      #   target: /app/public
+      - type: bind
+        source: ./apps/frontend/src
+        target: /app/src
+      - type: bind
+        source: ./apps/frontend/middleware.ts
+        target: /app/middleware.ts
+      - type: bind
+        source: ./apps/frontend/next.config.ts
+        target: /app/next.config.ts
+    networks:
+      - squady-network
+    profiles:
+      - dev
+
+  postgres:
+    container_name: squady-postgres
+    image: postgres:17.5
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: true
+    ports:
+      - 127.0.0.1:${SQUADY_POSTGRES_PORT}:${SQUADY_POSTGRES_PORT}
+    environment:
+      - PGUSER=${SQUADY_POSTGRES_USERNAME}
+      - POSTGRES_DB=${SQUADY_POSTGRES_PATH}
+      - POSTGRES_USER=${SQUADY_POSTGRES_USERNAME}
+      - POSTGRES_PASSWORD=${SQUADY_POSTGRES_PASSWORD}
+    volumes:
+      - type: volume
+        source: postgres-data
+        target: /var/lib/postgresql/data
+    networks:
+      - squady-network
+    profiles:
+      - dev
+      - dev-backend
+      - staging
+      - prod
+
+  postgres-test:
+    container_name: squady-postgres-test
+    image: postgres:17.5
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: true
+    ports:
+      - 127.0.0.1:${SQUADY_POSTGRES_TEST_PORT}:${SQUADY_POSTGRES_TEST_PORT}
+    environment:
+      - PGUSER=${SQUADY_POSTGRES_TEST_USERNAME}
+      - POSTGRES_DB=${SQUADY_POSTGRES_TEST_PATH}
+      - POSTGRES_USER=${SQUADY_POSTGRES_TEST_USERNAME}
+      - POSTGRES_PASSWORD=${SQUADY_POSTGRES_TEST_PASSWORD}
+    volumes:
+      - type: volume
+        source: postgres-test-data
+        target: /var/lib/postgresql/data
+    networks:
+      - squady-network
+    profiles:
+      - test
+      - test-e2e
+      - test-unit
+
+  redis:
+    container_name: squady-redis
+    image: redis:8.0.3-alpine
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: true
+    ports:
+      - 127.0.0.1:${SQUADY_REDIS_PORT}:${SQUADY_REDIS_PORT}
+    networks:
+      - squady-network
+    profiles:
+      - dev
+      - dev-backend
+      - staging
+      - prod
+
+  node-exporter:
+    container_name: squady-node-exporter
+    image: quay.io/prometheus/node-exporter:v1.9.1
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: true
+    volumes:
+      - type: volume
+        source: node-exporter-data
+        target: /host
+        read_only: true
+        volume:
+          nocopy: true
+    networks:
+      - squady-network
+    command:
+      - --path.rootfs=/host
+    profiles:
+      - prod
+
+  prometheus:
+    container_name: squady-prometheus
+    image: prom/prometheus:v3.3.0
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:9090:9090
+    healthcheck:
+      test: ["CMD", "wget", "-O", "-", "http://localhost:9090/-/healthy"]
+      interval: 1m30s
+      timeout: 5s
+      start_period: 5s
+      start_interval: 2s
+      retries: 5
+    env_file:
+      - path: .env
+        required: true
+    volumes:
+      - type: bind
+        source: ./etc/prometheus/alert.rules.yml
+        target: /etc/prometheus/alert.rules.yml
+    networks:
+      - squady-network
+    configs:
+      - source: prometheus-config
+        target: /etc/prometheus/prometheus.yml
+    profiles:
+      - prod
+
+  alertmanager:
+    container_name: squady-alertmanager
+    build:
+      context: ./etc/alertmanager
+      dockerfile: Dockerfile
+    restart: no
+    env_file:
+      - path: .env
+        required: true
+    networks:
+      - squady-network
+    depends_on:
+      backend:
+        restart: false
+        required: true
+        condition: service_started
+      prometheus:
+        condition: service_healthy
+    profiles:
+      - prod
+
+  grafana:
+    container_name: squady-grafana
+    image: grafana/grafana:11.6.1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-O", "-", "http://localhost:3000/api/health"]
+      interval: 1m30s
+      timeout: 5s
+      start_period: 5s
+      start_interval: 2s
+      retries: 5
+    env_file:
+      - path: .env
+        required: true
+    volumes:
+      - type: bind
+        source: ./etc/grafana/provisioning/dashboards
+        target: /etc/grafana/provisioning/dashboards
+      - type: bind
+        source: ./etc/grafana/provisioning/datasources
+        target: /etc/grafana/provisioning/datasources
+      - type: volume
+        source: grafana-data
+        target: /var/lib/grafana
+    networks:
+      - squady-network
+    configs:
+      - source: grafana-config
+        target: /etc/grafana/grafana.ini
+    depends_on:
+      prometheus:
+        restart: false
+        required: true
+        condition: service_healthy
+    profiles:
+      - prod
+
+  nginx:
+    container_name: squady-nginx
+    image: nginx:1.28.0-alpine
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: true
+    ports:
+      - 443:443
+      - 80:80
+    networks:
+      - squady-network
+    configs:
+      - source: nginx-config
+        target: /etc/nginx/conf.d/default.conf
+    depends_on:
+      backend:
+        restart: false
+        required: true
+        condition: service_started
+      frontend:
+        restart: false
+        required: true
+        condition: service_started
+      grafana:
+        restart: false
+        required: true
+        condition: service_healthy
+    profiles:
+      - prod
+
+  nginx-staging:
+    container_name: squady-nginx-staging
+    image: nginx:1.28.0-alpine
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: true
+    ports:
+      - 443:443
+      - 80:80
+    networks:
+      - squady-network
+    configs:
+      - source: nginx-staging-config
+        target: /etc/nginx/conf.d/default.conf
+    depends_on:
+      backend-staging:
+        restart: false
+        required: true
+        condition: service_started
+      frontend-staging:
+        restart: false
+        required: true
+        condition: service_started
+    profiles:
+      - staging
+
+  nginx-dev:
+    container_name: squady-nginx-dev
+    image: nginx:1.28.0-alpine
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: true
+    ports:
+      - 443:443
+      - 80:80
+    networks:
+      - squady-network
+    configs:
+      - source: nginx-dev-config
+        target: /etc/nginx/conf.d/default.conf
+    depends_on:
+      backend-dev:
+        restart: false
+        required: true
+        condition: service_started
+      frontend-dev:
+        restart: false
+        required: true
+        condition: service_started
+    profiles:
+      - dev
+
+volumes:
+  node-exporter-data:
+    name: squady-node-exporter-data
+  grafana-data:
+    name: squady-grafana-data
+  postgres-data:
+    name: squady-postgres-data
+  postgres-test-data:
+    name: squady-postgres-test-data
+
+networks:
+  squady-network:
+    name: squady-network
+    driver: bridge
+
+configs:
+  prometheus-config:
+    name: squady-prometheus-config
+    file: ./etc/prometheus/prometheus.yml
+  grafana-config:
+    name: squady-grafana-config
+    file: ./etc/grafana/grafana.ini
+  nginx-config:
+    name: squady-nginx-config
+    file: ./etc/nginx/conf.d/default.prod.conf
+  nginx-staging-config:
+    name: squady-nginx-staging-config
+    file: ./etc/nginx/conf.d/default.staging.conf
+  nginx-dev-config:
+    name: squady-nginx-dev-config
+    file: ./etc/nginx/conf.d/default.dev.conf

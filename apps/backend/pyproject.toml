@@ -1,0 +1,39 @@
+[tool.mypy]
+files = [
+    "src",
+    "tests",
+]
+strict = true
+
+[tool.ruff]
+indent-width = 4
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "I",
+]
+
+[tool.ruff.format]
+indent-style = "space"
+line-ending = "lf"
+quote-style = "double"
+
+[tool.alembic]
+script_location = "%(here)s/src/db/migrations"
+prepend_sys_path = ["."]
+version_path_separator = "os"
+
+[[tool.alembic.post_write_hooks]]
+name = "check"
+type = "exec"
+executable = "ruff"
+options = "check --fix REVISION_SCRIPT_FILENAME"
+
+[[tool.alembic.post_write_hooks]]
+name = "format"
+type = "exec"
+executable = "ruff"
+options = "format REVISION_SCRIPT_FILENAME"
