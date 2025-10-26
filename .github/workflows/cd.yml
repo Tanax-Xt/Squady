@@ -22,7 +22,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: 22
           script: |
-            cd /var/www/u3308137/data/${{ secrets.IMAGE_NAME }}
+            cd /root/Squady
             docker-compose --profile prod up -d --build --force-recreate
           # docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}-backend:latest
           # docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}-frontend:latest
