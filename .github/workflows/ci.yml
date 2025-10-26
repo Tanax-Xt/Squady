@@ -24,11 +24,12 @@ jobs:
 
   e2e-tests:
     needs:
-      - unit-tests
+      - lint-backend
     uses: ./.github/workflows/e2e-tests.yml
 
   build-backend:
     needs:
+      - unit-tests
       - e2e-tests
     if: github.ref_name == 'main'
     uses: ./.github/workflows/build-backend.yml
