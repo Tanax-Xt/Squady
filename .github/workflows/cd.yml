@@ -23,7 +23,8 @@ jobs:
           port: 22
           script: |
             cd /root/Squady
-            docker-compose --profile prod up -d --build --force-recreate
+            docker compose --profile prod pull
+            docker-compose --profile prod up -d --force-recreate
           # docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}-backend:latest
           # docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}-frontend:latest
              
