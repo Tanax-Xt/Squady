@@ -2,27 +2,16 @@
 
 import { DramaIcon } from "lucide-react";
 
-import { cn } from "@/shared/lib/utils";
+import Placeholder from "@/shared/ui/Placeholder";
 
-export interface UserUpdateRoleFormHeaderProps
-  extends Omit<React.ComponentProps<"div">, "children"> {}
-
-const UserUpdateRoleFormHeader: React.FunctionComponent<
-  UserUpdateRoleFormHeaderProps
-> = ({ className, ...otherProps }) => {
+const UserUpdateRoleFormHeader: React.FunctionComponent = () => {
   return (
-    <div className={cn("space-y-4", className)} {...otherProps}>
-      <DramaIcon className="mx-auto size-24" strokeWidth={1.25} />
-
-      <hgroup className="mb-2 space-y-1 text-center">
-        <h2 className="text-3xl font-semibold md:text-2xl">
-          Выберите свою роль
-        </h2>
-        <p className="text-base text-pretty text-muted-foreground md:text-sm">
-          Это поможет настроить платформу под ваши потребности
-        </p>
-      </hgroup>
-    </div>
+    <Placeholder
+      before={<DramaIcon strokeWidth={1.25} />}
+      title="Выберите свою роль"
+      description="Это поможет настроить платформу под ваши потребности"
+      classNames={{ root: "grow-0" }}
+    />
   );
 };
 

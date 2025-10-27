@@ -44,6 +44,9 @@ admin = Admin(
 )
 
 admin.add_view(views.UserAdminModelView)
+admin.add_view(views.ResumeAdminModelView)
+admin.add_view(views.RoleAdminModelView)
+admin.add_view(views.SkillAdminModelView)
 
 if not settings.app.debug:
     from prometheus_fastapi_instrumentator import Instrumentator

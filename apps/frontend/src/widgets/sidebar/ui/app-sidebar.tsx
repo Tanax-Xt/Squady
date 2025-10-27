@@ -10,65 +10,12 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
 import { CurrentUserResponse, UserRole } from "@/shared/api";
+import ThemeRadioGroup from "@/shared/ui/ThemeRadioGroup";
 import Sidebar from "@/shared/ui/sidebar";
 
 import { NavMain } from "./nav-main";
 import { NavProjects } from "./nav-projects";
 import { NavUser } from "./nav-user";
-
-const data: {
-  navMain: {
-    title: string;
-    badge?: string | number;
-    href: string;
-    icon: LucideIcon;
-    roles?: UserRole[];
-  }[];
-  projects: { name: string; href: string; type: "olymp" | "hack" }[];
-} = {
-  navMain: [
-    {
-      title: "Главная",
-      href: "/home",
-      icon: HomeIcon,
-    },
-    {
-      title: "Соревнования",
-      href: "/events",
-      icon: CalendarRangeIcon,
-      roles: ["mentor", "participant"],
-    },
-    {
-      title: "Мои резюме",
-      badge: 17,
-      href: "/resume",
-      icon: FileUserIcon,
-      roles: ["mentor", "participant"],
-    },
-  ],
-  projects: [
-    {
-      name: "Финал НТО АБП 2025",
-      href: "/events/4",
-      type: "olymp",
-    },
-    {
-      name: "Финал PROD 2025",
-      href: "/events/3",
-      type: "olymp",
-    },
-    {
-      name: "Хакатон PROD 2024",
-      href: "/events/2",
-      type: "hack",
-    },
-    {
-      name: "Финал НТО АБП 2024",
-      href: "/events/1",
-      type: "olymp",
-    },
-  ],
-};
 
 export function AppSidebar({
   user,
@@ -82,6 +29,60 @@ export function AppSidebar({
       sidebar.setOpenMobile(false);
     }
   }, [pathname]);
+
+  const data: {
+    navMain: {
+      title: string;
+      badge?: string | undefined | number;
+      href: string;
+      icon: LucideIcon;
+      roles?: UserRole[];
+    }[];
+    projects: { name: string; href: string; type: "olymp" | "hack" }[];
+  } = {
+    navMain: [
+      {
+        title: "Главная",
+        href: "/home",
+        icon: HomeIcon,
+      },
+      {
+        title: "Соревнования",
+        href: "/events",
+        icon: CalendarRangeIcon,
+        roles: ["mentor", "participant"],
+      },
+      {
+        title: "Мои резюме",
+        badge: user?.stats.resumes,
+        href: "/resume",
+        icon: FileUserIcon,
+        roles: ["mentor", "participant"],
+      },
+    ],
+    projects: [
+      {
+        name: "Финал НТО АБП 2025",
+        href: "/events/4",
+        type: "olymp",
+      },
+      {
+        name: "Финал PROD 2025",
+        href: "/events/3",
+        type: "olymp",
+      },
+      {
+        name: "Хакатон PROD 2024",
+        href: "/events/2",
+        type: "hack",
+      },
+      {
+        name: "Финал НТО АБП 2024",
+        href: "/events/1",
+        type: "olymp",
+      },
+    ],
+  };
 
   return (
     <Sidebar variant="floating" className="isolate" {...props}>
@@ -97,7 +98,15 @@ export function AppSidebar({
         <Sidebar.Separator className="mx-2" />
         <NavProjects projects={data.projects} />
       </Sidebar.Content>
-      <Sidebar.Footer>{user && <NavUser user={user} />}</Sidebar.Footer>
+      <Sidebar.Footer>
+        {user && (
+          <>
+            <NavUser user={user} />
+            <Sidebar.Separator />
+          </>
+        )}
+        <ThemeRadioGroup className="bg-sidebar has-focus-visible:ring-sidebar-ring" />
+      </Sidebar.Footer>
     </Sidebar>
   );
 }

@@ -20,7 +20,7 @@ export default function useDateTimeFormat({
 
   useEffect(() => {
     setFormat(formatter.format(date));
-  }, []);
+  }, [date, formatter, locales, options]);
 
   return format;
 }

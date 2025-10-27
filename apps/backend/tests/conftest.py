@@ -55,7 +55,7 @@ async def engine() -> AsyncIterator[AsyncEngine]:
 async def session(engine: AsyncEngine) -> AsyncIterator[AsyncSession]:
     async with engine.connect() as connection:
         await connection.run_sync(Base.metadata.drop_all)
-        await connection.run_sync(Base.metadata.create_all)
+        await connection.run_sync(lambda sync_conn: Base.create_all_skip_indexes(sync_conn))
 
         async_session = async_sessionmaker(connection, expire_on_commit=False)
 

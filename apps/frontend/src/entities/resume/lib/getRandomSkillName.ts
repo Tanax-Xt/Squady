@@ -1,0 +1,38 @@
+export const names = [
+  "Next.js",
+  "React",
+  "TypeScript",
+  "Node.js",
+  "Vue.js",
+  "Angular",
+  "Python",
+  "Java",
+  "Ruby on Rails",
+  "Django",
+  "GraphQL",
+  "MongoDB",
+  "PostgreSQL",
+  "Docker",
+  "Kubernetes",
+  "AWS",
+  "Azure",
+  "GCP",
+  "HTML",
+  "CSS",
+  "Sass",
+  "Tailwind CSS",
+  "Redux",
+  "MobX",
+  "Webpack",
+  "Babel",
+  "Jest",
+  "Cypress",
+  "Figma",
+  "Adobe XD",
+  "Git",
+  "GitHub",
+];
+
+export const getRandomSkillName = () => {
+  return names[Math.floor(Math.random() * names.length)];
+};

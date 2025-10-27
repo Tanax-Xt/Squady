@@ -24,3 +24,23 @@ class ApiSettings(BaseModel):
     user_city_max_length: PositiveInt
     user_telegram_pattern: Pattern[str]
     user_about_max_length: PositiveInt
+
+    resume_item_title_max_length: PositiveInt
+    resume_skill_max_length: PositiveInt
+    resume_skills_min_count: PositiveInt
+    resume_skills_max_count: PositiveInt
+    resume_experiences_min_count: PositiveInt
+    resume_experiences_max_count: PositiveInt
+    resume_achievements_min_count: PositiveInt
+    resume_achievements_max_count: PositiveInt
+    resume_additional_educations_min_count: PositiveInt
+    resume_additional_educations_max_count: PositiveInt
+    resume_item_date_max_years_ago: PositiveInt
+    resume_item_date_max_years_future: PositiveInt
+    resume_date_iso8601_pattern: Pattern[str]
+    resume_github_link_pattern: Pattern[str]
+    resume_hh_link_pattern: Pattern[str]
+    resume_max_pdf_size: PositiveInt
+
+    openrouter_api_key: str
+    llm_model: str

@@ -1,25 +1,28 @@
+"use client";
+
 import { ClassNameValue } from "tailwind-merge";
 import { tv, VariantProps } from "tailwind-variants";
 
-export const placeholder = tv({
-  slots: {
-    root: "flex grow flex-col items-center justify-center gap-4",
-    before: [
-      "text-muted-foreground",
-      "[&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-24",
-    ],
-    content: "space-y-1.5 text-center",
-    title: "text-2xl font-semibold",
-    description: "text-lg text-muted-foreground",
+export const placeholder = tv(
+  {
+    slots: {
+      root: "flex grow flex-col items-center justify-center gap-4",
+      before: ["[&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-24"],
+      content: "space-y-1 text-center",
+      title: "text-3xl font-semibold md:text-2xl",
+      description: "text-base text-pretty text-muted-foreground md:text-sm",
+    },
   },
-});
+  { twMerge: true },
+);
 
 export type PlaceholderVariantProps = VariantProps<typeof placeholder>;
 
-export interface PlaceholderProps extends React.ComponentProps<"div"> {
+export interface PlaceholderProps
+  extends Omit<React.ComponentProps<"div">, "title"> {
   before?: React.ReactNode;
-  title?: string;
-  description?: string;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
   after?: React.ReactNode;
   classNames?: Partial<
     Record<keyof ReturnType<typeof placeholder>, ClassNameValue>

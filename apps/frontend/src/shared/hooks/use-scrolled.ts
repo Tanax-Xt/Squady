@@ -9,7 +9,7 @@ export const useScrolled = () => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
         setScrolled(true);
-      } else {
+      } else if (!document.body.hasAttribute("data-scroll-locked")) {
         setScrolled(false);
       }
     };

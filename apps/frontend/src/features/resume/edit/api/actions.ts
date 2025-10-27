@@ -1,0 +1,72 @@
+"use server";
+
+import { revalidateTag } from "next/cache";
+import { redirect } from "next/navigation";
+
+import {
+  getResume,
+  getResumeCacheTag,
+  mapResumeFormValuesToResumeUpdateRequest,
+  ResumeFormValues,
+} from "@/entities/resume";
+import {
+  USER_CACHE_USERS_ME_RESUMES_TAG,
+  USER_CACHE_USERS_ME_TAG,
+} from "@/entities/user";
+import { client } from "@/shared/api";
+
+export const updateResume = async (
+  resumeId: string,
+  values: ResumeFormValues,
+) => {
+  const { response, error } = await client.PUT("/resumes/{resume_id}", {
+    params: {
+      path: { resume_id: resumeId },
+    },
+    body: mapResumeFormValuesToResumeUpdateRequest(values),
+  });
+
+  if (!response.ok) {
+    return {
+      error,
+      status: response.status,
+    };
+  }
+
+  revalidateTag(getResumeCacheTag(resumeId));
+  redirect(`/resume/${resumeId}`);
+};
+
+export const toggleResumeIsPublic = async (resumeId: string) => {
+  const resume = await getResume(resumeId);
+
+  if (!resume) {
+    return;
+  }
+
+  const { response, error } = await client.PUT("/resumes/{resume_id}", {
+    params: {
+      path: { resume_id: resumeId },
+    },
+    body: { ...resume, is_public: !resume.is_public },
+  });
+
+  if (!response.ok) {
+    return {
+      error,
+      status: response.status,
+    };
+  }
+
+  revalidateTag(getResumeCacheTag(resumeId));
+};
+
+export const deleteResume = async (resumeId: string) => {
+  await client.DELETE("/resumes/{resume_id}", {
+    params: { path: { resume_id: resumeId } },
+  });
+
+  revalidateTag(getResumeCacheTag(resumeId));
+  revalidateTag(USER_CACHE_USERS_ME_RESUMES_TAG);
+  revalidateTag(USER_CACHE_USERS_ME_TAG);
+};

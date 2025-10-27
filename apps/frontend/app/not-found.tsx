@@ -17,7 +17,7 @@ export default function NotFound() {
       description="Этой страницы не существует"
       after={
         <Button asChild size="lg">
-          <Link href="/resume/profile/edit">
+          <Link href="/home">
             <ArrowLeftIcon />
             <span>На главную</span>
           </Link>

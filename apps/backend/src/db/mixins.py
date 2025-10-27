@@ -2,7 +2,7 @@ from datetime import datetime
 from textwrap import shorten
 from typing import Any, Callable
 
-from sqlalchemy import DateTime, func
+from sqlalchemy import DateTime, func, inspect
 from sqlalchemy.orm import Mapped, mapped_column
 
 
@@ -14,8 +14,26 @@ class ReprMixin:
     }
 
     def __repr__(self) -> str:
-        attrs = map(self.__format_attr, self.__repr_attrs__)
+        # attrs = map(self.__format_attr, self.__repr_attrs__)
+        # return f"{self.__class__.__name__}({', '.join(attrs)})"
+        attrs = map(self.__safe_format, getattr(self, "__repr_attrs__", ("id",)))
         return f"{self.__class__.__name__}({', '.join(attrs)})"
+
+    def __safe_format(self, name: Any) -> str:
+        insp = inspect(self)
+
+        if insp is None:
+            return f"{name}=<no inspection>"
+
+        if name in insp.unloaded:
+            return f"{name}=<unloaded>"
+
+        try:
+            value = self.__format_attr(name)
+        except Exception as e:
+            return f"{name}=<error: {e}>"
+
+        return value
 
     def __format_attr(self, name: str) -> str:
         value = self.__format_attr_value(getattr(self, name))

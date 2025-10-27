@@ -44,7 +44,7 @@ export function NavMain({
                   <span>{item.title}</span>
                 </Link>
               </Sidebar.MenuButton>
-              {item.badge && (
+              {!!item.badge && (
                 <Sidebar.MenuBadge>{item.badge}</Sidebar.MenuBadge>
               )}
             </Sidebar.MenuItem>

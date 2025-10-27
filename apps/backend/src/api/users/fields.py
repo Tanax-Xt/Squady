@@ -1,19 +1,10 @@
 from datetime import date
 from typing import Annotated
 
-from pydantic import UUID4, AfterValidator, EmailStr, Field, StringConstraints
+from pydantic import AfterValidator, EmailStr, Field, StringConstraints
 
 from src.api.users.validators import validate_birth_date_in_range
 from src.settings import settings
-
-UserId = Annotated[
-    UUID4,
-    Field(
-        title="User ID",
-        description="Unique identifier for the user in UUID4 format.",
-        examples=["780de52b-b406-4764-ba9f-5c1e81b9f90f"],
-    ),
-]
 
 UserUsername = Annotated[
     str,
@@ -33,7 +24,6 @@ UserEmail = Annotated[
     EmailStr,
     Field(
         title="User email",
-        description="",
         examples=["johndoe@example.com"],
     ),
 ]

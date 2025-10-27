@@ -183,6 +183,7 @@ function SidebarRoot({
           data-slot="sidebar"
           data-mobile="true"
           className="top-2 bottom-2 left-2 bg-sidebar text-sidebar-foreground"
+          showCloseButton={false}
         >
           <Drawer.Header className="sr-only">
             <Drawer.Title>Боковое меню</Drawer.Title>

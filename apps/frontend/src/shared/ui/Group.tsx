@@ -2,7 +2,7 @@ import { tv, VariantProps } from "tailwind-variants";
 
 export const group = tv({
   base: [
-    "flex w-full flex-col overflow-hidden rounded-md border bg-card text-card-foreground shadow-xs",
+    "relative flex w-full flex-col overflow-hidden rounded-md border bg-card text-card-foreground",
   ],
   variants: {
     divide: {

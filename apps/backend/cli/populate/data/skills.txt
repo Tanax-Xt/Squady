@@ -1,0 +1,156 @@
+Python
+Java
+Kotlin
+Swift
+Objective-C
+JavaScript
+TypeScript
+C++
+C#
+Go
+Rust
+PHP
+Ruby
+Scala
+HTML
+CSS
+SASS
+LESS
+SQL
+PostgreSQL
+MySQL
+SQLite
+MongoDB
+Redis
+Elasticsearch
+ClickHouse
+Apache Kafka
+RabbitMQ
+Celery
+Sidekiq
+Docker
+Kubernetes
+Helm
+Terraform
+Ansible
+Puppet
+Jenkins
+GitHub Actions
+GitLab CI
+CircleCI
+Argo CD
+CI/CD
+NGINX
+Apache HTTP Server
+Spring
+Spring Boot
+FastAPI
+Django
+Flask
+Express
+ASP.NET Core
+Gin
+Fiber
+Node.js
+React
+React Native
+Next.js
+Vue.js
+Nuxt.js
+SolidJS
+Angular
+Svelte
+Webpack
+Vite
+npm
+yarn
+Gradle
+Maven
+Android Studio
+Jetpack Compose
+Android SDK
+Xcode
+UIKit
+SwiftUI
+Unity
+Unreal Engine
+Godot
+OpenGL
+Vulkan
+DirectX
+Blender
+Figma
+Adobe XD
+Sketch
+Adobe Illustrator
+Adobe Photoshop
+User Experience (UX)
+User Interface (UI)
+Jira
+Confluence
+Trello
+Asana
+Miro
+Product roadmap
+Roadmapping
+Stakeholder management
+Business analysis
+UML
+Wireframing
+Prototyping
+SQLAlchemy
+Django ORM
+Hibernate
+TypeORM
+Sequelize
+REST
+GraphQL
+gRPC
+WebSocket
+JSON
+XML
+Protocol Buffers
+OAuth2
+JWT
+OpenID Connect
+TLS/SSL
+Prometheus
+Grafana
+Sentry
+Datadog
+New Relic
+Power BI
+Tableau
+Looker
+pandas
+numpy
+scikit-learn
+TensorFlow
+PyTorch
+Hugging Face
+transformers
+Jupyter
+MLflow
+Weights & Biases
+matplotlib
+seaborn
+Excel
+bash
+Linux
+Git
+Version control
+Load balancing
+Caching
+Memcached
+Varnish
+Performance testing
+JMeter
+Selenium
+Playwright
+Cypress
+pytest
+unittest
+Jest
+Mocha
+Accessibility (a11y)
+Search engine optimization (SEO)

@@ -37,7 +37,8 @@ export function LoginForm({
                   <Input
                     {...field}
                     placeholder="Введите ваше имя пользователя или почту…"
-                    autoComplete="username"
+                    autoComplete="username email"
+                    inputMode="email"
                     spellCheck={false}
                   />
                 )}

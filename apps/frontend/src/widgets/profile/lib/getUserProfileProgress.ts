@@ -1,34 +1,27 @@
-import {
-  CurrentUserPersonalDataResponse,
-  CurrentUserResponse,
-  UserResponse,
-  UserRole,
-} from "@/shared/api";
+import { hasAnyPersonalData } from "@/entities/user";
+import { CurrentUserResponse, UserRole } from "@/shared/api";
 
 export type UserProfileProgressStep = {
   href?: string;
   label: string;
-  completed: (options: {
-    user: CurrentUserResponse;
-    personal: CurrentUserPersonalDataResponse | undefined;
-  }) => boolean;
+  completed: (user: CurrentUserResponse) => boolean;
 };
 
 const SHARED_STEPS: UserProfileProgressStep[] = [
   {
     href: "/register",
     label: "Создать аккаунт",
-    completed: ({ user }) => Boolean(user),
+    completed: (user) => Boolean(user),
   },
   {
     href: "/settings/verify",
     label: "Подтвердить электронную почту",
-    completed: ({ user }) => user.is_verified,
+    completed: ({ is_verified }) => is_verified,
   },
   {
     href: "/settings/role",
     label: "Выбрать роль",
-    completed: ({ user }) => Boolean(user.role),
+    completed: ({ role }) => Boolean(role),
   },
 ];
 
@@ -36,7 +29,7 @@ const AGENT_STEPS: UserProfileProgressStep[] = [
   ...SHARED_STEPS,
   {
     label: "Подтвердить статус представителя",
-    completed: ({ user }) => user.is_verified_agent === true,
+    completed: ({ is_verified_agent }) => !!is_verified_agent,
   },
 ] as const;
 
@@ -45,15 +38,12 @@ const PARTICIPANT_MENTOR_STEPS: UserProfileProgressStep[] = [
   {
     href: "/resume/profile/edit",
     label: "Заполнить личные данные",
-    completed: ({ personal }) =>
-      personal !== null &&
-      personal !== undefined &&
-      Object.values(personal).some((value) => value !== null),
+    completed: (user) => hasAnyPersonalData(user),
   },
   {
     href: "/resume/new",
     label: "Создать первое резюме",
-    completed: () => false,
+    completed: (user) => user.stats.resumes > 0,
   },
 ] as const;
 
@@ -64,20 +54,10 @@ const STEPS: Record<UserRole, UserProfileProgressStep[]> = {
   participant: PARTICIPANT_MENTOR_STEPS,
 };
 
-export default function getUserProfileProgress({
-  user,
-  personal,
-}: {
-  user: UserResponse;
-  personal: CurrentUserPersonalDataResponse | undefined;
-}) {
+export default function getUserProfileProgress(user: CurrentUserResponse) {
   const steps = user.role ? STEPS[user.role] : SHARED_STEPS;
-  const currentStep = steps.find(
-    ({ completed }) => !completed({ user, personal }),
-  );
-  const completedSteps = steps.filter(({ completed }) =>
-    completed({ user, personal }),
-  );
+  const currentStep = steps.find(({ completed }) => !completed(user));
+  const completedSteps = steps.filter(({ completed }) => completed(user));
   const remainingCount = steps.length - completedSteps.length;
   const progress = Math.round((completedSteps.length / steps.length) * 100);
 

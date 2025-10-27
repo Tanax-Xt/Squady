@@ -3,10 +3,7 @@
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 
-import {
-  CurrentUserPersonalDataResponse,
-  CurrentUserResponse,
-} from "@/shared/api";
+import { CurrentUserResponse } from "@/shared/api";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import { cn } from "@/shared/lib/utils";
 import Badge from "@/shared/ui/badge";
@@ -20,14 +17,13 @@ import getUserProfileProgress from "../lib/getUserProfileProgress";
 export interface UserProfileProgressProps
   extends React.ComponentProps<typeof Card> {
   user: CurrentUserResponse;
-  personal: CurrentUserPersonalDataResponse | undefined;
 }
 
 const UserProfileProgress: React.FunctionComponent<
   UserProfileProgressProps
-> = ({ user, personal, className, ...otherProps }) => {
+> = ({ user, className, ...otherProps }) => {
   const { completedSteps, currentStep, progress, remainingCount, steps } =
-    getUserProfileProgress({ user, personal });
+    getUserProfileProgress(user);
 
   const ordinalPluralRules = new Intl.PluralRules("ru", { type: "ordinal" });
   const cardinalPluralRules = new Intl.PluralRules("ru", { type: "cardinal" });

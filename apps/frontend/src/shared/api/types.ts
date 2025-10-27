@@ -140,6 +140,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/users/me/resumes": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Current User Resumes */
+    get: operations["get_current_user_resumes_users_me_resumes_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/users/me/personal": {
     parameters: {
       query?: never;
@@ -193,6 +210,93 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/users/{username}/resumes": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get User Resumes */
+    get: operations["get_user_resumes_users__username__resumes_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/resumes": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Create Resume */
+    post: operations["create_resume_resumes_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/resumes/roles": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Roles */
+    get: operations["get_roles_resumes_roles_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/resumes/skills": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Skills */
+    get: operations["get_skills_resumes_skills_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/resumes/{resume_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Resume */
+    get: operations["get_resume_resumes__resume_id__get"];
+    /** Update Resume */
+    put: operations["update_resume_resumes__resume_id__put"];
+    post?: never;
+    /** Delete Resume */
+    delete: operations["delete_resume_resumes__resume_id__delete"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -214,6 +318,37 @@ export interface components {
        * Format: date-time
        */
       expires_at: string;
+    };
+    /** AchievementItem */
+    AchievementItem: {
+      /**
+       * Title
+       * @description Resume item title
+       */
+      title: string;
+      /**
+       * The year of the achievement
+       * @description The year of achievement should be no more than the current year.
+       */
+      year: number;
+    };
+    /** AdditionalEducationItem */
+    AdditionalEducationItem: {
+      /**
+       * Title
+       * @description Resume item title
+       */
+      title: string;
+      /**
+       * Date
+       * @description Date in ISO 8601 format: YYYY-MM. Should be maximum 80 years ago and 10 years in the future.
+       */
+      start_date: string;
+      /**
+       * Date
+       * @description Date in ISO 8601 format: YYYY-MM. Should be maximum 80 years ago and 10 years in the future.
+       */
+      end_date: string;
     };
     /** Body_login_auth_login_post */
     Body_login_auth_login_post: {
@@ -253,7 +388,7 @@ export interface components {
       /**
        * User birth date
        * Format: date
-       * @description User's birth date, must be a date in the past.
+       * @description User's birth date, must be between 6 and 100 years old.
        */
       birth_date: string;
       /**
@@ -296,6 +431,16 @@ export interface components {
      * @description Represents the private response data for a user.
      */
     CurrentUserResponse: {
+      /** Full Name */
+      full_name: string | null;
+      /** Birth Date */
+      birth_date: string | null;
+      /** City */
+      city: string | null;
+      /** About */
+      about: string | null;
+      /** Telegram */
+      telegram: string | null;
       /**
        * Created At
        * Format: date-time
@@ -307,9 +452,9 @@ export interface components {
        */
       updated_at: string;
       /**
-       * User ID
+       * Entity ID
        * Format: uuid4
-       * @description Unique identifier for the user in UUID4 format.
+       * @description Unique identifier for the entity in UUID4 format.
        */
       id: string;
       /** Username */
@@ -320,12 +465,11 @@ export interface components {
        */
       email: string;
       role: components["schemas"]["UserRole"] | null;
-      /** About */
-      about: string | null;
       /** Is Verified */
       is_verified: boolean;
       /** Is Verified Agent */
       is_verified_agent: boolean | null;
+      stats: components["schemas"]["UserStatsResponse"];
     };
     /**
      * CurrentUserRoleUpdateRequest
@@ -349,6 +493,41 @@ export interface components {
     CurrentUserVerifyRequest: {
       /** Otp */
       otp: number;
+    };
+    /**
+     * EducationType
+     * @enum {string}
+     */
+    EducationType:
+      | "primary_school"
+      | "medium_school"
+      | "high_school"
+      | "vocational_school"
+      | "bachelor"
+      | "master";
+    /** ExperienceItem */
+    ExperienceItem: {
+      /**
+       * Title
+       * @description Resume item title
+       */
+      title: string;
+      /** Description */
+      description: string;
+      /**
+       * Date
+       * @description Date in ISO 8601 format: YYYY-MM. Should be maximum 80 years ago and 10 years in the future.
+       */
+      start_date: string;
+      /** End Date */
+      end_date?: string | null;
+      /**
+       * Is Work
+       * @default false
+       */
+      is_work: boolean;
+      /** Company */
+      company?: string | null;
     };
     /** HTTPValidationError */
     HTTPValidationError: {
@@ -384,6 +563,139 @@ export interface components {
       next_page: number | null;
       /** Prev Page */
       prev_page: number | null;
+    };
+    /** ResumeCreateRequest */
+    ResumeCreateRequest: {
+      /**
+       * Title
+       * @description Resume item title
+       */
+      role: string;
+      /**
+       * List of skills
+       * @description List of resume skills
+       */
+      skills: string[];
+      education: components["schemas"]["ResumeEducation"];
+      /** Experience */
+      experience: components["schemas"]["ExperienceItem"][] | null;
+      /** Achievements */
+      achievements: components["schemas"]["AchievementItem"][] | null;
+      /** Additional Education */
+      additional_education:
+        | components["schemas"]["AdditionalEducationItem"][]
+        | null;
+      /**
+       * Is Public
+       * @default true
+       */
+      is_public: boolean;
+      /**
+       * Is Parsed
+       * @default false
+       */
+      is_parsed: boolean;
+    };
+    /** ResumeEducation */
+    ResumeEducation: {
+      type: components["schemas"]["EducationType"];
+      /**
+       * Title
+       * @description Resume item title
+       */
+      title: string;
+      /**
+       * The end year of education
+       * @description The end year of education should be maximum 80 years ago and 10 years in the future.
+       */
+      end_year: number;
+    };
+    /** ResumeResponse */
+    ResumeResponse: {
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /**
+       * Entity ID
+       * Format: uuid4
+       * @description Unique identifier for the entity in UUID4 format.
+       */
+      id: string;
+      personal_data: components["schemas"]["ResumeUserPersonalDataResponse"];
+      /**
+       * Title
+       * @description Resume item title
+       */
+      role: string;
+      /**
+       * List of skills
+       * @description List of resume skills
+       */
+      skills: string[];
+      education: components["schemas"]["ResumeEducation"];
+      /** Experience */
+      experience: components["schemas"]["ExperienceItem"][] | null;
+      /** Achievements */
+      achievements: components["schemas"]["AchievementItem"][] | null;
+      /** Additional Education */
+      additional_education:
+        | components["schemas"]["AdditionalEducationItem"][]
+        | null;
+      /**
+       * Is Public
+       * @default true
+       */
+      is_public: boolean;
+    };
+    /** ResumeUpdateRequest */
+    ResumeUpdateRequest: {
+      /**
+       * Title
+       * @description Resume item title
+       */
+      role: string;
+      /**
+       * List of skills
+       * @description List of resume skills
+       */
+      skills: string[];
+      education: components["schemas"]["ResumeEducation"];
+      /** Experience */
+      experience: components["schemas"]["ExperienceItem"][] | null;
+      /** Achievements */
+      achievements: components["schemas"]["AchievementItem"][] | null;
+      /** Additional Education */
+      additional_education:
+        | components["schemas"]["AdditionalEducationItem"][]
+        | null;
+      /** Is Public */
+      is_public: boolean;
+    };
+    /** ResumeUserPersonalDataResponse */
+    ResumeUserPersonalDataResponse: {
+      /** Full Name */
+      full_name: string | null;
+      /** Birth Date */
+      birth_date: string | null;
+      /** City */
+      city: string | null;
+      /** About */
+      about: string | null;
+      /** Telegram */
+      telegram: string | null;
+    };
+    /** ResumesPaginationResponse */
+    ResumesPaginationResponse: {
+      /** Resumes */
+      resumes: components["schemas"]["ResumeResponse"][];
+      pagination: components["schemas"]["PaginationResponse"];
     };
     /** UserRegistrationConflictResponse */
     UserRegistrationConflictResponse: {
@@ -430,9 +742,9 @@ export interface components {
        */
       updated_at: string;
       /**
-       * User ID
+       * Entity ID
        * Format: uuid4
-       * @description Unique identifier for the user in UUID4 format.
+       * @description Unique identifier for the entity in UUID4 format.
        */
       id: string;
       /** Username */
@@ -455,6 +767,14 @@ export interface components {
      * @enum {string}
      */
     UserRole: "admin" | "agent" | "mentor" | "participant";
+    /**
+     * UserStatsResponse
+     * @description Represents the user stats details.
+     */
+    UserStatsResponse: {
+      /** Resumes */
+      resumes: number;
+    };
     /**
      * UsersPaginationResponse
      * @description Represents the public response data for a list of users.
@@ -481,6 +801,9 @@ export interface components {
   pathItems: never;
 }
 export type AccessTokenResponse = components["schemas"]["AccessTokenResponse"];
+export type AchievementItem = components["schemas"]["AchievementItem"];
+export type AdditionalEducationItem =
+  components["schemas"]["AdditionalEducationItem"];
 export type BodyLoginAuthLoginPost =
   components["schemas"]["Body_login_auth_login_post"];
 export type CurrentUserPasswordUpdateRequest =
@@ -498,15 +821,26 @@ export type CurrentUserUsernameUpdateRequest =
   components["schemas"]["CurrentUserUsernameUpdateRequest"];
 export type CurrentUserVerifyRequest =
   components["schemas"]["CurrentUserVerifyRequest"];
+export type EducationType = components["schemas"]["EducationType"];
+export type ExperienceItem = components["schemas"]["ExperienceItem"];
 export type HttpValidationError = components["schemas"]["HTTPValidationError"];
 export type OtpResponse = components["schemas"]["OTPResponse"];
 export type PaginationResponse = components["schemas"]["PaginationResponse"];
+export type ResumeCreateRequest = components["schemas"]["ResumeCreateRequest"];
+export type ResumeEducation = components["schemas"]["ResumeEducation"];
+export type ResumeResponse = components["schemas"]["ResumeResponse"];
+export type ResumeUpdateRequest = components["schemas"]["ResumeUpdateRequest"];
+export type ResumeUserPersonalDataResponse =
+  components["schemas"]["ResumeUserPersonalDataResponse"];
+export type ResumesPaginationResponse =
+  components["schemas"]["ResumesPaginationResponse"];
 export type UserRegistrationConflictResponse =
   components["schemas"]["UserRegistrationConflictResponse"];
 export type UserRegistrationRequest =
   components["schemas"]["UserRegistrationRequest"];
 export type UserResponse = components["schemas"]["UserResponse"];
 export type UserRole = components["schemas"]["UserRole"];
+export type UserStatsResponse = components["schemas"]["UserStatsResponse"];
 export type UsersPaginationResponse =
   components["schemas"]["UsersPaginationResponse"];
 export type ValidationError = components["schemas"]["ValidationError"];
@@ -1468,6 +1802,53 @@ export interface operations {
       };
     };
   };
+  get_current_user_resumes_users_me_resumes_get: {
+    parameters: {
+      query?: {
+        q?: string | null;
+        offset?: number;
+        limit?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ResumesPaginationResponse"];
+        };
+      };
+      /** @description Failed to verify credentials */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description User not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   get_current_user_personal_data_users_me_personal_get: {
     parameters: {
       query?: never;
@@ -1660,6 +2041,338 @@ export interface operations {
         };
       };
       /** @description No user found with the provided username */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_user_resumes_users__username__resumes_get: {
+    parameters: {
+      query?: {
+        q?: string | null;
+        offset?: number;
+        limit?: number;
+      };
+      header?: never;
+      path: {
+        username: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ResumesPaginationResponse"];
+        };
+      };
+      /** @description No user found with the provided username */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  create_resume_resumes_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ResumeCreateRequest"];
+      };
+    };
+    responses: {
+      /** @description Resume successful created */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ResumeResponse"];
+        };
+      };
+      /** @description Failed to verify credentials */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description User not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Resume with this role already exists. Use PUT method to update it. */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_roles_resumes_roles_get: {
+    parameters: {
+      query?: {
+        q?: string | null;
+        offset?: number;
+        limit?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": string[];
+        };
+      };
+      /** @description Failed to verify credentials */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description User not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_skills_resumes_skills_get: {
+    parameters: {
+      query?: {
+        q?: string | null;
+        offset?: number;
+        limit?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": string[];
+        };
+      };
+      /** @description Failed to verify credentials */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description User not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_resume_resumes__resume_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        resume_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ResumeResponse"];
+        };
+      };
+      /** @description Сannot get a private resume that does not belong to the current user */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Resume not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  update_resume_resumes__resume_id__put: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        resume_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ResumeUpdateRequest"];
+      };
+    };
+    responses: {
+      /** @description Resume successfully deleted */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Сannot edit a resume that does not belong to the current user */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Resume not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Resume with this role already exists. Use PUT method to update it. */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  delete_resume_resumes__resume_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        resume_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Resume successfully deleted */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Сannot delete a resume that does not belong to the current user */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Resume not found */
       404: {
         headers: {
           [name: string]: unknown;

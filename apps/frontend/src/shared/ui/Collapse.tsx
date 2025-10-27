@@ -2,9 +2,10 @@
 
 import { AnimatePresence, motion } from "motion/react";
 
-export type CollapseProps = React.ComponentProps<"div">;
+export type CollapseProps = React.ComponentProps<"div"> & { initial?: boolean };
 
 const Collapse: React.FunctionComponent<CollapseProps> = ({
+  initial,
   children,
   ...otherProps
 }) => {
@@ -12,11 +13,15 @@ const Collapse: React.FunctionComponent<CollapseProps> = ({
     <AnimatePresence>
       {children && (
         <motion.div
-          initial={{
-            height: 0,
-            opacity: 0,
-            y: -20,
-          }}
+          initial={
+            initial === false
+              ? false
+              : {
+                  height: 0,
+                  opacity: 0,
+                  y: -20,
+                }
+          }
           animate={{
             height: "auto",
             opacity: 1,

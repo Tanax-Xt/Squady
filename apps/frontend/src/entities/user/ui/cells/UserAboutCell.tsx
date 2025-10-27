@@ -50,6 +50,11 @@ const UserAboutCell: FunctionComponent<UserAboutCellProps> = ({
       }
       after={<CopyButton side="left" value={value} />}
       multiline={expanded}
+      classNames={
+        expanded
+          ? { before: "mt-3.5 mb-auto", after: "mt-1.5 mb-auto" }
+          : undefined
+      }
       {...otherProps}
     />
   );

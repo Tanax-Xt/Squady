@@ -2,41 +2,70 @@
 
 import { ClassValue, tv, VariantProps } from "tailwind-variants";
 
-export const cell = tv({
-  slots: {
-    root: [
-      "flex min-h-14 items-center gap-2 px-3 py-2.5",
-      "[&_svg:not([class*='text-'])]:text-muted-foreground",
-      "[&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-5",
-    ],
-    before: ["flex h-full items-center justify-center"],
-    content: "grow overflow-hidden",
-    label: "truncate",
-    description: "text-muted-foreground",
-    after: ["flex h-full items-center justify-center"],
-  },
-  variants: {
-    multiline: {
-      false: {
-        description: "truncate",
+export const cell = tv(
+  {
+    slots: {
+      root: [
+        "flex w-full items-center gap-2 px-3 py-2.5",
+        "[&_svg]:shrink-0",
+        "[&_svg:not([class*='size-'])]:size-5",
+        "[&_svg:not([class*='stroke-'])]:stroke-[1.75]",
+      ],
+      before: "flex",
+      content: "grow overflow-hidden text-left",
+      label: "truncate",
+      detail: "ms-1 text-muted-foreground",
+      description: "text-muted-foreground",
+      after: "flex",
+    },
+    variants: {
+      size: {
+        sm: {
+          content: "text-sm",
+        },
+        md: {
+          content: "text-base",
+        },
       },
-      true: {
-        before: ["mt-3 items-start", "[&_svg]:mt-2"],
-        description: "text-pretty whitespace-pre-line",
-        after: "mt-3 items-start",
+      color: {
+        primary: {
+          root: "[&_svg:not([class*='text-'])]:text-primary",
+          content: "text-primary",
+        },
+        default: {
+          root: "[&_svg:not([class*='text-'])]:text-muted-foreground",
+        },
+      },
+      multiline: {
+        false: {
+          description: "truncate",
+        },
+        true: {
+          description: "text-pretty whitespace-pre-line",
+        },
+      },
+      hoverable: {
+        true: {
+          root: [
+            "cursor-pointer",
+            "transition",
+            "hover:bg-accent",
+            "active:bg-accent active:duration-0",
+            "focus-visible:bg-accent focus-visible:outline-none",
+          ],
+        },
+        false: {
+          label: "cursor-default",
+          description: "cursor-default",
+        },
       },
     },
-    hoverable: {
-      true: {
-        root: ["cursor-pointer", "transition", "hover:bg-accent"],
-      },
-      false: {
-        label: "cursor-default",
-        description: "cursor-default",
-      },
+    defaultVariants: {
+      color: "default",
     },
   },
-});
+  { twMerge: true },
+);
 
 export type CellVariantProps = VariantProps<typeof cell>;
 
@@ -49,6 +78,7 @@ export type CellBaseProps<T extends React.ElementType> = {
   as?: T;
   before?: React.ReactNode;
   label?: React.ReactNode;
+  detail?: React.ReactNode;
   description?: React.ReactNode;
   after?: React.ReactNode;
   className?: ClassValue;
@@ -63,15 +93,18 @@ const Cell = <T extends React.ElementType = "div">({
   as,
   before,
   label,
+  detail,
   description,
   after,
   className,
   classNames,
+  size,
+  color,
   multiline,
   hoverable,
   ...otherProps
 }: CellProps<T>): React.ReactNode => {
-  const slots = cell({ multiline, hoverable, className });
+  const slots = cell({ size, color, multiline, hoverable, className });
 
   const Comp = as ?? "div";
 
@@ -87,8 +120,15 @@ const Cell = <T extends React.ElementType = "div">({
       )}
 
       <div className={slots.content({ className: classNames?.content })}>
-        <div className={slots.label({ className: classNames?.label })}>
-          {label}
+        <div className="flex">
+          <span className={slots.label({ className: classNames?.label })}>
+            {label}
+          </span>
+          {detail && (
+            <span className={slots.detail({ className: classNames?.detail })}>
+              {detail}
+            </span>
+          )}
         </div>
         {description && (
           <div

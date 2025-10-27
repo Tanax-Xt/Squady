@@ -1,38 +1,65 @@
-import { cva, type VariantProps } from "class-variance-authority";
+import { ClassValue, tv, type VariantProps } from "tailwind-variants";
 
-import { cn } from "@/shared/lib/utils";
-
-const badgeVariants = cva(
-  "inline-flex cursor-default items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors",
+export const badge = tv(
   {
+    base: ["inline-flex items-center border py-0.5 font-semibold transition"],
     variants: {
+      size: {
+        xs: "text-xs",
+        sm: "text-sm",
+      },
+      shape: {
+        rounded: "rounded-md px-2.5",
+        circle: "rounded-full px-2",
+      },
       variant: {
         default:
-          "border-transparent bg-primary text-primary-foreground shadow selection:bg-accent selection:text-accent-foreground",
+          "cursor-default border-transparent bg-primary text-primary-foreground shadow selection:bg-accent selection:text-accent-foreground",
         neutral:
-          "border-transparent bg-neutral-50 text-neutral-950 selection:bg-neutral-950 selection:text-neutral-50",
-        secondary: "border-transparent bg-secondary text-secondary-foreground",
+          "cursor-default border-transparent bg-neutral-50 text-neutral-950 selection:bg-neutral-950 selection:text-neutral-50",
+        secondary: "cursor-default bg-secondary text-secondary-foreground",
+        card: "cursor-default bg-card text-card-foreground",
+        "primary-action":
+          "cursor-pointer bg-card text-primary outline-none hover:bg-accent focus-visible:bg-secondary/50 focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50",
         destructive:
-          "text-destructive-foreground border-transparent bg-destructive shadow",
-        outline: "text-foreground",
+          "text-destructive-foreground cursor-default border-transparent bg-destructive shadow",
+        outline: "text-foreground∏ cursor-default",
       },
     },
     defaultVariants: {
+      size: "xs",
+      shape: "rounded",
       variant: "default",
     },
   },
+  { twMerge: true },
 );
 
-export interface BadgeProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof badgeVariants> {}
+export type BadgeProps<T extends React.ElementType> = Omit<
+  React.ComponentProps<T>,
+  "className"
+> &
+  VariantProps<typeof badge> & {
+    as?: T;
+    className?: ClassValue;
+  };
 
-function Badge({ className, variant, ...props }: BadgeProps) {
+const Badge = <T extends React.ElementType = "div">({
+  className,
+  size,
+  shape,
+  variant,
+  as,
+  ...otherProps
+}: BadgeProps<T>): React.ReactNode => {
+  const Component = as ?? "div";
+
   return (
-    <div className={cn(badgeVariants({ variant }), className)} {...props} />
+    <Component
+      className={badge({ size, shape, variant, className })}
+      {...otherProps}
+    />
   );
-}
-
-export { badgeVariants };
+};
 
 export default Badge;

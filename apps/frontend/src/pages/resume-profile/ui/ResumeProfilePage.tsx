@@ -1,16 +1,10 @@
-import {
-  getCurrentUserVerifiedParticipantOrMentor,
-  getCurrentUserPersonalData,
-} from "@/entities/user";
+import { getCurrentUserVerifiedParticipantOrMentor } from "@/entities/user";
 import { UserProfile } from "@/widgets/profile";
 
 const ResumeProfilePage: React.FunctionComponent = async () => {
-  const [user, personal] = await Promise.all([
-    getCurrentUserVerifiedParticipantOrMentor(),
-    getCurrentUserPersonalData(),
-  ]);
+  const user = await getCurrentUserVerifiedParticipantOrMentor();
 
-  return <UserProfile user={user} personal={personal} />;
+  return <UserProfile user={user} />;
 };
 
 export default ResumeProfilePage;

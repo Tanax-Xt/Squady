@@ -7,18 +7,14 @@ import Avatar from "@/shared/ui/avatar";
 
 import { parseInitials } from "../lib/parseInitials";
 
-const userAvatarVariants = cva("bg-gradient-to-b backdrop-blur-md", {
+const userAvatarVariants = cva("font-semibold", {
   variants: {
     role: {
-      null: "from-gray-500/75 via-gray-600/75 to-gray-500/75 text-white ring-gray-400",
-      admin:
-        "from-red-500/75 via-red-600/75 to-red-500/75 text-white ring-red-400",
-      agent:
-        "from-yellow-500/75 via-yellow-600/75 to-yellow-500/75 text-white ring-yellow-400",
-      mentor:
-        "from-green-500/75 via-green-600/75 to-green-500/75 text-white ring-green-400",
-      participant:
-        "from-blue-500/75 via-blue-600/75 to-blue-500/75 text-white ring-blue-400",
+      null: "bg-gray-500 text-white ring-gray-400",
+      admin: "bg-red-500 text-white ring-red-400",
+      agent: "bg-yellow-500 text-white ring-yellow-400",
+      mentor: "bg-green-500 text-white ring-green-400",
+      participant: "bg-blue-500 text-white ring-blue-400",
     },
   },
   defaultVariants: {

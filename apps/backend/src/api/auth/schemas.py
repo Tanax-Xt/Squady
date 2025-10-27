@@ -1,10 +1,12 @@
 from datetime import datetime
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from src.api.schemas import BaseSchema
 
 
-class AccessTokenResponse(BaseModel):
+class AccessTokenResponse(BaseSchema):
     """Represents a response containing access token and its expiration datetime."""
 
     access_token: str
@@ -12,14 +14,14 @@ class AccessTokenResponse(BaseModel):
     expires_at: datetime
 
 
-class JWT(BaseModel):
+class JWT(BaseSchema):
     """Represents the contents of a [JWT](https://wikipedia.org/wiki/JSON_Web_Token)."""
 
     exp: datetime | None = None
     sub: Any | None = None
 
 
-class UserRegistrationConflictResponse(BaseModel):
+class UserRegistrationConflictResponse(BaseSchema):
     subject: Literal["email", "username"] = Field(
         ...,
         description=("The field that caused the conflict."),

@@ -5,38 +5,38 @@ import {
   UserFullNameCell,
   UserTelegramCell,
 } from "@/entities/user";
-import { CurrentUserPersonalDataResponse } from "@/shared/api";
+import { CurrentUserResponse } from "@/shared/api";
 import { cn } from "@/shared/lib/utils";
 import Group from "@/shared/ui/Group";
 
 export interface UserProfilePersonalProps
   extends React.ComponentProps<"section"> {
-  personal: CurrentUserPersonalDataResponse;
+  user: CurrentUserResponse;
 }
 
 const UserProfilePersonal: React.FunctionComponent<
   UserProfilePersonalProps
-> = ({ personal, className, ...otherProps }) => {
+> = ({ user, className, ...otherProps }) => {
   const cells = [
     {
       cell: UserFullNameCell,
-      value: personal.full_name,
+      value: user.full_name,
     },
     {
       cell: UserBirthDateCell,
-      value: personal.birth_date,
+      value: user.birth_date,
     },
     {
       cell: UserCityCell,
-      value: personal.city,
+      value: user.city,
     },
     {
       cell: UserTelegramCell,
-      value: personal.telegram,
+      value: user.telegram,
     },
     {
       cell: UserAboutCell,
-      value: personal.about,
+      value: user.about,
     },
   ];
 
@@ -44,7 +44,7 @@ const UserProfilePersonal: React.FunctionComponent<
     <section className={cn("flex flex-col gap-4", className)} {...otherProps}>
       {cells.map(
         (cell, index) =>
-          cell.value && (
+          !!cell.value && (
             <Group key={index}>
               <cell.cell value={cell.value} />
             </Group>

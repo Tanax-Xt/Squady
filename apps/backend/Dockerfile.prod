@@ -2,13 +2,14 @@ FROM python:3.13-alpine
 
 WORKDIR /app
 
+COPY scripts scripts
 COPY requirements/common.txt requirements/common.txt
 COPY requirements/prod.txt requirements/prod.txt
 
+RUN sh ./scripts/cmd/prepare
 RUN pip install -r requirements/prod.txt
 
 COPY cli cli
-COPY scripts scripts
 COPY src src
 COPY pyproject.toml pyproject.toml
 

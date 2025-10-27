@@ -26,7 +26,7 @@ const UserRoleBadge: React.FunctionComponent<UserRoleBadgeProps> = ({
   return (
     <Badge
       variant="neutral"
-      className="mx-auto mt-2.5 flex w-fit"
+      className="mx-auto mt-2.5 !flex w-fit"
       {...otherProps}
     >
       {role === "agent" && is_verified_agent !== null && (

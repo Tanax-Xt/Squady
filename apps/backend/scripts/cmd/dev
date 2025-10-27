@@ -1,7 +1,10 @@
 #!/bin/sh
 
 # Run migrations
-alembic upgrade head 
+alembic upgrade head
+
+# Run clickhouse migrations
+python -m src.clickhouse.migrations.create
 
 # Create superuser
 python -m cli superuser create \
@@ -11,6 +14,15 @@ python -m cli superuser create \
 
 # Populate users
 python -m cli populate users
+
+# Populate roles
+python -m cli populate roles
+
+# Populate skills
+python -m cli populate skills
+
+# Populate resumes
+python -m cli populate resumes
 
 # Start development server
 uvicorn src.app:app --host 0.0.0.0 --port 8000 --reload

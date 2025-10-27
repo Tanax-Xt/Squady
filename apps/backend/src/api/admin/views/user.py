@@ -52,6 +52,7 @@ class UserAdminModelView(ModelView, model=User):
         User.is_verified,
         User.is_verified_agent,
         User.is_superuser,
+        User.resumes,
         User.created_at,
         User.updated_at,
     )

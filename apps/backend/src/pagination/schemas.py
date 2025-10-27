@@ -1,18 +1,17 @@
 import math
 from typing import Self
 
-from pydantic import BaseModel
-
+from src.api.schemas import BaseSchema
 from src.pagination.fields import PaginationSearchParamsLimit, PaginationSearchParamsOffset, PaginationSearchParamsQ
 
 
-class PaginationSearchParams(BaseModel):
+class PaginationSearchParams(BaseSchema):
     q: PaginationSearchParamsQ
     offset: PaginationSearchParamsOffset
     limit: PaginationSearchParamsLimit
 
 
-class PaginationResponse(BaseModel):
+class PaginationResponse(BaseSchema):
     total_items: int
     total_pages: int
     current_page: int

@@ -1,24 +1,22 @@
-import {
-  getCurrentUser,
-  getCurrentUserPersonalDataOrUndefined,
-} from "@/entities/user";
+import { getCurrentUser } from "@/entities/user";
 import { getUserProfileProgress, UserProfileProgress } from "@/widgets/profile";
 
 const HomePage: React.FunctionComponent = async () => {
-  const [user, personal] = await Promise.all([
-    getCurrentUser(),
-    getCurrentUserPersonalDataOrUndefined(),
-  ]);
+  const user = await getCurrentUser();
 
-  const { currentStep } = getUserProfileProgress({ user, personal });
+  const { currentStep } = getUserProfileProgress(user);
 
   return (
     <>
       <h1 className="text-3xl font-semibold md:text-2xl">
-        Привет, {user.username}!
+        Привет,{" "}
+        {!!user.full_name
+          ? user.full_name?.split(" ").slice(1, 2).join(" ")
+          : user.username}
+        !
       </h1>
 
-      {currentStep && <UserProfileProgress user={user} personal={personal} />}
+      {currentStep && <UserProfileProgress user={user} />}
     </>
   );
 };

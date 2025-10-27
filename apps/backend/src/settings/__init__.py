@@ -15,6 +15,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from src.settings.api import ApiSettings
 from src.settings.app import AppSettings
+from src.settings.clickhouse import ClickHouseSettings
 from src.settings.cors import CORSSettings
 from src.settings.otp import OTPSettings
 from src.settings.postgres import PostgresSettings
@@ -35,6 +36,7 @@ class Settings(BaseSettings):
     app: AppSettings
     api: ApiSettings
     cors: CORSSettings
+    clickhouse: ClickHouseSettings
     email: SMTPSettings
     otp: OTPSettings
     postgres: PostgresSettings

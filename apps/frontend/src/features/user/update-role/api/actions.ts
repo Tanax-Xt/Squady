@@ -3,11 +3,7 @@
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
-import {
-  getCurrentUser,
-  getCurrentUserPersonalDataOrUndefined,
-  USER_CACHE_USERS_ME_TAG,
-} from "@/entities/user";
+import { getCurrentUser, USER_CACHE_USERS_ME_TAG } from "@/entities/user";
 import { client, CurrentUserRoleUpdateRequest } from "@/shared/api";
 
 export async function updateCurrentUserRole(
@@ -26,11 +22,9 @@ export async function updateCurrentUserRole(
     };
   }
 
-  const personalData = await getCurrentUserPersonalDataOrUndefined();
-
   revalidateTag(USER_CACHE_USERS_ME_TAG);
 
-  if (personalData?.full_name || role !== null) {
+  if (role !== null) {
     redirect("/settings");
   } else if (body.role === "participant" || body.role === "mentor") {
     redirect("/resume/profile/edit?dismissible=true");

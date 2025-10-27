@@ -1,25 +1,36 @@
 export {
   getCurrentUser,
-  getCurrentUserOrUndefined,
-  getCurrentUserPersonalData,
-  getCurrentUserPersonalDataOrUndefined,
-  getCurrentUserUnverified,
-  getCurrentUserVerified,
-  getCurrentUserVerifiedParticipantOrMentor,
-  getCurrentUserVerifiedParticipantOrMentorOrNull,
   type GetCurrentUserOptions,
-  type GetCurrentUserPersonalDataOptions,
-  type GetCurrentUserUnverifiedOptions,
-  type GetCurrentUserVerifiedOptions,
-  type GetCurrentUserVerifiedParticipantOrMentorOptions,
-  type GetCurrentUserVerifiedParticipantOrMentorOrNullOptions,
-} from "./api/cache";
+} from "./api/cache/getCurrentUser";
+export { getCurrentUserOrUndefined } from "./api/cache/getCurrentUserOrUndefined";
+export { getCurrentUserResumes } from "./api/cache/getCurrentUserResumes";
 export {
-  USER_CACHE_USERS_ME_PERSONAL_TAG,
+  getCurrentUserUnverified,
+  type GetCurrentUserUnverifiedOptions,
+} from "./api/cache/getCurrentUserUnverified";
+export {
+  getCurrentUserVerified,
+  type GetCurrentUserVerifiedOptions,
+} from "./api/cache/getCurrentUserVerified";
+export {
+  getCurrentUserVerifiedParticipantOrMentor,
+  type GetCurrentUserVerifiedParticipantOrMentorOptions,
+} from "./api/cache/getCurrentUserVerifiedParticipantOrMentor";
+export {
+  getCurrentUserVerifiedParticipantOrMentorOrNull,
+  type GetCurrentUserVerifiedParticipantOrMentorOrNullOptions,
+} from "./api/cache/getCurrentUserVerifiedParticipantOrMentorOrNull";
+export {
+  getCurrentUserVerifiedParticipantOrMentorWithPersonalData,
+  type GetCurrentUserVerifiedParticipantOrMentorWithPersonalDataOptions,
+} from "./api/cache/getCurrentUserVerifiedParticipantOrMentorWithPersonalData";
+export {
+  USER_CACHE_USERS_ME_RESUMES_TAG,
   USER_CACHE_USERS_ME_TAG,
-} from "./api/tags";
+} from "./api/cache/tags";
 export { getMaxBirthDate, getMinBirthDate } from "./lib/birthdate";
 export { getRoleDisplayName } from "./lib/getRoleDisplayName";
+export { hasAnyPersonalData } from "./lib/hasPersonalData";
 export { parseInitials } from "./lib/parseInitials";
 export {
   UserAbout,

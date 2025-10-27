@@ -1,51 +1,58 @@
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from src.api.auth.otp.fields import OneTimePassword
+from src.api.schemas import BaseSchema
 from src.api.users.enums import UserRole
 from src.api.users.fields import UserPassword, UserUsername
-from src.api.users.schemas import UserResponse
+from src.api.users.me.personal.schemas import CurrentUserPersonalDataResponse
+from src.api.users.schemas import UserResponse, UserStatsResponse
 
 
-class CurrentUserResponse(UserResponse):
+class CurrentUserResponse(UserResponse, CurrentUserPersonalDataResponse):
     """Represents the private response data for a user."""
 
+    stats: UserStatsResponse
 
-class CurrentUserUsernameUpdateRequest(BaseModel):
+
+class CurrentUserUsernameUpdateRequest(BaseSchema):
     """Represents the user username request details."""
 
     username: UserUsername
 
 
-class CurrentUserPasswordUpdateRequest(BaseModel):
+class CurrentUserPasswordUpdateRequest(BaseSchema):
     """Represents the user password request details."""
 
     old_password: UserPassword
     new_password: UserPassword
 
 
-class CurrentUserRoleUpdateRequest(BaseModel):
+class CurrentUserRoleUpdateRequest(BaseSchema):
     """Represents the user password request details."""
 
     role: UserRole
 
 
-class CurrentUserForbiddenResponse(BaseModel):
+class CurrentUserForbiddenResponse(BaseSchema):
     subject: Literal[
         "unverified",
         "not_mentor_or_participant",
+        "no_personal_data",
     ] = Field(
         ...,
         description=("The specific forbidden action for the current user."),
         examples=[
             "unverified",
             "not_mentor_or_participant",
+            "no_personal_data",
         ],
         json_schema_extra={
             "x-enum-descriptions": [
                 "You cannot do this until you are verified.",
                 "You cannot do this because you aren't a mentor or participant.",
+                "You cannot do this because you don't have personal data.",
             ]
         },
     )
@@ -56,11 +63,12 @@ class CurrentUserForbiddenResponse(BaseModel):
         examples=[
             "You cannot do this until you are verified.",
             "You cannot do this because you aren't a mentor or participant.",
+            "You cannot do this because you don't have personal data.",
         ],
     )
 
 
-class CurrentUserRoleUpdateForbiddenResponse(BaseModel):
+class CurrentUserRoleUpdateForbiddenResponse(BaseSchema):
     subject: Literal[
         "to_admin",
         "from_agent",
@@ -93,7 +101,7 @@ class CurrentUserRoleUpdateForbiddenResponse(BaseModel):
     )
 
 
-class CurrentUserVerifyRequest(BaseModel):
+class CurrentUserVerifyRequest(BaseSchema):
     """Represents a request for verifying a One-Time Password (OTP)."""
 
     otp: OneTimePassword

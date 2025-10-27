@@ -20,5 +20,6 @@ export default {
       dynamic: 30,
     },
   },
+  poweredByHeader: false,
   transpilePackages: ["@t3-oss/env-nextjs", "@t3-oss/env-core"],
 } as const satisfies NextConfig;

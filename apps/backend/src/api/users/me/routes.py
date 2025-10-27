@@ -1,6 +1,8 @@
 from fastapi import APIRouter, HTTPException, status
 
 from src.api.auth.otp.service import OtpServiceDepends
+from src.api.resumes.schemas import ResumesPaginationResponse
+from src.api.resumes.service import ResumeServiceDepends
 from src.api.users.enums import UserRole
 from src.api.users.me.deps import CURRENT_USER_DEPENDS_RESPONSES, CurrentUserDepends, CurrentUserVerifiedDepends
 from src.api.users.me.schemas import (
@@ -12,8 +14,9 @@ from src.api.users.me.schemas import (
     CurrentUserVerifyRequest,
 )
 from src.api.users.me.service import CurrentUserServiceDepends
-from src.api.users.models import User
+from src.api.users.schemas import UserStatsResponse
 from src.api.users.service import UserServiceDepends
+from src.pagination import PaginationSearchParamsDepends
 from src.security import is_valid_password
 
 router = APIRouter(prefix="/me", responses=CURRENT_USER_DEPENDS_RESPONSES)
@@ -24,8 +27,14 @@ router = APIRouter(prefix="/me", responses=CURRENT_USER_DEPENDS_RESPONSES)
     response_model=CurrentUserResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_current_user(current_user: CurrentUserDepends) -> User:
-    return current_user
+async def get_current_user(
+    resume_service: ResumeServiceDepends, current_user: CurrentUserDepends
+) -> CurrentUserResponse:
+    stats = UserStatsResponse(
+        resumes=len(await resume_service.get_resumes_by_user_id(current_user.id, current_user.id))
+    )
+
+    return CurrentUserResponse(**current_user.__dict__, stats=stats)
 
 
 @router.patch(
@@ -140,3 +149,16 @@ async def verify(
         raise HTTPException(status.HTTP_406_NOT_ACCEPTABLE, "The One-Time Password (OTP) is incorrect or expired.")
 
     await current_user_service.verify_user(current_user)
+
+
+@router.get(
+    "/resumes",
+    response_model=ResumesPaginationResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def get_current_user_resumes(
+    search_params: PaginationSearchParamsDepends,
+    resume_service: ResumeServiceDepends,
+    current_user: CurrentUserVerifiedDepends,
+) -> ResumesPaginationResponse:
+    return await resume_service.get_user_resumes_pagination(current_user.id, current_user.id, search_params)

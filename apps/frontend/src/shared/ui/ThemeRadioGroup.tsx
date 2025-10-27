@@ -58,7 +58,7 @@ export const ThemeRadioGroup = memo(({ className }: ThemeRadioGroupProps) => {
       value={mounted ? theme : null}
       onValueChange={setTheme}
       className={cn(
-        "flex size-fit items-center justify-center gap-0.5 rounded-md border border-input bg-background p-0.5",
+        "flex size-fit items-center justify-center gap-0.5 rounded-md border border-input bg-background p-0.5 has-focus-visible:ring-2 has-focus-visible:ring-ring",
         className,
       )}
     >

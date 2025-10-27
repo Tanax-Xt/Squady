@@ -18,7 +18,7 @@ const ResumeProfileEditPageLayout: React.FunctionComponent<
   const dismissible = searchParams?.get("dismissible") === "true";
 
   return (
-    <Page data-vaul-drawer-wrapper>
+    <Page>
       <Bar>
         <Bar.Start>
           {!dismissible && (

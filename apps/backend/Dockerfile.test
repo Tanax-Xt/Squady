@@ -2,10 +2,12 @@ FROM python:3.13-alpine
 
 WORKDIR /app
 
+COPY scripts scripts
 COPY requirements/common.txt requirements/common.txt
 COPY requirements/dev.txt requirements/dev.txt
 COPY requirements/test.txt requirements/test.txt
 
+RUN sh ./scripts/cmd/prepare
 RUN pip install -r requirements/test.txt
 
 COPY src src

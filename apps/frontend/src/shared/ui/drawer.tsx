@@ -1,5 +1,6 @@
 "use client";
 
+import { XIcon } from "lucide-react";
 import * as React from "react";
 import { Drawer as DrawerPrimitive } from "vaul";
 
@@ -50,15 +51,21 @@ function DrawerOverlay({
 function DrawerContent({
   className,
   children,
+  fullscreen = false,
+  showCloseButton = true,
   ...props
-}: React.ComponentProps<typeof DrawerPrimitive.Content>) {
+}: React.ComponentProps<typeof DrawerPrimitive.Content> & {
+  fullscreen?: boolean;
+  showCloseButton?: boolean;
+}) {
   return (
     <DrawerPortal data-slot="drawer-portal">
       <DrawerOverlay />
       <DrawerPrimitive.Content
         data-slot="drawer-content"
         className={cn(
-          "group/drawer-content fixed z-30 flex h-auto flex-col bg-background outline-none",
+          fullscreen ? "h-[95dvh]" : "h-auto",
+          "group/drawer-content fixed z-30 flex flex-col bg-popover text-popover-foreground outline-none",
           "data-[vaul-drawer-direction=top]:inset-x-0 data-[vaul-drawer-direction=top]:top-0 data-[vaul-drawer-direction=top]:mb-24 data-[vaul-drawer-direction=top]:max-h-[80vh] data-[vaul-drawer-direction=top]:rounded-b-lg data-[vaul-drawer-direction=top]:border-b",
           "data-[vaul-drawer-direction=bottom]:inset-x-0 data-[vaul-drawer-direction=bottom]:bottom-0 data-[vaul-drawer-direction=bottom]:mt-24 data-[vaul-drawer-direction=bottom]:max-h-[80vh] data-[vaul-drawer-direction=bottom]:rounded-t-lg data-[vaul-drawer-direction=bottom]:border-t",
           "data-[vaul-drawer-direction=right]:inset-y-0 data-[vaul-drawer-direction=right]:right-0 data-[vaul-drawer-direction=right]:w-3/4 data-[vaul-drawer-direction=right]:border-l data-[vaul-drawer-direction=right]:sm:max-w-sm",
@@ -68,23 +75,31 @@ function DrawerContent({
         {...props}
       >
         <div className="flex grow flex-col overflow-auto">
-          <div className="mx-auto mt-2 hidden h-1 w-9 shrink-0 rounded-full bg-muted group-data-[vaul-drawer-direction=bottom]/drawer-content:block" />
+          <div className="mx-auto mt-1.25 mb-2 hidden h-1.25 w-9 shrink-0 rounded-full bg-accent-foreground/25 group-data-[vaul-drawer-direction=bottom]/drawer-content:block" />
           {children}
+          {showCloseButton && (
+            <DrawerPrimitive.Close className="absolute top-4 right-4 flex size-7 cursor-pointer items-center justify-center rounded-full bg-accent-foreground/10 text-muted-foreground transition outline-none hover:bg-card-foreground/15 focus-visible:ring-[3px] focus-visible:ring-ring/50 active:scale-95 active:bg-card-foreground/15 active:duration-0">
+              <XIcon className="size-5" strokeWidth={2.5} />
+            </DrawerPrimitive.Close>
+          )}
         </div>
       </DrawerPrimitive.Content>
     </DrawerPortal>
   );
 }
 
-function DrawerHeader({ className, ...props }: React.ComponentProps<"div">) {
+function DrawerHeader({
+  className,
+  ...otherProps
+}: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="drawer-header"
       className={cn(
-        "flex flex-col gap-0.5 p-4 group-data-[vaul-drawer-direction=bottom]/drawer-content:text-center group-data-[vaul-drawer-direction=top]/drawer-content:text-center md:gap-1.5 md:text-left",
+        "flex flex-col gap-0.5 px-4 pb-4 group-data-[vaul-drawer-direction=bottom]/drawer-content:text-center group-data-[vaul-drawer-direction=top]/drawer-content:text-center md:gap-1.5 md:text-left",
         className,
       )}
-      {...props}
+      {...otherProps}
     />
   );
 }

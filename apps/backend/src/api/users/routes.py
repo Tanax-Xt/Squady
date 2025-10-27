@@ -1,8 +1,11 @@
 from fastapi import APIRouter, HTTPException, status
 
+from src.api.resumes.schemas import ResumesPaginationResponse
+from src.api.resumes.service import ResumeServiceDepends
 from src.api.tags import Tag
 from src.api.users import me
 from src.api.users.fields import UserUsername
+from src.api.users.me.deps import CurrentUserVerifiedDepends
 from src.api.users.models import User
 from src.api.users.schemas import UserResponse, UsersPaginationResponse
 from src.api.users.service import UserServiceDepends
@@ -55,3 +58,25 @@ async def get_user(username: UserUsername, service: UserServiceDepends) -> User:
         raise HTTPException(status.HTTP_404_NOT_FOUND, f"No user found with the username '{username}'.")
 
     return user
+
+
+@router.get(
+    "/{username}/resumes",
+    status_code=status.HTTP_200_OK,
+    response_model=ResumesPaginationResponse,
+    responses={
+        status.HTTP_404_NOT_FOUND: dict(
+            description="No user found with the provided username",
+        ),
+    },
+)
+async def get_user_resumes(
+    search_params: PaginationSearchParamsDepends,
+    username: UserUsername,
+    user_service: UserServiceDepends,
+    resume_service: ResumeServiceDepends,
+    current_user: CurrentUserVerifiedDepends,
+) -> ResumesPaginationResponse:
+    user = await get_user(username, user_service)
+
+    return await resume_service.get_user_resumes_pagination(user.id, current_user.id, search_params)

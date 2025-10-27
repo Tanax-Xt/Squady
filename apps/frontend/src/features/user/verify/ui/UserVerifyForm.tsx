@@ -7,6 +7,7 @@ import { startTransition } from "react";
 import { CurrentUserResponse } from "@/shared/api";
 import { env } from "@/shared/config/client";
 import { cn } from "@/shared/lib/utils";
+import Placeholder from "@/shared/ui/Placeholder";
 import Button from "@/shared/ui/button";
 import Form from "@/shared/ui/form";
 import InputOTP from "@/shared/ui/input-otp";
@@ -34,24 +35,26 @@ const UserUpdatePasswordForm: React.FunctionComponent<
       className={cn("flex w-full grow flex-col justify-center", className)}
       {...otherProps}
     >
-      <InboxIcon className="mb-4 size-24 self-center" />
-
-      <hgroup className="mb-4 space-y-1 text-center text-balance">
-        <h2 className="text-3xl font-semibold md:text-2xl">Верификация</h2>
-        <p className="text-base text-muted-foreground md:text-sm">
-          <span className="block">
-            {sending || !otp
-              ? "Высылаем письмо с 6-значным кодом подтверждения на ваш почтовый ящик:"
-              : "Выслали письмо с 6-значным кодом подтверждения на ваш почтовый ящик:"}
-          </span>
-          <a
-            href={`mailto:${user.email}`}
-            className="hover text-accent-foreground transition-opacity hover:opacity-75 focus-visible:opacity-75 active:opacity-50"
-          >
-            {user.email}
-          </a>
-        </p>
-      </hgroup>
+      <Placeholder
+        before={<InboxIcon />}
+        title="Верификация"
+        description={
+          <>
+            <span className="block">
+              {sending || !otp
+                ? "Высылаем письмо с 6-значным кодом подтверждения на ваш почтовый ящик:"
+                : "Выслали письмо с 6-значным кодом подтверждения на ваш почтовый ящик:"}
+            </span>
+            <a
+              href={`mailto:${user.email}`}
+              className="hover text-accent-foreground transition-opacity hover:opacity-75 focus-visible:opacity-75 active:opacity-50"
+            >
+              {user.email}
+            </a>
+          </>
+        }
+        classNames={{ root: "grow-0 mb-4", description: "text-balance" }}
+      />
 
       <Form.Fieldset disabled={pending}>
         <Form.Field

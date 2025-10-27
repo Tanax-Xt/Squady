@@ -1,15 +1,16 @@
-from pydantic import BaseModel
+from pydantic import NonNegativeInt
 
-from src.api.schemas import AuditBaseModel
+from src.api.fields import EntityId
+from src.api.schemas import AuditBaseModel, BaseSchema
 from src.api.users.enums import UserRole
-from src.api.users.fields import UserAbout, UserEmail, UserId, UserPassword, UserUsername
+from src.api.users.fields import UserAbout, UserEmail, UserPassword, UserUsername
 from src.pagination import PaginationResponse
 
 
 class UserResponse(AuditBaseModel):
     """Represents the public response data for a user."""
 
-    id: UserId
+    id: EntityId
     username: UserUsername
     email: UserEmail
     role: UserRole | None
@@ -18,16 +19,22 @@ class UserResponse(AuditBaseModel):
     is_verified_agent: bool | None
 
 
-class UsersPaginationResponse(BaseModel):
+class UsersPaginationResponse(BaseSchema):
     """Represents the public response data for a list of users."""
 
     users: list[UserResponse]
     pagination: PaginationResponse
 
 
-class UserRegistrationRequest(BaseModel):
+class UserRegistrationRequest(BaseSchema):
     """Represents the user registration details."""
 
     username: UserUsername
     email: UserEmail
     password: UserPassword
+
+
+class UserStatsResponse(BaseSchema):
+    """Represents the user stats details."""
+
+    resumes: NonNegativeInt

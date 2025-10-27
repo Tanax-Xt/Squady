@@ -19,6 +19,11 @@ const firaCode = Fira_Code({
 
 export const metadata: Metadata = {
   applicationName: "Squady",
+  icons: {
+    icon: ["/icon.svg", "/favicon.ico"],
+    apple: "/apple-touch-icon.png",
+    shortcut: "/favicon.ico",
+  },
   title: {
     default: "Squady",
     template: "%s · Squady",
@@ -74,6 +79,7 @@ export default function AppLayout({ children }: React.PropsWithChildren) {
       <body>
         <ThemeProvider
           attribute="class"
+          storageKey="squady-theme"
           defaultTheme="system"
           disableTransitionOnChange
         >

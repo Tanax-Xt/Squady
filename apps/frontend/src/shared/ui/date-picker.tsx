@@ -1,10 +1,12 @@
 "use client";
 
+import { MaskitoOptions } from "@maskito/core";
 import {
   maskitoDateOptionsGenerator,
   MaskitoDateParams,
   maskitoParseDate,
   maskitoStringifyDate,
+  maskitoWithPlaceholder,
 } from "@maskito/kit";
 import { useMaskito } from "@maskito/react";
 import { CalendarIcon } from "lucide-react";
@@ -34,6 +36,8 @@ export interface DatePickerProps {
   startMonth?: Date;
   title?: string;
   description?: string;
+  placeholder?: string;
+  separator?: string;
   autoComplete?: React.HTMLInputAutoCompleteAttribute;
 }
 
@@ -49,6 +53,8 @@ const DatePicker: React.FunctionComponent<DatePickerProps> = ({
   startMonth,
   title,
   description,
+  placeholder = "dd/mm/yyyy",
+  separator = ".",
   ...otherProps
 }: DatePickerProps) => {
   const [open, setOpen] = useState(false);
@@ -56,24 +62,57 @@ const DatePicker: React.FunctionComponent<DatePickerProps> = ({
 
   const date = useMemo(() => (value ? new Date(value) : undefined), [value]);
 
+  const placeholderCharacters = useMemo(
+    () =>
+      placeholder
+        .split(separator)
+        .map((character) => character.at(0))
+        .filter((character) => character !== undefined),
+    [placeholder, separator],
+  );
+
   const isMobile = useIsMobile();
 
   const maskitoDateParams: MaskitoDateParams = {
     mode: "dd/mm/yyyy",
     min: startMonth,
     max: endMonth,
+    separator,
   };
-  const maskitoOptions = maskitoDateOptionsGenerator(maskitoDateParams);
+  const maskitoDateOptions = maskitoDateOptionsGenerator(maskitoDateParams);
+
+  const { plugins, ...placeholderOptions } =
+    maskitoWithPlaceholder(placeholder);
+
+  const maskitoOptions = {
+    ...maskitoDateOptions,
+    plugins: plugins.concat(maskitoDateOptions.plugins || []),
+    preprocessors: [
+      ...placeholderOptions.preprocessors,
+      ...maskitoDateOptions.preprocessors,
+    ],
+    postprocessors: [
+      ...maskitoDateOptions.postprocessors,
+      ...placeholderOptions.postprocessors,
+    ],
+  } satisfies Required<MaskitoOptions>;
+
   const maskitoInputRef = useMaskito({ options: maskitoOptions });
 
   const Root = isMobile ? Drawer : Popover;
 
   const handleInputOnChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      setInputValue(event.currentTarget.value);
-      const date = maskitoParseDate(event.target.value, maskitoDateParams);
+      const value = event.currentTarget.value;
 
-      if (date) {
+      setInputValue(value);
+
+      const date = maskitoParseDate(value, maskitoDateParams);
+
+      if (
+        date &&
+        !placeholderCharacters.some((character) => value.includes(character))
+      ) {
         onChange?.(date);
       }
     },
@@ -106,10 +145,12 @@ const DatePicker: React.FunctionComponent<DatePickerProps> = ({
           maskitoInputRef as React.RefCallback<HTMLInputElement>,
         ])}
         value={inputValue}
-        placeholder="дд.мм.гггг"
+        placeholder={placeholder}
         onBlur={onBlur}
         onChange={handleInputOnChange}
+        spellCheck={false}
         readOnly={readOnly}
+        inputMode="decimal"
         after={
           !readOnly && (
             <Root.Trigger asChild>

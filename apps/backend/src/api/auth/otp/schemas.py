@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from src.api.schemas import BaseSchema
 
 
-class OTPResponse(BaseModel):
+class OTPResponse(BaseSchema):
     """Represents a response containing One-Time Password (OTP) expiration datetime."""
 
     expires_at: datetime

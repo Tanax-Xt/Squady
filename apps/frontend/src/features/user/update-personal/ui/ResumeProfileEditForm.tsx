@@ -20,11 +20,9 @@ interface ResumeProfileEditFormProps
   extends UseResumeProfileEditFormProps,
     Omit<React.ComponentProps<"form">, "children"> {}
 
-const ResumeProfileEditForm = ({
-  defaultValues,
-  onSubmit,
-  ...otherProps
-}: ResumeProfileEditFormProps) => {
+const ResumeProfileEditForm: React.FunctionComponent<
+  ResumeProfileEditFormProps
+> = ({ defaultValues, onSubmit, ...otherProps }) => {
   const maxBirthDate = getMaxBirthDate();
   const minBirthDate = getMinBirthDate();
 
@@ -80,6 +78,7 @@ const ResumeProfileEditForm = ({
               {...field}
               title="Выберите дату"
               description="Установите дату своего рождения"
+              placeholder="дд.мм.гггг"
               disabled={{
                 before: minBirthDate,
                 after: maxBirthDate,
@@ -118,6 +117,8 @@ const ResumeProfileEditForm = ({
           render={({ field }) => (
             <Input
               {...field}
+              before={<span className="select-none md:text-sm">t.me/</span>}
+              className="pl-12.5 md:pl-11.5"
               placeholder="johndoe"
               autoComplete="username"
               spellCheck={false}

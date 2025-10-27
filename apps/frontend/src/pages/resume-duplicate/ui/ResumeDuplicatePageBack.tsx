@@ -1,0 +1,33 @@
+"use client";
+
+import { ArrowLeftIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
+import Button from "@/shared/ui/button";
+
+export const ResumeDuplicatePageBack: React.FunctionComponent<{
+  href: string;
+}> = ({ href }) => {
+  const [mounted, setMounted] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  return (
+    <Button
+      variant="ghost"
+      className="text-muted-foreground max-md:text-base max-md:[&_svg:not([class*='size-'])]:size-5"
+      onClick={() => router.push(href)}
+    >
+      <ArrowLeftIcon />
+      <span>Назад</span>
+    </Button>
+  );
+};
