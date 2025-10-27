@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import {
   getResume,
   getResumeCacheTag,
+  mapResumeFormValuesToResumeCreateRequest,
   mapResumeFormValuesToResumeUpdateRequest,
   ResumeFormValues,
 } from "@/entities/resume";
@@ -34,6 +35,8 @@ export const updateResume = async (
   }
 
   revalidateTag(getResumeCacheTag(resumeId));
+  revalidateTag(USER_CACHE_USERS_ME_RESUMES_TAG);
+  revalidateTag(USER_CACHE_USERS_ME_TAG);
   redirect(`/resume/${resumeId}`);
 };
 
@@ -58,6 +61,8 @@ export const toggleResumeIsPublic = async (resumeId: string) => {
     };
   }
 
+  revalidateTag(USER_CACHE_USERS_ME_RESUMES_TAG);
+  revalidateTag(USER_CACHE_USERS_ME_TAG);
   revalidateTag(getResumeCacheTag(resumeId));
 };
 
@@ -69,4 +74,21 @@ export const deleteResume = async (resumeId: string) => {
   revalidateTag(getResumeCacheTag(resumeId));
   revalidateTag(USER_CACHE_USERS_ME_RESUMES_TAG);
   revalidateTag(USER_CACHE_USERS_ME_TAG);
+};
+
+export const createResume = async (values: ResumeFormValues) => {
+  const { response, data, error } = await client.POST("/resumes", {
+    body: mapResumeFormValuesToResumeCreateRequest(values),
+  });
+
+  if (!response.ok || !data) {
+    return {
+      error,
+      status: response.status,
+    };
+  }
+
+  revalidateTag(USER_CACHE_USERS_ME_RESUMES_TAG);
+  revalidateTag(USER_CACHE_USERS_ME_TAG);
+  redirect(`/resume/${data.id}`);
 };

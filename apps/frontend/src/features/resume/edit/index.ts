@@ -1,4 +1,5 @@
 export {
+  createResume,
   deleteResume,
   toggleResumeIsPublic,
   updateResume,

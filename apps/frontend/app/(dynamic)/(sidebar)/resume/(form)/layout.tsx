@@ -1,11 +1,10 @@
-"use server";
-
 import { getCurrentUserVerifiedParticipantOrMentorWithPersonalData } from "@/entities/user";
 
 export default async function SidebarResumeFormLayout({
   children,
 }: React.PropsWithChildren) {
-  await getCurrentUserVerifiedParticipantOrMentorWithPersonalData();
+  const user =
+    await getCurrentUserVerifiedParticipantOrMentorWithPersonalData();
 
-  return children;
+  return user ? children : null;
 }

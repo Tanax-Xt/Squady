@@ -297,6 +297,57 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/resumes/parse/github": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Parse Resume From Github */
+    post: operations["parse_resume_from_github_resumes_parse_github_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/resumes/parse/pdf": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Parse Resume From Pdf */
+    post: operations["parse_resume_from_pdf_resumes_parse_pdf_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/resumes/parse/hh": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Parse Resume From Headhunter */
+    post: operations["parse_resume_from_headhunter_resumes_parse_hh_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -367,6 +418,14 @@ export interface components {
       client_id?: string | null;
       /** Client Secret */
       client_secret?: string | null;
+    };
+    /** Body_parse_resume_from_pdf_resumes_parse_pdf_post */
+    Body_parse_resume_from_pdf_resumes_parse_pdf_post: {
+      /**
+       * File
+       * Format: binary
+       */
+      file: string;
     };
     /**
      * CurrentUserPasswordUpdateRequest
@@ -610,6 +669,48 @@ export interface components {
        */
       end_year: number;
     };
+    /** ResumeParseFromGithubRequest */
+    ResumeParseFromGithubRequest: {
+      /**
+       * GitHub link
+       * @description Link to GitHub profile
+       */
+      url: string;
+    };
+    /** ResumeParseFromHeadHunterRequest */
+    ResumeParseFromHeadHunterRequest: {
+      /**
+       * HeadHunter link
+       * @description Link to headhunter resume. The visibility of the resume should be "available by reference"
+       */
+      url: string;
+    };
+    /** ResumeParsedResponse */
+    ResumeParsedResponse: {
+      /** Role */
+      role: string | null;
+      /** Skills */
+      skills: string[] | null;
+      education: components["schemas"]["ResumeEducation"] | null;
+      /** Experience */
+      experience: components["schemas"]["ExperienceItem"][] | null;
+      /** Achievements */
+      achievements: components["schemas"]["AchievementItem"][] | null;
+      /** Additional Education */
+      additional_education:
+        | components["schemas"]["AdditionalEducationItem"][]
+        | null;
+      /**
+       * Is Public
+       * @default true
+       */
+      is_public: boolean;
+      /**
+       * Is Parsed
+       * @default true
+       */
+      is_parsed: boolean;
+    };
     /** ResumeResponse */
     ResumeResponse: {
       /**
@@ -806,6 +907,8 @@ export type AdditionalEducationItem =
   components["schemas"]["AdditionalEducationItem"];
 export type BodyLoginAuthLoginPost =
   components["schemas"]["Body_login_auth_login_post"];
+export type BodyParseResumeFromPdfResumesParsePdfPost =
+  components["schemas"]["Body_parse_resume_from_pdf_resumes_parse_pdf_post"];
 export type CurrentUserPasswordUpdateRequest =
   components["schemas"]["CurrentUserPasswordUpdateRequest"];
 export type CurrentUserPersonalDataRequest =
@@ -828,6 +931,12 @@ export type OtpResponse = components["schemas"]["OTPResponse"];
 export type PaginationResponse = components["schemas"]["PaginationResponse"];
 export type ResumeCreateRequest = components["schemas"]["ResumeCreateRequest"];
 export type ResumeEducation = components["schemas"]["ResumeEducation"];
+export type ResumeParseFromGithubRequest =
+  components["schemas"]["ResumeParseFromGithubRequest"];
+export type ResumeParseFromHeadHunterRequest =
+  components["schemas"]["ResumeParseFromHeadHunterRequest"];
+export type ResumeParsedResponse =
+  components["schemas"]["ResumeParsedResponse"];
 export type ResumeResponse = components["schemas"]["ResumeResponse"];
 export type ResumeUpdateRequest = components["schemas"]["ResumeUpdateRequest"];
 export type ResumeUserPersonalDataResponse =
@@ -2373,6 +2482,182 @@ export interface operations {
         content?: never;
       };
       /** @description Resume not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  parse_resume_from_github_resumes_parse_github_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ResumeParseFromGithubRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ResumeParsedResponse"];
+        };
+      };
+      /** @description Failed to parse resume from GitHub */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Failed to verify credentials */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description User not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  parse_resume_from_pdf_resumes_parse_pdf_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "multipart/form-data": components["schemas"]["Body_parse_resume_from_pdf_resumes_parse_pdf_post"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ResumeParsedResponse"];
+        };
+      };
+      /** @description Failed to parse resume */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Failed to verify credentials */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description User not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description File size exceeded maximum resume size */
+      413: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description File type must be application/pdf */
+      415: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  parse_resume_from_headhunter_resumes_parse_hh_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ResumeParseFromHeadHunterRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ResumeParsedResponse"];
+        };
+      };
+      /** @description Failed to parse resume */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Failed to verify credentials */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description User not found */
       404: {
         headers: {
           [name: string]: unknown;

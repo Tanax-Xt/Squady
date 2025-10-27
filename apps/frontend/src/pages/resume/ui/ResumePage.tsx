@@ -80,7 +80,7 @@ const ResumePage: React.FunctionComponent = async () => {
               </EmptyHeader>
               <EmptyContent>
                 <Button size="sm" asChild>
-                  <Link href="/resume/new">
+                  <Link href="/resume/create">
                     <PlusIcon />
                     Создать первое резюме
                   </Link>

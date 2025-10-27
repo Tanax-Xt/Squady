@@ -8,7 +8,7 @@ export const mapExperienceItemToResumeExperience = (
 ): ResumeExperience => {
   return {
     title: experienceItem.title,
-    description: experienceItem.description,
+    description: experienceItem.description || experienceItem.title,
     startYear: parseInt(experienceItem.start_date.split("-")[0]), // Extract year
     startMonth: MONTHS[Number(experienceItem.start_date.split("-")[1]) - 1],
     endYear: experienceItem.end_date

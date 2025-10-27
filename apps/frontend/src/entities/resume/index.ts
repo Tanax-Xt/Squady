@@ -10,6 +10,7 @@ export { mapAdditionalEducationItemToResumeAdditionalEducation } from "./lib/map
 export { mapExperienceItemToResumeExperience } from "./lib/mapExperienceItemToResumeExperience";
 export { mapResumeFormValuesToResumeCreateRequest } from "./lib/mapResumeFormValuesToResumeCreateRequest";
 export { mapResumeFormValuesToResumeUpdateRequest } from "./lib/mapResumeFormValuesToResumeUpdateRequest";
+export { mapResumeParsedResponseToResumeFormValues } from "./lib/mapResumeParsedResponseToResumeFormValues";
 export { mapResumeResponseToResumeFormValues } from "./lib/mapResumeResponseToResumeFormValues";
 export {
   ResumeEducationFormSchema,
@@ -45,6 +46,8 @@ export {
   type ResumeExperience,
 } from "./model/schema/experience";
 export { ResumeFormSchema, type ResumeFormValues } from "./model/schema/form";
+export { ResumeParseGithubUrlSchema } from "./model/schema/github";
+export { ResumeParseHeadHunterUrlSchema } from "./model/schema/hh";
 export { ResumeSkillSchema } from "./model/schema/skill";
 export { default as ResumeAchievementCell } from "./ui/ResumeAchievementCell";
 export { default as ResumeAdditionalEducationCell } from "./ui/ResumeAdditionalEducationCell";

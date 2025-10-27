@@ -41,7 +41,7 @@ const PARTICIPANT_MENTOR_STEPS: UserProfileProgressStep[] = [
     completed: (user) => hasAnyPersonalData(user),
   },
   {
-    href: "/resume/new",
+    href: "/resume/create",
     label: "Создать первое резюме",
     completed: (user) => user.stats.resumes > 0,
   },

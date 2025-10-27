@@ -5,10 +5,11 @@ import Bar from "@/shared/ui/bar";
 import Button from "@/shared/ui/button";
 import Page from "@/shared/ui/page";
 
-export interface ResumeNewPageLayoutProps extends React.PropsWithChildren {}
+export interface ResumeCreateNewPageLayoutProps
+  extends React.PropsWithChildren {}
 
-const ResumeNewPageLayout: React.FunctionComponent<
-  ResumeNewPageLayoutProps
+const ResumeCreateNewPageLayout: React.FunctionComponent<
+  ResumeCreateNewPageLayoutProps
 > = ({ children }) => {
   return (
     <Page>
@@ -18,7 +19,7 @@ const ResumeNewPageLayout: React.FunctionComponent<
           variant="ghost"
           className="text-muted-foreground max-md:text-base max-md:[&_svg:not([class*='size-'])]:size-5"
         >
-          <Link href="/resume">
+          <Link href="/resume/create">
             <ArrowLeftIcon />
             <span>Назад</span>
           </Link>
@@ -32,4 +33,4 @@ const ResumeNewPageLayout: React.FunctionComponent<
   );
 };
 
-export default ResumeNewPageLayout;
+export default ResumeCreateNewPageLayout;

@@ -57,6 +57,9 @@ ARG NEXT_PUBLIC_SQUADY_API_RESUME_ADDITIONAL_EDUCATIONS_MIN_COUNT
 ARG NEXT_PUBLIC_SQUADY_API_RESUME_ADDITIONAL_EDUCATIONS_MAX_COUNT
 ARG NEXT_PUBLIC_SQUADY_API_RESUME_ITEM_DATE_MAX_YEARS_AGO
 ARG NEXT_PUBLIC_SQUADY_API_RESUME_ITEM_DATE_MAX_YEARS_FUTURE
+ARG NEXT_PUBLIC_SQUADY_API_RESUME_GITHUB_LINK_PATTERN
+ARG NEXT_PUBLIC_SQUADY_API_RESUME_HH_LINK_PATTERN
+ARG NEXT_PUBLIC_SQUADY_API_RESUME_MAX_PDF_SIZE
 ARG NEXT_PUBLIC_SQUADY_OTP_LENGTH
 ARG NEXT_PUBLIC_SQUADY_OTP_RESEND_SECONDS
 
@@ -73,7 +76,8 @@ WORKDIR /app
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# COPY --from=builder /app/public ./public
+# Copy the public folder from the builder stage
+COPY --from=builder /app/public ./public
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing

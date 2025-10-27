@@ -31,7 +31,7 @@ const ResumePageLayout: React.FunctionComponent<ResumePageLayoutProps> = ({
             variant="ghost"
             className="text-muted-foreground max-md:text-base max-md:[&_svg:not([class*='size-'])]:size-5"
           >
-            <Link href="/resume/new">Создать</Link>
+            <Link href="/resume/create">Создать</Link>
           </Button>
         </Bar.End>
       </Bar>

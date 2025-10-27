@@ -3,11 +3,10 @@
 import { startTransition, useActionState, useEffect } from "react";
 
 import { ResumeForm, ResumeFormValues } from "@/entities/resume";
+import { createResume } from "@/features/resume/edit";
 import { toast } from "@/shared/ui/sonner";
 
-import { createResume } from "../api/actions";
-
-const ResumeNewPage: React.FunctionComponent = () => {
+const ResumeCreateNewPage: React.FunctionComponent = () => {
   const [response, submit, loading] = useActionState<
     ReturnType<typeof createResume>,
     ResumeFormValues
@@ -23,11 +22,10 @@ const ResumeNewPage: React.FunctionComponent = () => {
 
   return (
     <ResumeForm
-      persist
       loading={loading}
       onSubmit={(values) => startTransition(() => submit(values))}
     />
   );
 };
 
-export default ResumeNewPage;
+export default ResumeCreateNewPage;

@@ -7,7 +7,6 @@ import {
   ResumeAdditionalEducationSchema,
   ResumeEducationFormSchema,
   ResumeExperienceSchema,
-  ResumeSkillSchema,
 } from "@/entities/resume";
 import { env } from "@/shared/config/client";
 
@@ -15,7 +14,17 @@ export const ResumeFormSchema = z.object({
   role: z.string(),
   education: ResumeEducationFormSchema,
   skills: z
-    .array(z.object({ name: ResumeSkillSchema }))
+    .array(
+      z.object({
+        name: z
+          .string()
+          .nonempty("Введите навык полностью.")
+          .max(env.NEXT_PUBLIC_SQUADY_API_RESUME_SKILL_MAX_LENGTH, {
+            message: `Максимальная длина навыка: ${env.NEXT_PUBLIC_SQUADY_API_RESUME_SKILL_MAX_LENGTH} символов.`,
+          })
+          .trim(),
+      }),
+    )
     .min(env.NEXT_PUBLIC_SQUADY_API_RESUME_SKILLS_MIN_COUNT, {
       message: `В резюме должен быть минимум ${env.NEXT_PUBLIC_SQUADY_API_RESUME_SKILLS_MIN_COUNT} навык.`,
     })

@@ -173,11 +173,11 @@ class ResumeParseService:
         try:
             resume = ResumeParsedResponse(
                 role=role,
-                skills=skills,
+                skills=skills[: settings.api.resume_skills_max_count],
                 education=None,
-                experience=experiences,
+                experience=experiences[: settings.api.resume_experiences_max_count],
                 achievements=None,
-                additional_education=additional_education,
+                additional_education=additional_education[: settings.api.resume_additional_educations_max_count],
             )
         except Exception:
             return None
@@ -219,11 +219,11 @@ class ResumeParseService:
 
         resume = ResumeParsedResponse(
             role=_safe(ResumeItemTitle, raw_resume.get("role")),
-            skills=skills,
+            skills=skills[: settings.api.resume_skills_max_count],
             education=None,
-            experience=experience,
-            achievements=achievements,
-            additional_education=additional_education,
+            experience=experience[: settings.api.resume_experiences_max_count],
+            achievements=achievements[: settings.api.resume_achievements_max_count],
+            additional_education=additional_education[: settings.api.resume_additional_educations_max_count],
         )
 
         return resume
