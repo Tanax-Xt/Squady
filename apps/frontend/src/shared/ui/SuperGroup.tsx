@@ -16,11 +16,11 @@ import Cell from "@/shared/ui/Cell";
 import Collapse from "@/shared/ui/Collapse";
 import Group from "@/shared/ui/Group";
 import ActionDialog from "@/shared/ui/action-dialog";
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 import Dialog from "@/shared/ui/dialog";
 import Drawer from "@/shared/ui/drawer";
 import Form from "@/shared/ui/form";
-import Separator from "@/shared/ui/separator";
+import { Separator } from "@/shared/ui/separator";
 
 export type SuperGroupProps<
   TFieldValues extends object,
@@ -219,7 +219,6 @@ const SuperGroup = <
               appendButtonRef.current?.focus();
             }
           }}
-          showCloseButton
         >
           <Modal.Header>
             <Modal.Title>
@@ -249,7 +248,7 @@ const SuperGroup = <
             {updatingIndex !== null && (
               <Button
                 ref={removeButtonRef}
-                variant="outline-destructive"
+                variant="destructive"
                 onClick={() => setRemoving(true)}
               >
                 {removeButtonChildren}

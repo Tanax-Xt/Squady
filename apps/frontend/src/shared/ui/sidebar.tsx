@@ -8,10 +8,10 @@ import * as React from "react";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import { cn } from "@/shared/lib/utils";
 import IconButton from "@/shared/ui/IconButton";
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 import Drawer from "@/shared/ui/drawer";
-import Input from "@/shared/ui/input";
-import Separator from "@/shared/ui/separator";
+import { Input } from "@/shared/ui/input";
+import { Separator } from "@/shared/ui/separator";
 import Skeleton from "@/shared/ui/skeleton";
 import Tooltip from "@/shared/ui/tooltip";
 
@@ -183,7 +183,6 @@ function SidebarRoot({
           data-slot="sidebar"
           data-mobile="true"
           className="top-2 bottom-2 left-2 bg-sidebar text-sidebar-foreground"
-          showCloseButton={false}
         >
           <Drawer.Header className="sr-only">
             <Drawer.Title>Боковое меню</Drawer.Title>

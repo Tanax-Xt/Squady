@@ -60,6 +60,8 @@ ARG NEXT_PUBLIC_SQUADY_API_RESUME_ITEM_DATE_MAX_YEARS_FUTURE
 ARG NEXT_PUBLIC_SQUADY_API_RESUME_GITHUB_LINK_PATTERN
 ARG NEXT_PUBLIC_SQUADY_API_RESUME_HH_LINK_PATTERN
 ARG NEXT_PUBLIC_SQUADY_API_RESUME_MAX_PDF_SIZE
+ARG NEXT_PUBLIC_SQUADY_API_TEAM_TITLE_MAX_LENGTH
+ARG NEXT_PUBLIC_SQUADY_API_TEAM_TEXT_FIELD_MAX_LENGTH
 ARG NEXT_PUBLIC_SQUADY_OTP_LENGTH
 ARG NEXT_PUBLIC_SQUADY_OTP_RESEND_SECONDS
 
@@ -83,6 +85,8 @@ COPY --from=builder /app/public ./public
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+COPY --from=builder /app/next.config.ts ./next.config.ts
 
 USER nextjs
 

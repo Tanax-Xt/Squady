@@ -18,7 +18,7 @@ import { tv, type ClassValue, type VariantProps } from "tailwind-variants";
 
 import { cn } from "@/shared/lib/utils";
 import Collapse from "@/shared/ui/Collapse";
-import Label, { label } from "@/shared/ui/label";
+import { Label } from "@/shared/ui/label";
 
 const FormRoot = <
   TFieldValues extends FieldValues,
@@ -205,8 +205,7 @@ const FormFieldset: React.FunctionComponent<
 
 export const legend = tv(
   {
-    extend: label,
-    base: "mb-2 transition-colors data-[error=true]:text-destructive",
+    base: "mb-2 flex items-center gap-2 text-sm leading-none font-medium transition-colors select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 data-[error=true]:text-destructive",
     variants: {
       asterisk: {
         true: "after:text-destructive after:content-['*']",
@@ -246,6 +245,7 @@ function FormResponse({
 
 export { FormField, FormResponse, FormRoot };
 
+/** @deprecated use `<Field />` instead */
 const Form = Object.assign(FormRoot, {
   Fieldset: FormFieldset,
   Legend: FormLegend,

@@ -40,6 +40,12 @@ class ResumeService:
 
         return ResumesPaginationResponse(resumes=resumes_schema, pagination=pagination)
 
+    async def get_resumes_by_ids(self, ids: list[str | UUID]) -> Sequence[Resume]:
+        return await self.repository.get_by_ids(ids)
+
+    async def get_resume_by_user_and_team_ids(self, user_id: str | UUID, team_id: str | UUID) -> Resume | None:
+        return await self.repository.get_by_user_and_team_ids(user_id, team_id)
+
     async def create_resume(self, user_id: str | UUID, args: ResumeCreateRequest) -> Resume:
         seen = set()
         unique_skills = [s for s in args.skills if (key := s.lower()) not in seen and not seen.add(key)]  # type: ignore

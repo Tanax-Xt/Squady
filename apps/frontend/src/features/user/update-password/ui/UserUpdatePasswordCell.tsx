@@ -5,8 +5,9 @@ import { useState } from "react";
 
 import { UserPasswordCell } from "@/entities/user";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
+import { cn } from "@/shared/lib/utils";
 import IconButton from "@/shared/ui/IconButton";
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 import Dialog from "@/shared/ui/dialog";
 import Drawer from "@/shared/ui/drawer";
 
@@ -49,8 +50,7 @@ const UserUpdatePasswordCell: React.FunctionComponent<
               <Root.Close asChild>
                 <Button
                   variant="outline"
-                  stretched
-                  className={isMobile ? undefined : "-mt-4"}
+                  className={cn(isMobile ? undefined : "-mt-4", "w-full")}
                 >
                   Закрыть
                 </Button>

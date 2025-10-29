@@ -18,7 +18,7 @@ def validate_date_iso8601(iso8601_date: str) -> str:
     ago = today.replace(year=today.year - settings.api.resume_item_date_max_years_ago)
     future = today.replace(year=today.year + settings.api.resume_item_date_max_years_future)
 
-    user_date = date.fromisoformat(f"{iso8601_date}-{str(today.day).zfill(2)}")
+    user_date = date.fromisoformat(f"{iso8601_date}-28")
 
     if not (ago <= user_date <= future):
         raise ValueError(

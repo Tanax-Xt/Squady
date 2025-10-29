@@ -5,7 +5,7 @@ import * as React from "react";
 
 import { cn } from "@/shared/lib/utils";
 
-function SeparatorRoot({
+function Separator({
   className,
   orientation = "horizontal",
   decorative = true,
@@ -17,7 +17,7 @@ function SeparatorRoot({
       decorative={decorative}
       orientation={orientation}
       className={cn(
-        "shrink-0 border-border data-[orientation=horizontal]:w-full data-[orientation=horizontal]:border-t data-[orientation=vertical]:h-full data-[orientation=vertical]:border-r",
+        "shrink-0 bg-border data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px",
         className,
       )}
       {...props}
@@ -25,8 +25,4 @@ function SeparatorRoot({
   );
 }
 
-export { SeparatorRoot };
-
-const Separator = SeparatorRoot;
-
-export default Separator;
+export { Separator };

@@ -1,10 +1,17 @@
 import { MapPinIcon } from "lucide-react";
 
-import Cell from "@/shared/ui/Cell";
 import CopyButton from "@/shared/ui/CopyButton";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from "@/shared/ui/item";
 
 interface UserCityCellProps
-  extends Omit<React.ComponentProps<typeof Cell>, "value"> {
+  extends Omit<React.ComponentProps<typeof Item>, "value"> {
   value: string;
 }
 
@@ -13,13 +20,18 @@ const UserCityCell: React.FunctionComponent<UserCityCellProps> = ({
   ...otherProps
 }) => {
   return (
-    <Cell
-      before={<MapPinIcon />}
-      label="Город"
-      description={value}
-      after={<CopyButton side="left" value={value} />}
-      {...otherProps}
-    />
+    <Item size="sm" {...otherProps}>
+      <ItemMedia className="my-auto">
+        <MapPinIcon />
+      </ItemMedia>
+      <ItemContent>
+        <ItemTitle>Город</ItemTitle>
+        <ItemDescription>{value}</ItemDescription>
+      </ItemContent>
+      <ItemActions>
+        <CopyButton side="left" value={value} />
+      </ItemActions>
+    </Item>
   );
 };
 

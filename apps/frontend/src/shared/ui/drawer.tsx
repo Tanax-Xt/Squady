@@ -1,6 +1,5 @@
 "use client";
 
-import { XIcon } from "lucide-react";
 import * as React from "react";
 import { Drawer as DrawerPrimitive } from "vaul";
 
@@ -52,11 +51,9 @@ function DrawerContent({
   className,
   children,
   fullscreen = false,
-  showCloseButton = true,
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Content> & {
   fullscreen?: boolean;
-  showCloseButton?: boolean;
 }) {
   return (
     <DrawerPortal data-slot="drawer-portal">
@@ -77,11 +74,6 @@ function DrawerContent({
         <div className="flex grow flex-col overflow-auto">
           <div className="mx-auto mt-1.25 mb-2 hidden h-1.25 w-9 shrink-0 rounded-full bg-accent-foreground/25 group-data-[vaul-drawer-direction=bottom]/drawer-content:block" />
           {children}
-          {showCloseButton && (
-            <DrawerPrimitive.Close className="absolute top-4 right-4 flex size-7 cursor-pointer items-center justify-center rounded-full bg-accent-foreground/10 text-muted-foreground transition outline-none hover:bg-card-foreground/15 focus-visible:ring-[3px] focus-visible:ring-ring/50 active:scale-95 active:bg-card-foreground/15 active:duration-0">
-              <XIcon className="size-5" strokeWidth={2.5} />
-            </DrawerPrimitive.Close>
-          )}
         </div>
       </DrawerPrimitive.Content>
     </DrawerPortal>

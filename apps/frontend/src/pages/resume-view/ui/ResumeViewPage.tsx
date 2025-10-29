@@ -16,18 +16,27 @@ import {
   ResumePrivateIcon,
 } from "@/entities/resume";
 import { ResumeCardUserActions } from "@/features/resume/edit";
-import Cell from "@/shared/ui/Cell";
 import Group from "@/shared/ui/Group";
 import Badge from "@/shared/ui/badge";
 import Bar from "@/shared/ui/bar";
-import Button from "@/shared/ui/button";
-import Input from "@/shared/ui/input";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from "@/shared/ui/item";
 import Page from "@/shared/ui/page";
+import { UserProfilePersonal } from "@/widgets/profile";
 
 const ResumeViewPage: React.FunctionComponent<{
   params: Promise<{ id?: string | undefined }>;
-}> = async ({ params }) => {
+  searchParams: Promise<{ back?: string | undefined }>;
+}> = async ({ params, searchParams }) => {
   const resumeId = (await params).id;
+  const back = (await searchParams).back;
 
   if (!resumeId) {
     return notFound();
@@ -47,7 +56,7 @@ const ResumeViewPage: React.FunctionComponent<{
           variant="ghost"
           className="text-muted-foreground max-md:text-base max-md:[&_svg:not([class*='size-'])]:size-5"
         >
-          <Link href="/resume">
+          <Link href={back ?? "/resumes"}>
             <ArrowLeftIcon />
             <span>Назад</span>
           </Link>
@@ -59,11 +68,17 @@ const ResumeViewPage: React.FunctionComponent<{
         </Bar.Center>
 
         <Bar.End>
-          <ResumeCardUserActions resume={resume} variant="ghost" />
+          <ResumeCardUserActions resume={resume} />
         </Bar.End>
       </Bar>
 
-      <Page.Content size="xl" className="gap-6">
+      <Page.Content size="3xl" className="gap-6">
+        <section>
+          <p className="mb-2 flex items-center gap-1 text-sm leading-none font-medium select-none">
+            Персональные данные
+          </p>
+          <UserProfilePersonal user={resume.personal_data} />
+        </section>
         <section>
           <p className="mb-2 flex items-center gap-1 text-sm leading-none font-medium select-none">
             Роль
@@ -74,16 +89,19 @@ const ResumeViewPage: React.FunctionComponent<{
           <p className="mb-2 flex items-center gap-1 text-sm leading-none font-medium select-none">
             Учебное заведение
           </p>
-          <Group>
-            <Cell
-              size="sm"
-              color="default"
-              multiline
-              before={<GraduationCapIcon className="!mt-0" />}
-              label={`${resume.education.title} – ${resume.education.end_year}`}
-              description={getEducationTypeDisplayName(resume.education.type)}
-            />
-          </Group>
+          <Item size="sm" variant="muted" className="border border-border">
+            <ItemMedia className="my-auto">
+              <GraduationCapIcon />
+            </ItemMedia>
+            <ItemContent>
+              <ItemTitle>
+                {resume.education.title} – {resume.education.end_year}
+              </ItemTitle>
+              <ItemDescription>
+                {getEducationTypeDisplayName(resume.education.type)}
+              </ItemDescription>
+            </ItemContent>
+          </Item>
         </section>
         <section>
           <p className="mb-2 flex items-center gap-1 text-sm leading-none font-medium select-none">
@@ -93,9 +111,9 @@ const ResumeViewPage: React.FunctionComponent<{
             </span>
           </p>
           <div className="flex flex-wrap gap-1">
-            {resume.skills.map((skill) => (
+            {resume.skills.map((skill, index) => (
               <Badge
-                key={skill}
+                key={`${index}-${skill}`}
                 size="sm"
                 shape="circle"
                 variant="card"
@@ -118,9 +136,9 @@ const ResumeViewPage: React.FunctionComponent<{
               {resume.experience
                 .map(mapExperienceItemToResumeExperience)
                 .sort(compareExperiences)
-                .map((experience) => (
+                .map((experience, index) => (
                   <ResumeExperienceCell
-                    key={experience.title}
+                    key={`${index}-${experience.title}`}
                     size="sm"
                     experience={experience}
                   />
@@ -133,15 +151,15 @@ const ResumeViewPage: React.FunctionComponent<{
             <p className="mb-2 flex items-center gap-1 text-sm leading-none font-medium select-none">
               <span>Достижения</span>
               <span className="text-muted-foreground tabular-nums">
-                ({resume.skills.length})
+                ({resume.achievements.length})
               </span>
             </p>
             <Group>
               {resume.achievements
                 .sort(compareAchievements)
-                .map((achievement) => (
+                .map((achievement, index) => (
                   <ResumeAchievementCell
-                    key={achievement.title}
+                    key={`${index}-${achievement.title}`}
                     as="button"
                     type="button"
                     size="sm"
@@ -164,9 +182,9 @@ const ResumeViewPage: React.FunctionComponent<{
                 {resume.additional_education
                   .map(mapAdditionalEducationItemToResumeAdditionalEducation)
                   .sort(compareAdditionalEducation)
-                  .map((additionalEducation) => (
+                  .map((additionalEducation, index) => (
                     <ResumeAdditionalEducationCell
-                      key={additionalEducation.title}
+                      key={`${index}-${additionalEducation.title}`}
                       size="sm"
                       additionalEducation={additionalEducation}
                     />

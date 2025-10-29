@@ -8,7 +8,7 @@ import { SubmitHandler, useFieldArray, useFormContext } from "react-hook-form";
 import { ResumeSkillFormModal, ResumeSkillFormValues } from "@/entities/resume";
 import Collapse from "@/shared/ui/Collapse";
 import Badge from "@/shared/ui/badge";
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 import Form from "@/shared/ui/form";
 import { toast } from "@/shared/ui/sonner";
 
@@ -78,15 +78,14 @@ const ResumeFormSkillsFieldset: React.FunctionComponent<
                   size="sm"
                   shape="circle"
                   variant="card"
-                  className="!font-normal"
+                  className="gap-1 pr-0.5 !font-normal"
                 >
                   <span>{skill.name}</span>
                   <Button
                     type="button"
                     size="icon-sm"
-                    rounded="full"
                     variant="ghost"
-                    className="-my-1 ms-0.5 -me-2 text-muted-foreground"
+                    className="size-5.5 rounded-full text-muted-foreground"
                     onClick={() => array.remove(index)}
                     aria-label={`Удалить навык "${skill.name}"`}
                   >

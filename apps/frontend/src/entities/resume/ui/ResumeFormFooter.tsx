@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 
 import { cn } from "@/shared/lib/utils";
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 import Spinner from "@/shared/ui/spinner";
 
 import { ResumeFormValues } from "../model/schema/form";
@@ -32,7 +32,7 @@ const ResumeFormFooter: React.FunctionComponent<ResumeFormFooterProps> = ({
       )}
       {...otherProps}
     >
-      <Button type="submit" disabled={disabled} loading={loading} stretched>
+      <Button type="submit" disabled={disabled || loading} className="w-full">
         {loading && <Spinner />}
         Сохранить
       </Button>

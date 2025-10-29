@@ -13,7 +13,7 @@ import {
 } from "@radix-ui/react-alert-dialog";
 import { tv } from "tailwind-variants";
 
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 
 export const AlertDialogRoot = Root;
 

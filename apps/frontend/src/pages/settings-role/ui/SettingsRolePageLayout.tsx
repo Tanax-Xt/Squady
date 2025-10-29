@@ -2,7 +2,7 @@ import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 
 import Bar from "@/shared/ui/bar";
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 import Page from "@/shared/ui/page";
 
 export interface SettingsRolePageLayoutProps extends React.PropsWithChildren {}

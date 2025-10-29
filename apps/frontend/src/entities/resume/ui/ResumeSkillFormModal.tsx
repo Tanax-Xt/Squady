@@ -24,7 +24,7 @@ const ResumeSkillFormModal: React.FunctionComponent<
   return (
     <Root open={open} onOpenChange={setOpen} autoFocus={isMobile}>
       <Root.Trigger asChild>{trigger}</Root.Trigger>
-      <Root.Content showCloseButton>
+      <Root.Content>
         <Root.Header>
           <Root.Title>Добавление навыка</Root.Title>
           <Root.Description>

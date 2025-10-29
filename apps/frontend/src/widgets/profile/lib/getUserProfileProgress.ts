@@ -36,12 +36,12 @@ const AGENT_STEPS: UserProfileProgressStep[] = [
 const PARTICIPANT_MENTOR_STEPS: UserProfileProgressStep[] = [
   ...SHARED_STEPS,
   {
-    href: "/resume/profile/edit",
+    href: "/resumes/profile/edit",
     label: "Заполнить личные данные",
     completed: (user) => hasAnyPersonalData(user),
   },
   {
-    href: "/resume/create",
+    href: "/resumes/create",
     label: "Создать первое резюме",
     completed: (user) => user.stats.resumes > 0,
   },

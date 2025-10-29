@@ -12,7 +12,7 @@ import { Month } from "@/shared/lib/month";
 import MonthRangeInput from "@/shared/ui/MonthRangeInput";
 import SuperGroup from "@/shared/ui/SuperGroup";
 import Form from "@/shared/ui/form";
-import Input from "@/shared/ui/input";
+import { Input } from "@/shared/ui/input";
 
 import { ResumeFormValues } from "../../model/schema/form";
 

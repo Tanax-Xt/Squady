@@ -16,7 +16,7 @@ export interface GetCurrentUserVerifiedParticipantOrMentorWithPersonalDataOption
 
 export const getCurrentUserVerifiedParticipantOrMentorWithPersonalData = cache(
   async ({
-    forbiddenRedirectUrl = "/resume/profile/edit",
+    forbiddenRedirectUrl = "/resumes/profile/edit",
     ...options
   }: GetCurrentUserVerifiedParticipantOrMentorWithPersonalDataOptions = {}) => {
     const user = await getCurrentUserVerifiedParticipantOrMentor(options);

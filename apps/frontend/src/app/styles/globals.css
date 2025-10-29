@@ -47,19 +47,12 @@
 }
 
 :root {
-  --radius: 0.625rem;
-
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
-
+  --radius: 0.75rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
-  --card: oklch(0.985 0 0);
+  --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(0.985 0 0);
+  --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
   --primary: var(--color-blue-600);
   --primary-foreground: var(--color-blue-50);
@@ -67,13 +60,18 @@
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.95 0 0);
+  --accent: oklch(0.94 0 0);
   --accent-foreground: oklch(0.205 0 0);
-  --success: oklch(0.51 0.1 166);
   --destructive: oklch(0.577 0.245 27.325);
+  --success: oklch(0.51 0.1 166);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: var(--color-blue-500);
+  --chart-1: var(--color-blue-300);
+  --chart-2: var(--color-blue-500);
+  --chart-3: var(--color-blue-600);
+  --chart-4: var(--color-blue-700);
+  --chart-5: var(--color-blue-800);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: var(--color-blue-600);
@@ -81,7 +79,7 @@
   --sidebar-accent: oklch(0.95 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: var(--ring);
+  --sidebar-ring: var(--color-blue-500);
 }
 
 .dark {
@@ -89,31 +87,34 @@
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
+  --popover: oklch(0.269 0 0);
   --popover-foreground: oklch(0.985 0 0);
   --primary: var(--color-blue-500);
   --primary-foreground: var(--color-blue-50);
   --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.922 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.3 0 0);
+  --accent: oklch(0.371 0 0);
   --accent-foreground: oklch(0.985 0 0);
-  --success: oklch(0.7 0.15 162);
   --destructive: oklch(0.704 0.191 22.216);
+  --success: oklch(0.7 0.15 162);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: var(--color-blue-400);
+  --ring: var(--color-blue-500);
+  --chart-1: var(--color-blue-300);
+  --chart-2: var(--color-blue-500);
+  --chart-3: var(--color-blue-600);
+  --chart-4: var(--color-blue-700);
+  --chart-5: var(--color-blue-800);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: var(--color-blue-500);
   --sidebar-primary-foreground: var(--color-blue-50);
-  --sidebar-accent: oklch(0.3 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: var(--ring);
-  --selection: oklch(0.922 0 0);
-  --selection-foreground: oklch(0.205 0 0);
+  --sidebar-ring: var(--color-blue-500);
 }
 
 @layer base {
@@ -126,11 +127,14 @@
   }
 
   html {
-    font-synthesis-weight: none;
-    text-rendering: optimizeLegibility;
-    touch-action: manipulation;
-    scrollbar-color: var(--color-muted-foreground) transparent;
+    cursor: default;
+    caret-color: var(--primary);
     accent-color: var(--primary);
+    scrollbar-color: var(--color-muted-foreground) transparent;
+    touch-action: manipulation;
+    scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
+    font-synthesis-weight: none;
   }
 
   body {

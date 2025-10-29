@@ -2,9 +2,9 @@
 
 import { useMemo } from "react";
 
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 import Form from "@/shared/ui/form";
-import Input from "@/shared/ui/input";
+import { Input } from "@/shared/ui/input";
 
 import { useRandomSkillNameInterval } from "../lib/useRandomSkillNameInterval";
 import {

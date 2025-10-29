@@ -12,7 +12,7 @@ import { UserUpdatePasswordCell } from "@/features/user/update-password";
 import { UserUpdateRoleCell } from "@/features/user/update-role";
 import { UserUpdateUsernameCell } from "@/features/user/update-username";
 import Group from "@/shared/ui/Group";
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 import { UserProfileCard } from "@/widgets/profile";
 
 const SettingsPage: React.FunctionComponent = async () => {

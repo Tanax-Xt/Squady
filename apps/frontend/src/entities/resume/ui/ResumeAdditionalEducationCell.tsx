@@ -32,7 +32,7 @@ const ResumeAdditionalEducationCell = <T extends React.ElementType = "div">({
   const dateRange = `${startDate.toLocaleDateString("ru-RU", { month: "long" })} ${startDate.toLocaleDateString("ru-RU", { year: "numeric" })}${
     endDate
       ? ` – ${endDate.toLocaleDateString("ru-RU", { month: "long" })} ${endDate.toLocaleDateString("ru-RU", { year: "numeric" })}`
-      : ""
+      : " – по настоящее время"
   }`;
 
   return (

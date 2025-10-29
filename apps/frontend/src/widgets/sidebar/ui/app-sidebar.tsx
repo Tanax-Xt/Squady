@@ -5,6 +5,7 @@ import {
   FileUserIcon,
   HomeIcon,
   LucideIcon,
+  ShieldHalfIcon,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
@@ -55,8 +56,15 @@ export function AppSidebar({
       {
         title: "Мои резюме",
         badge: user?.stats.resumes,
-        href: "/resume",
+        href: "/resumes",
         icon: FileUserIcon,
+        roles: ["mentor", "participant"],
+      },
+      {
+        title: "Команды",
+        badge: 0, // TODO
+        href: "/teams",
+        icon: ShieldHalfIcon,
         roles: ["mentor", "participant"],
       },
     ],

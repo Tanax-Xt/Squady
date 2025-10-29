@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 
 interface LandingPageHeroProps {}
 
@@ -45,10 +45,10 @@ const LandingPageHero: React.FunctionComponent<LandingPageHeroProps> = () => {
       </hgroup>
 
       <div className="mt-8 flex w-full flex-wrap items-center justify-center gap-2">
-        <Button asChild rounded="full">
+        <Button asChild>
           <Link href="/register">Найти команду</Link>
         </Button>
-        <Button asChild rounded="full" variant="outline">
+        <Button variant="outline" asChild>
           <Link href="/register">
             <span>Посмотреть события</span>
             <ArrowRightIcon />

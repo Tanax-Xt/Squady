@@ -52,7 +52,6 @@
     "next-themes": "^0.4.6",
     "openapi-fetch": "^0.14.0",
     "react": "^19.1.0",
-    "react-day-picker": "^9.8.1",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.59.0",
     "react-merge-refs": "^3.0.2",
@@ -82,9 +81,5 @@
     "sort-package-json": "^3.3.1",
     "steiger": "^0.5.7",
     "typescript-eslint": "^8.35.1"
-  },
-  "engines": {
-    "node": "^24.10.0",
-    "pnpm": "^10.19.0"
   }
 }

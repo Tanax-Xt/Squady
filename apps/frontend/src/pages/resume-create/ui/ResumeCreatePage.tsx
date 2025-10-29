@@ -32,8 +32,8 @@ const ResumeCreatePage: React.FunctionComponent = () => {
         className="my-8 border border-border"
         asChild
       >
-        <Link href="/resume/create/new">
-          <ItemMedia>
+        <Link href="/resumes/create/new">
+          <ItemMedia variant="icon">
             <PenLineIcon className="size-5" />
           </ItemMedia>
           <ItemContent>
@@ -48,8 +48,8 @@ const ResumeCreatePage: React.FunctionComponent = () => {
         </Link>
       </Item>
       <Item size="sm" variant="muted" className="border border-border" asChild>
-        <Link href="/resume/create/pdf">
-          <ItemMedia>
+        <Link href="/resumes/create/pdf">
+          <ItemMedia variant="icon">
             <FileTextIcon className="size-5" />
           </ItemMedia>
           <ItemContent>
@@ -65,8 +65,8 @@ const ResumeCreatePage: React.FunctionComponent = () => {
         </Link>
       </Item>
       <Item size="sm" variant="muted" className="border border-border" asChild>
-        <Link href="/resume/create/github">
-          <ItemMedia>
+        <Link href="/resumes/create/github">
+          <ItemMedia variant="icon">
             <Image
               src="/assets/github.png"
               alt="hh.ru"
@@ -87,8 +87,8 @@ const ResumeCreatePage: React.FunctionComponent = () => {
         </Link>
       </Item>
       <Item size="sm" variant="muted" className="border border-border" asChild>
-        <Link href="/resume/create/hh">
-          <ItemMedia>
+        <Link href="/resumes/create/hh">
+          <ItemMedia variant="icon">
             <Image
               src="/assets/hh.svg"
               alt="hh.ru"

@@ -42,5 +42,8 @@ class ApiSettings(BaseModel):
     resume_hh_link_pattern: Pattern[str]
     resume_max_pdf_size: PositiveInt
 
+    team_title_max_length: PositiveInt
+    team_text_field_max_length: PositiveInt
+
     openrouter_api_key: str
     llm_model: str

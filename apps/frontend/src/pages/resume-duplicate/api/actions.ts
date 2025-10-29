@@ -23,5 +23,5 @@ export const duplicateResume = async (values: ResumeFormValues) => {
   }
 
   revalidateTag(USER_CACHE_USERS_ME_TAG);
-  redirect(`/resume/${data.id}`);
+  redirect(`/resumes/${data.id}`);
 };

@@ -2,7 +2,6 @@ from typing import Annotated
 
 from pydantic import AfterValidator, Field, StringConstraints
 
-# from src.api.resumes.schemas import ExperienceItem
 from src.api.resumes.validators import validate_achievement_year, validate_date_iso8601, validate_education_end_year
 from src.settings import settings
 

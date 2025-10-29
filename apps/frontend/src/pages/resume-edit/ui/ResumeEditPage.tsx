@@ -27,9 +27,9 @@ const ResumeEditPage: React.FunctionComponent<{
   return (
     <Page>
       <Bar>
-        <ResumeEditPageBack href={back ?? `/resume/${resume.id}`} />
+        <ResumeEditPageBack href={back ?? `/resumes/${resume.id}`} />
 
-        <Bar.Center>Редактирование резюме</Bar.Center>
+        <Bar.Center>Редактирование</Bar.Center>
       </Bar>
 
       <Page.Content size="xl">

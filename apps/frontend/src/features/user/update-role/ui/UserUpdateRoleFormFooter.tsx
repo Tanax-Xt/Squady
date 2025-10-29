@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { UseFormReturn } from "react-hook-form";
 
 import { cn } from "@/shared/lib/utils";
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 import Spinner from "@/shared/ui/spinner";
 
 import { ROLE_OPTIONS } from "./UserRoleOptionRadioGroup";
@@ -33,8 +33,7 @@ const UserUpdateRoleFormFooter: React.FunctionComponent<
       <Button
         type="submit"
         size="lg"
-        loading={pending}
-        disabled={!form.formState.isDirty || !role}
+        disabled={!form.formState.isDirty || !role || pending}
         className="mx-auto w-full overflow-clip"
       >
         <AnimatePresence mode="popLayout" initial={false}>

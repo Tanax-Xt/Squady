@@ -8,7 +8,7 @@ import { CurrentUserResponse } from "@/shared/api";
 import { env } from "@/shared/config/client";
 import { cn } from "@/shared/lib/utils";
 import Placeholder from "@/shared/ui/Placeholder";
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 import Form from "@/shared/ui/form";
 import InputOTP from "@/shared/ui/input-otp";
 import Spinner from "@/shared/ui/spinner";
@@ -88,8 +88,7 @@ const UserUpdatePasswordForm: React.FunctionComponent<
       <Button
         type="button"
         variant="ghost"
-        loading={pending}
-        disabled={sending || accepted !== null || remaining !== 0}
+        disabled={sending || accepted !== null || remaining !== 0 || pending}
         onClick={() => startTransition(() => resend())}
         className="mt-2 self-center md:w-fit"
       >

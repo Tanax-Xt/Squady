@@ -21,7 +21,7 @@ const SettingsPageLayout: React.FunctionComponent<SettingsPageLayoutProps> = ({
         <Bar.Center>Настройки</Bar.Center>
       </Bar>
 
-      <Page.Content size="xl">{children}</Page.Content>
+      <Page.Content size="3xl">{children}</Page.Content>
     </Page>
   );
 };

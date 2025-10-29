@@ -3,7 +3,8 @@
 import { useState } from "react";
 
 import { useIsMobile } from "@/shared/hooks/use-mobile";
-import Button from "@/shared/ui/button";
+import { cn } from "@/shared/lib/utils";
+import { Button } from "@/shared/ui/button";
 import Dialog from "@/shared/ui/dialog";
 import Drawer from "@/shared/ui/drawer";
 
@@ -46,8 +47,7 @@ const ResumeEducationFormModal: React.FunctionComponent<
           <Root.Close asChild>
             <Button
               variant="outline"
-              stretched
-              className={isMobile ? undefined : "-mt-4"}
+              className={cn(isMobile ? undefined : "-mt-4", "w-full")}
             >
               Закрыть
             </Button>

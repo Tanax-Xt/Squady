@@ -3,7 +3,7 @@
 import { useTransition } from "react";
 
 import { cn } from "@/shared/lib/utils";
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 
 import LogoutButtonIdleContent from "./LogoutButtonIdleContent";
 import LogoutButtonPendingContent from "./LogoutButtonPendingContent";
@@ -26,7 +26,7 @@ const LogoutButton: React.FunctionComponent<LogoutButtonProps> = ({
     <Button
       size="lg"
       variant="outline"
-      loading={pending}
+      disabled={pending}
       onClick={startLogout}
       className={cn("text-destructive max-md:mt-auto", className)}
       {...otherProps}

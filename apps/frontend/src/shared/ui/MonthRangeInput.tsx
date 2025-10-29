@@ -6,7 +6,7 @@ import Cell from "@/shared/ui/Cell";
 import Collapse from "@/shared/ui/Collapse";
 import Group from "@/shared/ui/Group";
 import Form from "@/shared/ui/form";
-import Input from "@/shared/ui/input";
+import { Input } from "@/shared/ui/input";
 import Select from "@/shared/ui/select";
 import Switch from "@/shared/ui/switch";
 

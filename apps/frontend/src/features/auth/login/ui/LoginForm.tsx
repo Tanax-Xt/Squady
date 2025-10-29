@@ -3,10 +3,10 @@
 import Link from "next/link";
 
 import { cn } from "@/shared/lib/utils";
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 import Card from "@/shared/ui/card";
 import Form from "@/shared/ui/form";
-import Input from "@/shared/ui/input";
+import { Input } from "@/shared/ui/input";
 import Spinner from "@/shared/ui/spinner";
 
 import { useLoginForm } from "../model/form";
@@ -64,8 +64,9 @@ export function LoginForm({
             <div className="mt-6 flex flex-col gap-2">
               <Button
                 type="submit"
-                loading={pending}
-                disabled={!form.formState.isDirty || !form.formState.isValid}
+                disabled={
+                  !form.formState.isDirty || !form.formState.isValid || pending
+                }
               >
                 {pending ? (
                   <>

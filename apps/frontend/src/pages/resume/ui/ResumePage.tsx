@@ -1,22 +1,12 @@
-import { ChevronRightIcon, FileUserIcon, PlusIcon } from "lucide-react";
+import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 
-import { compareResumeResponses, ResumeCard } from "@/entities/resume";
+import { ResumesMyEmpty } from "@/entities/resume";
 import {
   getCurrentUserResumes,
   getCurrentUserVerifiedParticipantOrMentor,
   UserAvatar,
 } from "@/entities/user";
-import { ResumeCardUserActions } from "@/features/resume/edit";
-import Button from "@/shared/ui/button";
-import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@/shared/ui/empty";
 import {
   Item,
   ItemActions,
@@ -26,6 +16,7 @@ import {
   ItemTitle,
 } from "@/shared/ui/item";
 import { UserProfilePersonalEmpty } from "@/widgets/profile";
+import { ResumeList } from "@/widgets/resume-list";
 
 const ResumePage: React.FunctionComponent = async () => {
   const user = await getCurrentUserVerifiedParticipantOrMentor();
@@ -36,7 +27,7 @@ const ResumePage: React.FunctionComponent = async () => {
       <h1 className="text-2xl font-semibold">Мои резюме</h1>
 
       <Item size="sm" variant="muted" className="border border-border" asChild>
-        <Link href="/resume/profile">
+        <Link href="/resumes/profile">
           <ItemMedia variant="image">
             <UserAvatar user={user} className="size-full text-lg" />
           </ItemMedia>
@@ -56,39 +47,11 @@ const ResumePage: React.FunctionComponent = async () => {
       </Item>
 
       {!!user.full_name ? (
-        <>
-          {!!resumes?.resumes.length ? (
-            <div className="mt-2 space-y-4">
-              {resumes?.resumes.sort(compareResumeResponses).map((resume) => (
-                <ResumeCard
-                  key={resume.id}
-                  resume={resume}
-                  actions={<ResumeCardUserActions resume={resume} />}
-                />
-              ))}
-            </div>
-          ) : (
-            <Empty>
-              <EmptyMedia variant="icon">
-                <FileUserIcon />
-              </EmptyMedia>
-              <EmptyHeader>
-                <EmptyTitle>Нет резюме</EmptyTitle>
-                <EmptyDescription>
-                  Вы ещё не содавали ни одного резюме.
-                </EmptyDescription>
-              </EmptyHeader>
-              <EmptyContent>
-                <Button size="sm" asChild>
-                  <Link href="/resume/create">
-                    <PlusIcon />
-                    Создать первое резюме
-                  </Link>
-                </Button>
-              </EmptyContent>
-            </Empty>
-          )}
-        </>
+        !!resumes?.resumes.length ? (
+          <ResumeList resumes={resumes.resumes} />
+        ) : (
+          <ResumesMyEmpty />
+        )
       ) : (
         <UserProfilePersonalEmpty />
       )}

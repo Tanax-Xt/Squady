@@ -8,7 +8,7 @@ export const ResumePrivateIcon = () => {
   return (
     <Tooltip>
       <Tooltip.Trigger asChild>
-        <div className="flex items-center justify-center rounded-full bg-muted p-1 text-muted-foreground">
+        <div className="flex items-center justify-center rounded-full bg-accent/75 p-1 text-accent-foreground/75">
           <LockIcon className="size-2.5" strokeWidth={2.5} />
         </div>
       </Tooltip.Trigger>

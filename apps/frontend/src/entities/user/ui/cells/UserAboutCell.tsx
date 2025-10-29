@@ -3,11 +3,16 @@
 import { TextIcon } from "lucide-react";
 import { FunctionComponent, useMemo, useState } from "react";
 
-import Cell from "@/shared/ui/Cell";
-import CopyButton from "@/shared/ui/CopyButton";
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from "@/shared/ui/item";
 
 interface UserAboutCellProps
-  extends Omit<React.ComponentProps<typeof Cell>, "value"> {
+  extends Omit<React.ComponentProps<typeof Item>, "value"> {
   value: string;
   slice?: number;
 }
@@ -32,31 +37,29 @@ const UserAboutCell: FunctionComponent<UserAboutCellProps> = ({
   }, [value, expanded, expandable, sliced]);
 
   return (
-    <Cell
-      before={<TextIcon />}
-      label="О себе"
-      description={
-        <span className="inline-block">
-          <span>{displayValue}</span>
-          {expandable && !expanded && (
-            <button
-              onClick={() => setExpanded(true)}
-              className="ms-1 cursor-pointer font-medium text-secondary-foreground transition hover:text-foreground"
-            >
-              Показать ещё
-            </button>
-          )}
-        </span>
-      }
-      after={<CopyButton side="left" value={value} />}
-      multiline={expanded}
-      classNames={
-        expanded
-          ? { before: "mt-3.5 mb-auto", after: "mt-1.5 mb-auto" }
-          : undefined
-      }
-      {...otherProps}
-    />
+    <Item size="sm" {...otherProps}>
+      <ItemMedia className="mt-2 mb-auto">
+        <TextIcon />
+      </ItemMedia>
+      <ItemContent>
+        <ItemTitle>О себе</ItemTitle>
+        <ItemDescription className="line-clamp-1">
+          <span className="inline-block">
+            <span className={expanded ? "whitespace-pre-wrap" : undefined}>
+              {displayValue}
+            </span>
+            {expandable && !expanded && (
+              <button
+                onClick={() => setExpanded(true)}
+                className="ms-1 underline underline-offset-4 hover:text-primary"
+              >
+                Показать ещё
+              </button>
+            )}
+          </span>
+        </ItemDescription>
+      </ItemContent>
+    </Item>
   );
 };
 

@@ -27,6 +27,6 @@ export async function updateCurrentUserRole(
   if (role !== null) {
     redirect("/settings");
   } else if (body.role === "participant" || body.role === "mentor") {
-    redirect("/resume/profile/edit?dismissible=true");
+    redirect("/resumes/profile/edit");
   }
 }

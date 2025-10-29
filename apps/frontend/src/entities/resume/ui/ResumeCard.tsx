@@ -31,7 +31,7 @@ export const ResumeCard: React.FunctionComponent<{
 
   return (
     <Item variant="muted" className="border border-border" asChild>
-      <Link href={`/resume/${resume.id}`}>
+      <Link href={`/resumes/${resume.id}`}>
         <ItemContent>
           <ItemTitle>
             {resume.role}

@@ -94,7 +94,7 @@ class ResumeParseService:
 
         resume = ResumeParsedResponse(
             role=None,
-            skills=skills[: settings.api.resume_skills_max_count],
+            skills=skills[: settings.api.resume_skills_max_count] if len(skills) > 0 else None,
             education=None,
             experience=experience[: settings.api.resume_experiences_max_count],
             achievements=None,
@@ -173,7 +173,7 @@ class ResumeParseService:
         try:
             resume = ResumeParsedResponse(
                 role=role,
-                skills=skills[: settings.api.resume_skills_max_count],
+                skills=skills[: settings.api.resume_skills_max_count] if len(skills) > 0 else None,
                 education=None,
                 experience=experiences[: settings.api.resume_experiences_max_count],
                 achievements=None,
@@ -219,11 +219,11 @@ class ResumeParseService:
 
         resume = ResumeParsedResponse(
             role=_safe(ResumeItemTitle, raw_resume.get("role")),
-            skills=skills[: settings.api.resume_skills_max_count],
+            skills=skills[: settings.api.resume_skills_max_count] or ["Носитель чая и кофе"],
             education=None,
-            experience=experience[: settings.api.resume_experiences_max_count],
-            achievements=achievements[: settings.api.resume_achievements_max_count],
-            additional_education=additional_education[: settings.api.resume_additional_educations_max_count],
+            experience=experience[: settings.api.resume_experiences_max_count] or None,
+            achievements=achievements[: settings.api.resume_achievements_max_count] or None,
+            additional_education=additional_education[: settings.api.resume_additional_educations_max_count] or None,
         )
 
         return resume

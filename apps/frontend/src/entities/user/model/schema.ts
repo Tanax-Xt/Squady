@@ -43,7 +43,7 @@ export const UserFullName = z
 
 export const UserBirthDate = z
   .string()
-  .date("Неверная дата.")
+  .date("Введите вашу дату рождения полностью в формате дд.мм.гггг")
   .refine(
     (date) =>
       new Date(date).setHours(0, 0, 0, 0) <= getMaxBirthDate().getTime(),

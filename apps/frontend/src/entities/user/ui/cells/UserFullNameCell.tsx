@@ -1,10 +1,17 @@
 import { IdCardIcon } from "lucide-react";
 
-import Cell from "@/shared/ui/Cell";
 import CopyButton from "@/shared/ui/CopyButton";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from "@/shared/ui/item";
 
 interface UserFullNameCellProps
-  extends Omit<React.ComponentProps<typeof Cell>, "value"> {
+  extends Omit<React.ComponentProps<typeof Item>, "value"> {
   value: string;
 }
 
@@ -13,13 +20,18 @@ const UserFullNameCell: React.FunctionComponent<UserFullNameCellProps> = ({
   ...otherProps
 }) => {
   return (
-    <Cell
-      before={<IdCardIcon />}
-      label="ФИО"
-      description={value}
-      after={<CopyButton side="left" value={value} />}
-      {...otherProps}
-    />
+    <Item size="sm" {...otherProps}>
+      <ItemMedia className="my-auto">
+        <IdCardIcon />
+      </ItemMedia>
+      <ItemContent>
+        <ItemTitle>ФИО</ItemTitle>
+        <ItemDescription>{value}</ItemDescription>
+      </ItemContent>
+      <ItemActions>
+        <CopyButton side="left" value={value} />
+      </ItemActions>
+    </Item>
   );
 };
 

@@ -4,7 +4,7 @@ import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 
 import Bar from "@/shared/ui/bar";
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 import Page from "@/shared/ui/page";
 import Sidebar from "@/shared/ui/sidebar";
 
@@ -25,7 +25,7 @@ const ResumeProfilePageLayout: React.FunctionComponent<
             variant="ghost"
             className="text-muted-foreground max-md:text-base max-md:[&_svg:not([class*='size-'])]:size-5"
           >
-            <Link href="/resume">
+            <Link href="/resumes">
               <ArrowLeftIcon />
               <span>Назад</span>
             </Link>
@@ -40,12 +40,12 @@ const ResumeProfilePageLayout: React.FunctionComponent<
             variant="ghost"
             className="text-muted-foreground max-md:text-base max-md:[&_svg:not([class*='size-'])]:size-5"
           >
-            <Link href="/resume/profile/edit">Изменить</Link>
+            <Link href="/resumes/profile/edit">Изменить</Link>
           </Button>
         </Bar.End>
       </Bar>
 
-      <Page.Content size="xl">{children}</Page.Content>
+      <Page.Content size="3xl">{children}</Page.Content>
     </Page>
   );
 };

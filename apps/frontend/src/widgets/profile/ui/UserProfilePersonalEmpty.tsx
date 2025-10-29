@@ -1,7 +1,7 @@
 import { PenLineIcon, SignatureIcon } from "lucide-react";
 import Link from "next/link";
 
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 import {
   Empty,
   EmptyContent,
@@ -26,7 +26,7 @@ const UserProfilePersonalEmpty: React.FunctionComponent = () => {
       </EmptyHeader>
       <EmptyContent>
         <Button size="sm" asChild>
-          <Link href="/resume/profile/edit">
+          <Link href="/resumes/profile/edit">
             <PenLineIcon />
             Заполнить личные данные
           </Link>

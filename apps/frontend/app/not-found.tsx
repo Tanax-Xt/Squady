@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 import Placeholder from "@/shared/ui/Placeholder";
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 
 export const metadata: Metadata = {
   title: "Страница не найдена",

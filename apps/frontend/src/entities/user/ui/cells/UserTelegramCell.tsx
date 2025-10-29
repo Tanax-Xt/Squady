@@ -1,13 +1,19 @@
 "use client";
 
 import { SendIcon } from "lucide-react";
-import { useMemo } from "react";
 
-import Cell from "@/shared/ui/Cell";
 import CopyButton from "@/shared/ui/CopyButton";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from "@/shared/ui/item";
 
 interface UserTelegramCellProps
-  extends Omit<React.ComponentProps<typeof Cell>, "value"> {
+  extends Omit<React.ComponentProps<typeof Item>, "value"> {
   value: string;
 }
 
@@ -15,24 +21,25 @@ const UserTelegramCell: React.FunctionComponent<UserTelegramCellProps> = ({
   value,
   ...otherProps
 }) => {
-  const href = useMemo(() => `https://t.me/${value}`, [value]);
+  const href = `https://t.me/${value}`;
 
   return (
-    <Cell
-      before={<SendIcon />}
-      label="Telegram"
-      description={
-        <a
-          href={href}
-          target="_blank"
-          className="text-muted-foreground transition hover:text-foreground"
-        >
-          @{value}
-        </a>
-      }
-      after={<CopyButton side="left" value={href} />}
-      {...otherProps}
-    />
+    <Item size="sm" {...otherProps}>
+      <ItemMedia className="my-auto">
+        <SendIcon />
+      </ItemMedia>
+      <ItemContent>
+        <ItemTitle>Telegram</ItemTitle>
+        <ItemDescription>
+          <a href={href} target="_blank">
+            @{value}
+          </a>
+        </ItemDescription>
+      </ItemContent>
+      <ItemActions>
+        <CopyButton side="left" value={href} />
+      </ItemActions>
+    </Item>
   );
 };
 

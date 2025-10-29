@@ -37,7 +37,7 @@ export const updateResume = async (
   revalidateTag(getResumeCacheTag(resumeId));
   revalidateTag(USER_CACHE_USERS_ME_RESUMES_TAG);
   revalidateTag(USER_CACHE_USERS_ME_TAG);
-  redirect(`/resume/${resumeId}`);
+  redirect(`/resumes/${resumeId}`);
 };
 
 export const toggleResumeIsPublic = async (resumeId: string) => {
@@ -90,5 +90,5 @@ export const createResume = async (values: ResumeFormValues) => {
 
   revalidateTag(USER_CACHE_USERS_ME_RESUMES_TAG);
   revalidateTag(USER_CACHE_USERS_ME_TAG);
-  redirect(`/resume/${data.id}`);
+  redirect(`/resumes/${data.id}`);
 };

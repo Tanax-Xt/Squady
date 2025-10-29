@@ -2,6 +2,7 @@
 
 import {
   CopyPlusIcon,
+  LinkIcon,
   LockIcon,
   LockOpenIcon,
   MoreVerticalIcon,
@@ -10,6 +11,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { startTransition, useActionState } from "react";
+import { toast } from "sonner";
 
 import { ResumeResponse } from "@/shared/api";
 import {
@@ -22,7 +24,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/shared/ui/alert-dialog";
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 import {
   DropdownMenuContent,
   DropdownMenuItem,
@@ -34,11 +36,12 @@ import Spinner from "@/shared/ui/spinner";
 
 import { deleteResume, toggleResumeIsPublic } from "../api/actions";
 
+// TODO: show edit/delete actions only if current user id === owner id
 export const ResumeCardUserActions: React.FC<
   Pick<React.ComponentProps<typeof Button>, "variant"> & {
     resume: ResumeResponse;
   }
-> = ({ resume, variant = "outline" }) => {
+> = ({ resume, variant = "ghost" }) => {
   const router = useRouter();
 
   const [, startDeleteResume, deleting] = useActionState(
@@ -48,30 +51,41 @@ export const ResumeCardUserActions: React.FC<
 
   const edit = () => {
     router.push(
-      `/resume/${resume.id}/edit?back=${encodeURIComponent("/resume")}`,
+      `/resumes/${resume.id}/edit?back=${encodeURIComponent("/resumes")}`,
     );
   };
 
   const duplicate = () => {
     router.push(
-      `/resume/${resume.id}/duplicate?back=${encodeURIComponent("/resume")}`,
+      `/resumes/${resume.id}/duplicate?back=${encodeURIComponent("/resumes")}`,
     );
+  };
+
+  const copyLink = () => {
+    if (window.isSecureContext) {
+      navigator.clipboard.writeText(`/resumes/${resume.id}`);
+      toast.success("Ссылка на резюме скопирована!");
+    } else {
+      toast.error("Не удалось скопировать ссылку на резюме!", {
+        description: "Окно браузера используется в небезопасном контексте.",
+      });
+    }
   };
 
   return (
     <AlertDialogRoot>
       <DropdownMenuRoot>
         <DropdownMenuTrigger asChild>
-          <Button
-            size="icon"
-            variant={variant}
-            className="rounded-full"
-            aria-label="Действия с резюме"
-          >
+          <Button size="icon" variant={variant} aria-label="Действия с резюме">
             <MoreVerticalIcon />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
+          <DropdownMenuItem onSelect={copyLink}>
+            <LinkIcon />
+            Скопировать ссылку
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem onSelect={edit}>
             <PenLineIcon />
             Редактировать
@@ -101,7 +115,7 @@ export const ResumeCardUserActions: React.FC<
         <AlertDialogFooter>
           <AlertDialogAction
             variant="destructive"
-            loading={deleting}
+            disabled={deleting}
             onClick={() => startTransition(startDeleteResume)}
           >
             {deleting && <Spinner />}

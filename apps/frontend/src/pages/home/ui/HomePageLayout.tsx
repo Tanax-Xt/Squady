@@ -22,7 +22,7 @@ const HomePageLayout: React.FunctionComponent<HomePageLayoutProps> = ({
         <Bar.Center showAfterScrolled>Главная</Bar.Center>
       </Bar>
 
-      <Page.Content size="4xl" className="gap-4">
+      <Page.Content size="3xl" className="gap-4">
         {children}
       </Page.Content>
     </Page>

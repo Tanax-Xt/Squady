@@ -4,7 +4,7 @@ import { ArrowLeftIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 
 export const ResumeDuplicatePageBack: React.FunctionComponent<{
   href: string;

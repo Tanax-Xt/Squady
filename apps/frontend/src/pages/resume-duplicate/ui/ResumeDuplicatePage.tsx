@@ -27,9 +27,9 @@ const ResumeDuplicatePage: React.FunctionComponent<{
   return (
     <Page>
       <Bar>
-        <ResumeDuplicatePageBack href={back ?? `/resume/${resume.id}`} />
+        <ResumeDuplicatePageBack href={back ?? `/resumes/${resume.id}`} />
 
-        <Bar.Center>Дублирование резюме</Bar.Center>
+        <Bar.Center>Дублирование</Bar.Center>
       </Bar>
 
       <Page.Content size="xl">

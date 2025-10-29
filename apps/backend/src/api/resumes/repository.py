@@ -5,8 +5,10 @@ from fastapi import Depends
 from sqlalchemy import Select, func, select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import selectinload
 
 from src.api.resumes.models import Resume, Role, Skill
+from src.api.users.models import TeamToUser
 from src.db import SessionDepends
 from src.pagination import PaginationSearchParams
 
@@ -97,16 +99,19 @@ class ResumeRepository:
         return role
 
     async def create_and_get_skills_by_names(self, names: list[str]) -> Sequence[Skill]:
-        stmt = insert(Skill).values([{"name": name} for name in names])
-        stmt = stmt.on_conflict_do_nothing(index_elements=[func.lower(Skill.name)])
-        await self.session.execute(stmt)
-        await self.session.commit()
+        try:
+            stmt = insert(Skill).values([{"name": name} for name in names])
+            stmt = stmt.on_conflict_do_nothing(index_elements=[func.lower(Skill.name)])
+            await self.session.execute(stmt)
+            await self.session.commit()
 
-        statement = select(Skill).where(func.lower(Skill.name).in_([name.lower() for name in names]))
-        result = await self.session.execute(statement)
-        existing: Sequence[Skill] = result.scalars().all()
+            statement = select(Skill).where(func.lower(Skill.name).in_([name.lower() for name in names]))
+            result = await self.session.execute(statement)
+            existing: Sequence[Skill] = result.scalars().all()
 
-        return existing
+            return existing
+        except Exception:
+            return []
 
     async def bulk_create_roles(self, names: list[str]) -> None:
         stmt = insert(Role).values([{"name": name} for name in names])
@@ -143,6 +148,25 @@ class ResumeRepository:
         result = await self.session.execute(statement)
 
         return result.scalars().all()
+
+    async def get_by_ids(self, ids: list[str | UUID]) -> Sequence[Resume]:
+        statement = select(Resume).where(Resume.id.in_(ids))
+        result = await self.session.execute(statement)
+        return result.scalars().all()
+
+    async def get_by_user_and_team_ids(self, user_id: str | UUID, team_id: str | UUID) -> Resume | None:
+        statement = select(TeamToUser).where(TeamToUser.user_id == user_id, TeamToUser.team_id == team_id)
+        result = await self.session.execute(statement)
+        team_to_user = result.scalars().one_or_none()
+        if team_to_user is None:
+            return None
+        stmt = (
+            select(Resume)
+            .where(Resume.id == team_to_user.resume_id)
+            .options(selectinload(Resume.role), selectinload(Resume.skills))
+        )
+        result_out = await self.session.execute(stmt)
+        return result_out.scalars().one_or_none()
 
     def _filter[T: Any](self, statement: Select[T], *, q: str | None = None) -> Select[T]:
         if not q:

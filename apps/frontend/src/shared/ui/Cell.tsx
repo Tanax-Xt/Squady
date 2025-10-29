@@ -13,7 +13,7 @@ export const cell = tv(
       ],
       before: "flex",
       content: "grow overflow-hidden text-left",
-      label: "truncate",
+      label: "",
       detail: "ms-1 text-muted-foreground",
       description: "text-muted-foreground",
       after: "flex",
@@ -89,6 +89,9 @@ export type CellProps<T extends React.ElementType> = CellComponentProps<T> &
   CellBaseProps<T> &
   CellVariantProps;
 
+/**
+ * @deprecated use `<Item />` instead
+ */
 const Cell = <T extends React.ElementType = "div">({
   as,
   before,

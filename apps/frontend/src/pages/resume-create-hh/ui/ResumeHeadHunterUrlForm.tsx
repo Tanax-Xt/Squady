@@ -9,9 +9,10 @@ import { z } from "zod";
 import { ResumeParseHeadHunterUrlSchema } from "@/entities/resume";
 import { ResumeParsedResponse } from "@/shared/api";
 import Placeholder from "@/shared/ui/Placeholder";
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 import Form from "@/shared/ui/form";
-import Input from "@/shared/ui/input";
+import { Input } from "@/shared/ui/input";
+import { toast } from "@/shared/ui/sonner";
 import Spinner from "@/shared/ui/spinner";
 
 import { parseHeadHunterResume } from "../api/actions";
@@ -53,7 +54,11 @@ const ResumeHeadHunterUrlForm: React.FunctionComponent<
   });
 
   useEffect(() => {
-    if (response?.data) {
+    if (response?.status === 400) {
+      toast.error(
+        "Не удалось импортировать резюме из HeadHunter. Попробуйте другую ссылку.",
+      );
+    } else if (response?.data) {
       onSubmit(response.data);
     }
   }, [response]);

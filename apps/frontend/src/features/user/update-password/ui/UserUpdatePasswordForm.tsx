@@ -2,9 +2,9 @@
 
 import { toast } from "sonner";
 
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 import Form from "@/shared/ui/form";
-import Input from "@/shared/ui/input";
+import { Input } from "@/shared/ui/input";
 import Spinner from "@/shared/ui/spinner";
 
 import { useUserUpdatePasswordForm } from "../model/form";
@@ -83,8 +83,7 @@ const UserUpdatePasswordForm: React.FunctionComponent<
 
       <Button
         type="submit"
-        loading={pending}
-        disabled={!form.formState.isDirty || !form.formState.isValid}
+        disabled={!form.formState.isDirty || !form.formState.isValid || pending}
         className="mt-6"
       >
         {pending ? (

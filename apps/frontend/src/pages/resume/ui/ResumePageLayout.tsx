@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import Bar from "@/shared/ui/bar";
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 import Page from "@/shared/ui/page";
 import Sidebar from "@/shared/ui/sidebar";
 
@@ -31,12 +31,12 @@ const ResumePageLayout: React.FunctionComponent<ResumePageLayoutProps> = ({
             variant="ghost"
             className="text-muted-foreground max-md:text-base max-md:[&_svg:not([class*='size-'])]:size-5"
           >
-            <Link href="/resume/create">Создать</Link>
+            <Link href="/resumes/create">Создать</Link>
           </Button>
         </Bar.End>
       </Bar>
 
-      <Page.Content size="4xl" className="gap-4">
+      <Page.Content size="3xl" className="gap-4">
         {children}
       </Page.Content>
     </Page>

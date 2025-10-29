@@ -7,7 +7,7 @@ import { CurrentUserResponse } from "@/shared/api";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import { cn } from "@/shared/lib/utils";
 import Badge from "@/shared/ui/badge";
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 import Card from "@/shared/ui/card";
 import ProgressCircle from "@/shared/ui/progress-circle";
 
@@ -52,7 +52,7 @@ const UserProfileProgress: React.FunctionComponent<
         label={label}
       />
       <Card.Header className="flex w-full shrink grow flex-col max-md:items-center max-md:text-center md:px-0 md:py-3">
-        <Badge variant="secondary" className="max-md:mb-1">
+        <Badge variant="secondary" className="rounded-full max-md:mb-1">
           {badge}
         </Badge>
         <Card.Title className="text-2xl md:text-xl">{title}</Card.Title>
@@ -63,7 +63,7 @@ const UserProfileProgress: React.FunctionComponent<
           <Button
             disabled={!currentStep.href}
             asChild={!!currentStep.href}
-            size={isMobile ? "lg" : "sm"}
+            size={isMobile ? "default" : "sm"}
             className="mt-2 max-md:w-full"
           >
             {currentStep.href ? (

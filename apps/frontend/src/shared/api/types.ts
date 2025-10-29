@@ -348,6 +348,95 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/teams": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Teams */
+    get: operations["get_teams_teams_get"];
+    put?: never;
+    /** Create Team */
+    post: operations["create_team_teams_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/teams/my": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get My Teams */
+    get: operations["get_my_teams_teams_my_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/teams/{team_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Team */
+    get: operations["get_team_teams__team_id__get"];
+    /** Update Team */
+    put: operations["update_team_teams__team_id__put"];
+    post?: never;
+    /** Delete Team */
+    delete: operations["delete_team_teams__team_id__delete"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/teams/{team_id}/members": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Team Members */
+    get: operations["get_team_members_teams__team_id__members_get"];
+    put?: never;
+    /** Add Team Member */
+    post: operations["add_team_member_teams__team_id__members_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/teams/{team_id}/members/{user_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** Remove Team Member */
+    delete: operations["remove_team_member_teams__team_id__members__user_id__delete"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -593,6 +682,55 @@ export interface components {
       /** Detail */
       detail?: components["schemas"]["ValidationError"][];
     };
+    /** MemberResponse */
+    MemberResponse: {
+      /** Full Name */
+      full_name: string | null;
+      /** Birth Date */
+      birth_date: string | null;
+      /** City */
+      city: string | null;
+      /** About */
+      about: string | null;
+      /** Telegram */
+      telegram: string | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /**
+       * Entity ID
+       * Format: uuid4
+       * @description Unique identifier for the entity in UUID4 format.
+       */
+      id: string;
+      /** Username */
+      username: string;
+      /**
+       * User email
+       * Format: email
+       */
+      email: string;
+      role: components["schemas"]["UserRole"] | null;
+      /** Is Verified */
+      is_verified: boolean;
+      /** Is Verified Agent */
+      is_verified_agent: boolean | null;
+      /** @default active */
+      status: components["schemas"]["MemberStatusEnum"];
+      resume: components["schemas"]["ResumeResponse"];
+    };
+    /**
+     * MemberStatusEnum
+     * @enum {string}
+     */
+    MemberStatusEnum: "active" | "in_check";
     /**
      * OTPResponse
      * @description Represents a response containing One-Time Password (OTP) expiration datetime.
@@ -729,6 +867,12 @@ export interface components {
        * @description Unique identifier for the entity in UUID4 format.
        */
       id: string;
+      /**
+       * Entity ID
+       * Format: uuid4
+       * @description Unique identifier for the entity in UUID4 format.
+       */
+      owner_id: string;
       personal_data: components["schemas"]["ResumeUserPersonalDataResponse"];
       /**
        * Title
@@ -797,6 +941,93 @@ export interface components {
       /** Resumes */
       resumes: components["schemas"]["ResumeResponse"][];
       pagination: components["schemas"]["PaginationResponse"];
+    };
+    /**
+     * StatusEnum
+     * @enum {string}
+     */
+    StatusEnum: "active" | "in_check" | "finished";
+    /** TeamAddUserRequest */
+    TeamAddUserRequest: {
+      /**
+       * Entity ID
+       * Format: uuid4
+       * @description Unique identifier for the entity in UUID4 format.
+       */
+      user_id: string;
+      /**
+       * Entity ID
+       * Format: uuid4
+       * @description Unique identifier for the entity in UUID4 format.
+       */
+      resume_id: string;
+    };
+    /** TeamCreateRequest */
+    TeamCreateRequest: {
+      /**
+       * Title
+       * @description Team title
+       */
+      title: string;
+      /** About */
+      about: string | null;
+      /** Tasks */
+      tasks: string | null;
+      /**
+       * Entity ID
+       * Format: uuid4
+       * @description Unique identifier for the entity in UUID4 format.
+       */
+      lead_resume_id: string;
+    };
+    /** TeamResponse */
+    TeamResponse: {
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /**
+       * Entity ID
+       * Format: uuid4
+       * @description Unique identifier for the entity in UUID4 format.
+       */
+      id: string;
+      /**
+       * Title
+       * @description Team title
+       */
+      title: string;
+      /** About */
+      about: string | null;
+      /** Tasks */
+      tasks: string | null;
+      /**
+       * Entity ID
+       * Format: uuid4
+       * @description Unique identifier for the entity in UUID4 format.
+       */
+      leader_id: string;
+      status: components["schemas"]["StatusEnum"];
+      /** Users */
+      users: components["schemas"]["MemberResponse"][];
+    };
+    /** TeamUpdateRequest */
+    TeamUpdateRequest: {
+      /**
+       * Title
+       * @description Team title
+       */
+      title: string;
+      /** About */
+      about: string | null;
+      /** Tasks */
+      tasks: string | null;
     };
     /** UserRegistrationConflictResponse */
     UserRegistrationConflictResponse: {
@@ -927,6 +1158,8 @@ export type CurrentUserVerifyRequest =
 export type EducationType = components["schemas"]["EducationType"];
 export type ExperienceItem = components["schemas"]["ExperienceItem"];
 export type HttpValidationError = components["schemas"]["HTTPValidationError"];
+export type MemberResponse = components["schemas"]["MemberResponse"];
+export type MemberStatusEnum = components["schemas"]["MemberStatusEnum"];
 export type OtpResponse = components["schemas"]["OTPResponse"];
 export type PaginationResponse = components["schemas"]["PaginationResponse"];
 export type ResumeCreateRequest = components["schemas"]["ResumeCreateRequest"];
@@ -943,6 +1176,11 @@ export type ResumeUserPersonalDataResponse =
   components["schemas"]["ResumeUserPersonalDataResponse"];
 export type ResumesPaginationResponse =
   components["schemas"]["ResumesPaginationResponse"];
+export type StatusEnum = components["schemas"]["StatusEnum"];
+export type TeamAddUserRequest = components["schemas"]["TeamAddUserRequest"];
+export type TeamCreateRequest = components["schemas"]["TeamCreateRequest"];
+export type TeamResponse = components["schemas"]["TeamResponse"];
+export type TeamUpdateRequest = components["schemas"]["TeamUpdateRequest"];
 export type UserRegistrationConflictResponse =
   components["schemas"]["UserRegistrationConflictResponse"];
 export type UserRegistrationRequest =
@@ -2659,6 +2897,379 @@ export interface operations {
       };
       /** @description User not found */
       404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_teams_teams_get: {
+    parameters: {
+      query?: {
+        q?: string | null;
+        offset?: number;
+        limit?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TeamResponse"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  create_team_teams_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TeamCreateRequest"];
+      };
+    };
+    responses: {
+      /** @description Team successfully created */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TeamResponse"];
+        };
+      };
+      /** @description Resume does not belong to the current user */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Resume not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_my_teams_teams_my_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TeamResponse"][];
+        };
+      };
+    };
+  };
+  get_team_teams__team_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        team_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TeamResponse"];
+        };
+      };
+      /** @description Team not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  update_team_teams__team_id__put: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        team_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TeamUpdateRequest"];
+      };
+    };
+    responses: {
+      /** @description Team successfully updated */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Only team owner can update team */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Team not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  delete_team_teams__team_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        team_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Team successfully deleted */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Only team owner can delete team */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Team not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_team_members_teams__team_id__members_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        team_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["MemberResponse"][];
+        };
+      };
+      /** @description Team not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  add_team_member_teams__team_id__members_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        team_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TeamAddUserRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TeamResponse"];
+        };
+      };
+      /** @description Access denied */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Team, user or resume not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description User already in team */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  remove_team_member_teams__team_id__members__user_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        team_id: string;
+        user_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Member successfully deleted */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Access denied */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Team or user not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Cannot remove team owner */
+      409: {
         headers: {
           [name: string]: unknown;
         };

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 
 interface LandingPageCtaProps {}
 
@@ -15,7 +15,7 @@ const LandingPageCta: React.FunctionComponent<LandingPageCtaProps> = () => {
           Присоединяйтесь к сообществу участников интеллектуальных соревнований
         </p>
       </hgroup>
-      <Button asChild rounded="full">
+      <Button asChild>
         <Link href="/register">Создать аккаунт</Link>
       </Button>
     </section>

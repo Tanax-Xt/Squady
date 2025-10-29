@@ -1,7 +1,7 @@
 import { cva, VariantProps } from "class-variance-authority";
 
 import { UserAvatar, UserRoleBadge } from "@/entities/user";
-import { CurrentUserResponse, UserResponse } from "@/shared/api";
+import { UserResponse } from "@/shared/api";
 
 import UserProfileCardBackground from "./UserProfileCardBackground";
 
@@ -26,7 +26,7 @@ const userProfileCardVariants = cva(
 type UserProfileCardVariantProps = VariantProps<typeof userProfileCardVariants>;
 
 interface UserProfileCardProps extends React.ComponentProps<"div"> {
-  user: UserResponse | CurrentUserResponse;
+  user: UserResponse;
 }
 
 const UserProfileCard: React.FunctionComponent<UserProfileCardProps> = ({

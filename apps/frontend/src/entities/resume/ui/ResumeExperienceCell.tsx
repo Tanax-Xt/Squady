@@ -29,17 +29,26 @@ const ResumeExperienceCell = <T extends React.ElementType = "div">({
   const dateRange = `${startDate.toLocaleDateString("ru-RU", { month: "long" })} ${startDate.toLocaleDateString("ru-RU", { year: "numeric" })}${
     endDate
       ? ` – ${endDate.toLocaleDateString("ru-RU", { month: "long" })} ${endDate.toLocaleDateString("ru-RU", { year: "numeric" })}`
-      : ""
+      : " – по настоящее время"
   }`;
 
   return (
     <Cell
       before={<StarIcon />}
-      label={experience.title}
-      detail={experience.company}
+      label={
+        <>
+          {experience.title}
+          {experience.company ? (
+            <span className="text-muted-foreground">
+              {" "}
+              ({experience.company})
+            </span>
+          ) : null}
+        </>
+      }
       description={
         <>
-          <span className="block capitalize">{dateRange}</span>
+          <span className="block first-letter:uppercase">{dateRange}</span>
           <span>{experience.description}</span>
         </>
       }

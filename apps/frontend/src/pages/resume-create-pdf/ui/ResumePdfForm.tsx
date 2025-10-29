@@ -2,19 +2,18 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FileTextIcon } from "lucide-react";
-import { startTransition, useActionState, useEffect } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { ResumeParsedResponse } from "@/shared/api";
 import { env } from "@/shared/config/client";
 import Placeholder from "@/shared/ui/Placeholder";
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 import Form from "@/shared/ui/form";
-import Input from "@/shared/ui/input";
+import { Input } from "@/shared/ui/input";
+import { toast } from "@/shared/ui/sonner";
 import Spinner from "@/shared/ui/spinner";
-
-import { parsePdfResume } from "../api/actions";
 
 const ACCEPTED_PDF_TYPES = ["application/pdf"];
 const PdfFileSchema = z
@@ -41,30 +40,41 @@ export interface ResumePdfFormProps {
 const ResumePdfForm: React.FunctionComponent<ResumePdfFormProps> = ({
   onSubmit,
 }) => {
+  const [loading, start] = useTransition();
+  const [response, setResponse] = useState<null | ResumeParsedResponse>(null);
   const form = useForm({
     mode: "onChange",
     resolver: zodResolver(ResumePdfFormSchema),
   });
 
-  const [response, submitAction, loading] = useActionState<
-    ReturnType<typeof parsePdfResume>,
-    ResumePdfFormValues
-  >(
-    async (_, { file }) => {
-      return await parsePdfResume(file);
-    },
-    { data: null, error: {}, status: 0 },
-  );
-
   const handleSubmit = form.handleSubmit(async (values) => {
-    startTransition(() => {
-      submitAction(values);
+    start(async () => {
+      const formData = new FormData();
+      formData.set("file", values.file);
+      const respose = await fetch("/bff/parse-resume-pdf", {
+        body: formData,
+        method: "POST",
+      });
+      const json = (await respose.json()) as unknown as {
+        data: ResumeParsedResponse;
+        error: unknown;
+        status: number;
+      };
+      if (json.status === 400) {
+        toast.error(
+          "Не удалось импортировать резюме из PDF-файла. Попробуйте другой файл.",
+        );
+      } else if (!json.data || json.error) {
+        toast.error("Ошибка сервера при парсинге резюме.");
+      } else {
+        setResponse(json.data);
+      }
     });
   });
 
   useEffect(() => {
-    if (response?.data) {
-      onSubmit(response.data);
+    if (response) {
+      onSubmit(response);
     }
   }, [response]);
 
@@ -100,7 +110,7 @@ const ResumePdfForm: React.FunctionComponent<ResumePdfFormProps> = ({
 
         <Button
           type="submit"
-          disabled={!form.formState.isDirty || loading}
+          disabled={!form.formState.isValid || loading}
           className="mt-4"
         >
           {loading && <Spinner />}

@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 import Form from "@/shared/ui/form";
-import Input from "@/shared/ui/input";
+import { Input } from "@/shared/ui/input";
 import Select from "@/shared/ui/select";
 
 import { EDUCATION_TYPES } from "../config/education";

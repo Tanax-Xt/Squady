@@ -1,6 +1,6 @@
 "use client";
 
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 import Tooltip from "@/shared/ui/tooltip";
 
 export interface IconButtonProps extends React.ComponentProps<typeof Button> {

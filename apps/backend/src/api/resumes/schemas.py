@@ -132,6 +132,7 @@ class ResumeUserPersonalDataResponse(BaseSchema):
 
 class ResumeResponse(AuditBaseModel):
     id: EntityId
+    owner_id: EntityId
     personal_data: ResumeUserPersonalDataResponse
     role: ResumeItemTitle
     skills: ResumeSkillsList
@@ -145,6 +146,7 @@ class ResumeResponse(AuditBaseModel):
     def from_orm(cls, resume: Resume) -> "ResumeResponse":
         return cls(
             id=resume.id,  # type: ignore
+            owner_id=resume.user_id,
             personal_data=ResumeUserPersonalDataResponse.from_orm(resume.user),
             role=resume.role.name,
             skills=[skill.name for skill in resume.skills],

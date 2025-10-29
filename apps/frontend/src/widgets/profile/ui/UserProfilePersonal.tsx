@@ -5,13 +5,13 @@ import {
   UserFullNameCell,
   UserTelegramCell,
 } from "@/entities/user";
-import { CurrentUserResponse } from "@/shared/api";
+import { ResumeResponse } from "@/shared/api";
 import { cn } from "@/shared/lib/utils";
 import Group from "@/shared/ui/Group";
 
 export interface UserProfilePersonalProps
   extends React.ComponentProps<"section"> {
-  user: CurrentUserResponse;
+  user: ResumeResponse["personal_data"];
 }
 
 const UserProfilePersonal: React.FunctionComponent<

@@ -5,6 +5,7 @@ export default defineConfig([
   ...fsd.configs.recommended,
   {
     rules: {
+      "fsd/excessive-slicing": "off",
       "fsd/insignificant-slice": "off",
       "fsd/no-segmentless-slices": "off",
     },

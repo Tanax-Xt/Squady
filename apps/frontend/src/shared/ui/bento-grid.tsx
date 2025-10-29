@@ -2,7 +2,7 @@ import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 
 import { cn } from "@/shared/lib/utils";
-import Button from "@/shared/ui/button";
+import { Button } from "@/shared/ui/button";
 
 interface BentoGridProps extends React.ComponentPropsWithoutRef<"div"> {
   children: React.ReactNode;
@@ -77,7 +77,6 @@ const BentoCard = ({
           <Button
             variant="outline"
             asChild
-            rounded="full"
             size="sm"
             className="pointer-events-auto p-0"
           >
@@ -99,7 +98,6 @@ const BentoCard = ({
         <Button
           variant="outline"
           asChild
-          rounded="full"
           size="sm"
           className="pointer-events-auto p-0"
         >
