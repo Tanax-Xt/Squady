@@ -5,18 +5,19 @@ from fastapi_mail import MessageSchema, MessageType
 
 from src.api.teams.models import Team
 from src.mail import fm
+from src.settings import settings
 from src.template import render
 
 
 class ApplicationToTeamMailingService:
-    async def send_application_message(self, recipient: str, team: Team, url: str) -> None:
-        message = self.generate_application_message(recipient, team.title, self.generate_link(team.id, url))
+    async def send_application_message(self, recipient: str, team: Team) -> None:
+        message = self.generate_application_message(recipient, team.title, self.generate_link(team.id))
 
         await fm.send_message(message)
 
     @staticmethod
-    def generate_link(team_id: str, url: str) -> str:
-        return f"{url}/teams/{team_id}/join"
+    def generate_link(team_id: str) -> str:
+        return f"{settings.app.url}/teams/{team_id}/join"
 
     @staticmethod
     def generate_application_message(recipient: str, team: str, link: str) -> MessageSchema:

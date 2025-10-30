@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Request, status
+from fastapi import APIRouter, HTTPException, status
 
 from src.api.fields import EntityId
 from src.api.resumes.service import ResumeServiceDepends
@@ -156,7 +156,6 @@ async def update_application_status(
     },
 )
 async def send_application(
-    request: Request,
     team_id: EntityId,
     args: ApplicationSendEmailRequest,
     user_service: UserServiceDepends,
@@ -179,6 +178,4 @@ async def send_application(
     if any(member.id == user_to_send.id for member in team_members):
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="User already in team")
 
-    await mail_service.send_application_message(
-        user_to_send.email, team, f"{request.url.scheme}://{request.url.hostname}"
-    )
+    await mail_service.send_application_message(user_to_send.email, team)

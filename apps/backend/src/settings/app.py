@@ -15,3 +15,4 @@ class AppSettings(BaseModel):
     docs_url: str | None
     redoc_url: str | None
     root_path: str
+    url: str
