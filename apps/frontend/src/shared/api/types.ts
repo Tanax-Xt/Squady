@@ -437,6 +437,58 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/teams/{team_id}/applications": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Applications */
+    get: operations["get_applications_teams__team_id__applications_get"];
+    put?: never;
+    /** Add Application */
+    post: operations["add_application_teams__team_id__applications_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/teams/{team_id}/applications/{application_id}/status": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Update Application Status */
+    patch: operations["update_application_status_teams__team_id__applications__application_id__status_patch"];
+    trace?: never;
+  };
+  "/teams/{team_id}/applications/send": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Send Application */
+    post: operations["send_application_teams__team_id__applications_send_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -489,6 +541,64 @@ export interface components {
        * @description Date in ISO 8601 format: YYYY-MM. Should be maximum 80 years ago and 10 years in the future.
        */
       end_date: string;
+    };
+    /** ApplicationCreateRequest */
+    ApplicationCreateRequest: {
+      /**
+       * Entity ID
+       * Format: uuid4
+       * @description Unique identifier for the entity in UUID4 format.
+       */
+      resume_id: string;
+    };
+    /** ApplicationResponse */
+    ApplicationResponse: {
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /**
+       * Entity ID
+       * Format: uuid4
+       * @description Unique identifier for the entity in UUID4 format.
+       */
+      id: string;
+      /**
+       * Entity ID
+       * Format: uuid4
+       * @description Unique identifier for the entity in UUID4 format.
+       */
+      team_id: string;
+      user: components["schemas"]["UserPersonalDataResponse"];
+      resume: components["schemas"]["ResumeResponse"];
+      status: components["schemas"]["ApplicationStatusEnum"];
+    };
+    /** ApplicationSendEmailRequest */
+    ApplicationSendEmailRequest: {
+      /**
+       * Email
+       * Format: email
+       */
+      email: string;
+    };
+    /**
+     * ApplicationStatusEnum
+     * @enum {string}
+     */
+    ApplicationStatusEnum: "sent" | "accepted" | "rejected";
+    /** ApplicationUpdateRequest */
+    ApplicationUpdateRequest: {
+      /**
+       * Status
+       * @enum {string}
+       */
+      status: "accepted" | "rejected";
     };
     /** Body_login_auth_login_post */
     Body_login_auth_login_post: {
@@ -1029,6 +1139,50 @@ export interface components {
       /** Tasks */
       tasks: string | null;
     };
+    /**
+     * UserPersonalDataResponse
+     * @description Represents the public response data for a user with personal data.
+     */
+    UserPersonalDataResponse: {
+      /** Full Name */
+      full_name: string | null;
+      /** Birth Date */
+      birth_date: string | null;
+      /** City */
+      city: string | null;
+      /** About */
+      about: string | null;
+      /** Telegram */
+      telegram: string | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /**
+       * Entity ID
+       * Format: uuid4
+       * @description Unique identifier for the entity in UUID4 format.
+       */
+      id: string;
+      /** Username */
+      username: string;
+      /**
+       * User email
+       * Format: email
+       */
+      email: string;
+      role: components["schemas"]["UserRole"] | null;
+      /** Is Verified */
+      is_verified: boolean;
+      /** Is Verified Agent */
+      is_verified_agent: boolean | null;
+    };
     /** UserRegistrationConflictResponse */
     UserRegistrationConflictResponse: {
       /**
@@ -1106,6 +1260,8 @@ export interface components {
     UserStatsResponse: {
       /** Resumes */
       resumes: number;
+      /** Teams */
+      teams: number;
     };
     /**
      * UsersPaginationResponse
@@ -1136,6 +1292,15 @@ export type AccessTokenResponse = components["schemas"]["AccessTokenResponse"];
 export type AchievementItem = components["schemas"]["AchievementItem"];
 export type AdditionalEducationItem =
   components["schemas"]["AdditionalEducationItem"];
+export type ApplicationCreateRequest =
+  components["schemas"]["ApplicationCreateRequest"];
+export type ApplicationResponse = components["schemas"]["ApplicationResponse"];
+export type ApplicationSendEmailRequest =
+  components["schemas"]["ApplicationSendEmailRequest"];
+export type ApplicationStatusEnum =
+  components["schemas"]["ApplicationStatusEnum"];
+export type ApplicationUpdateRequest =
+  components["schemas"]["ApplicationUpdateRequest"];
 export type BodyLoginAuthLoginPost =
   components["schemas"]["Body_login_auth_login_post"];
 export type BodyParseResumeFromPdfResumesParsePdfPost =
@@ -1181,6 +1346,8 @@ export type TeamAddUserRequest = components["schemas"]["TeamAddUserRequest"];
 export type TeamCreateRequest = components["schemas"]["TeamCreateRequest"];
 export type TeamResponse = components["schemas"]["TeamResponse"];
 export type TeamUpdateRequest = components["schemas"]["TeamUpdateRequest"];
+export type UserPersonalDataResponse =
+  components["schemas"]["UserPersonalDataResponse"];
 export type UserRegistrationConflictResponse =
   components["schemas"]["UserRegistrationConflictResponse"];
 export type UserRegistrationRequest =
@@ -3269,6 +3436,218 @@ export interface operations {
         content?: never;
       };
       /** @description Cannot remove team owner */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_applications_teams__team_id__applications_get: {
+    parameters: {
+      query?: {
+        q?: string | null;
+        offset?: number;
+        limit?: number;
+      };
+      header?: never;
+      path: {
+        team_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ApplicationResponse"][];
+        };
+      };
+      /** @description Only team owner can get applications */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Team not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  add_application_teams__team_id__applications_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        team_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ApplicationCreateRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Resume does not belong to the current user */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Team or resume not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Application already sent */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  update_application_status_teams__team_id__applications__application_id__status_patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        team_id: string;
+        application_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ApplicationUpdateRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Only team owner can update applications */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Team or application not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Only sent applications can be updated */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  send_application_teams__team_id__applications_send_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        team_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ApplicationSendEmailRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Only team owner can send applications */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Team or user not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description User already in team */
       409: {
         headers: {
           [name: string]: unknown;

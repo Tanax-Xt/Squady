@@ -26,11 +26,7 @@ const ResumePageLayout: React.FunctionComponent<ResumePageLayoutProps> = ({
         <Bar.Center showAfterScrolled>Мои резюме</Bar.Center>
 
         <Bar.End>
-          <Button
-            asChild
-            variant="ghost"
-            className="text-muted-foreground max-md:text-base max-md:[&_svg:not([class*='size-'])]:size-5"
-          >
+          <Button asChild variant="ghost">
             <Link href="/resumes/create">Создать</Link>
           </Button>
         </Bar.End>

@@ -10,7 +10,10 @@ const BarEnd: React.FunctionComponent<BarEndProps> = ({
 }) => {
   return (
     <div
-      className={cn("absolute right-2 flex items-center gap-1", className)}
+      className={cn(
+        "absolute right-2 flex items-center gap-1 [&>[data-slot=button]]:text-muted-foreground max-md:[&>[data-slot=button]]:text-base max-md:[&>[data-slot=button]]:[&>svg:not([class*='size-'])]:size-5",
+        className,
+      )}
       {...otherProps}
     />
   );

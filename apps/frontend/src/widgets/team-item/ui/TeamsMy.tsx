@@ -5,8 +5,8 @@ import Link from "next/link";
 
 import { TeamResponse } from "@/shared/api";
 import { Button } from "@/shared/ui/button";
-import { TeamItem } from "@/widgets/team-item";
 
+import { TeamItem } from "./TeamItem";
 import { TeamsMyEmpty } from "./TeamsMyEmpty";
 
 function TeamsMy({ teamsMy }: { teamsMy: TeamResponse[] | undefined }) {
@@ -28,7 +28,7 @@ function TeamsMy({ teamsMy }: { teamsMy: TeamResponse[] | undefined }) {
         {!!teamsMy?.length ? (
           teamsMy.map((teamMy) => <TeamItem key={teamMy.id} team={teamMy} />)
         ) : (
-          <TeamsMyEmpty findTeamHref="#all" />
+          <TeamsMyEmpty />
         )}
       </div>
     </section>

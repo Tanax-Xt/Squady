@@ -1,4 +1,5 @@
 export { getTeam } from "./api/cache/getTeam";
+export { getTeamApplications } from "./api/cache/getTeamApplications";
 export { getTeams } from "./api/cache/getTeams";
 export { getTeamsMy } from "./api/cache/getTeamsMy";
 export {
@@ -7,6 +8,7 @@ export {
   TEAMS_MY_CACHE_TAG,
 } from "./api/cache/tags";
 export { TEAM_MEMBERS_MAX_COUNT } from "./config";
+export { getTeamMemberDisplayName } from "./lib/getTeamMemberDisplayName";
 export {
   getTeamStatusDisplayName,
   TEAM_STATUS_DISPLAY_NAMES,

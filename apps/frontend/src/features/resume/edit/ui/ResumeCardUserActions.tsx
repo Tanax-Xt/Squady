@@ -36,12 +36,12 @@ import Spinner from "@/shared/ui/spinner";
 
 import { deleteResume, toggleResumeIsPublic } from "../api/actions";
 
-// TODO: show edit/delete actions only if current user id === owner id
 export const ResumeCardUserActions: React.FC<
   Pick<React.ComponentProps<typeof Button>, "variant"> & {
     resume: ResumeResponse;
+    isCurrentUser?: boolean;
   }
-> = ({ resume, variant = "ghost" }) => {
+> = ({ resume, isCurrentUser, variant = "ghost" }) => {
   const router = useRouter();
 
   const [, startDeleteResume, deleting] = useActionState(
@@ -63,7 +63,9 @@ export const ResumeCardUserActions: React.FC<
 
   const copyLink = () => {
     if (window.isSecureContext) {
-      navigator.clipboard.writeText(`/resumes/${resume.id}`);
+      navigator.clipboard.writeText(
+        `https://${window.location.host}/resumes/${resume.id}`,
+      );
       toast.success("Ссылка на резюме скопирована!");
     } else {
       toast.error("Не удалось скопировать ссылку на резюме!", {
@@ -85,27 +87,33 @@ export const ResumeCardUserActions: React.FC<
             <LinkIcon />
             Скопировать ссылку
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onSelect={edit}>
-            <PenLineIcon />
-            Редактировать
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={duplicate}>
-            <CopyPlusIcon />
-            Дублировать
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onSelect={() => toggleResumeIsPublic(resume.id)}>
-            {resume.is_public ? <LockIcon /> : <LockOpenIcon />}
-            {resume.is_public ? "Сделать приватным" : "Сделать публичным"}
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <AlertDialogTrigger asChild>
-            <DropdownMenuItem variant="destructive">
-              <Trash2Icon />
-              Удалить
-            </DropdownMenuItem>
-          </AlertDialogTrigger>
+          {isCurrentUser && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onSelect={edit}>
+                <PenLineIcon />
+                Редактировать
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={duplicate}>
+                <CopyPlusIcon />
+                Дублировать
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onSelect={() => toggleResumeIsPublic(resume.id)}
+              >
+                {resume.is_public ? <LockIcon /> : <LockOpenIcon />}
+                {resume.is_public ? "Сделать приватным" : "Сделать публичным"}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <AlertDialogTrigger asChild>
+                <DropdownMenuItem variant="destructive">
+                  <Trash2Icon />
+                  Удалить
+                </DropdownMenuItem>
+              </AlertDialogTrigger>
+            </>
+          )}
         </DropdownMenuContent>
       </DropdownMenuRoot>
       <AlertDialogContent>

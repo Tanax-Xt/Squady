@@ -2,9 +2,7 @@ import { getTeams, getTeamsMy } from "@/entities/team";
 import Bar from "@/shared/ui/bar";
 import Page from "@/shared/ui/page";
 import { SidebarTrigger } from "@/shared/ui/sidebar";
-
-import { Teams } from "./Teams";
-import { TeamsMy } from "./TeamsMy";
+import { Teams, TeamsMy } from "@/widgets/team-item";
 
 async function TeamsPage() {
   const teams = await getTeams();

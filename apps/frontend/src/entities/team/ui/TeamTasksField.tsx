@@ -9,7 +9,12 @@ import {
 
 import { env } from "@/shared/config/client";
 import Collapse from "@/shared/ui/Collapse";
-import { Field, FieldError, FieldLabel } from "@/shared/ui/field";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from "@/shared/ui/field";
 import {
   InputGroup,
   InputGroupAddon,
@@ -33,6 +38,8 @@ function TeamTasksField<T extends FieldValues>({
         <InputGroupTextarea
           {...field}
           id="team-create-form-tasks"
+          rows={4}
+          className="min-h-24"
           placeholder="Перечислите ключевые задачи и проекты, над которыми работает команда…"
           aria-invalid={fieldState.invalid}
         />
@@ -44,6 +51,11 @@ function TeamTasksField<T extends FieldValues>({
           </InputGroupText>
         </InputGroupAddon>
       </InputGroup>
+
+      <FieldDescription className="!mt-2">
+        Укажите ключевые цели на ближайший период или регулярные обязанности
+        членов команды.
+      </FieldDescription>
 
       <Collapse>
         {fieldState.error && (

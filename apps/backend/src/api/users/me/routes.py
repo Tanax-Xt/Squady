@@ -3,6 +3,7 @@ from fastapi import APIRouter, HTTPException, status
 from src.api.auth.otp.service import OtpServiceDepends
 from src.api.resumes.schemas import ResumesPaginationResponse
 from src.api.resumes.service import ResumeServiceDepends
+from src.api.teams.service import TeamServiceDepends
 from src.api.users.enums import UserRole
 from src.api.users.me.deps import CURRENT_USER_DEPENDS_RESPONSES, CurrentUserDepends, CurrentUserVerifiedDepends
 from src.api.users.me.schemas import (
@@ -28,10 +29,13 @@ router = APIRouter(prefix="/me", responses=CURRENT_USER_DEPENDS_RESPONSES)
     status_code=status.HTTP_200_OK,
 )
 async def get_current_user(
-    resume_service: ResumeServiceDepends, current_user: CurrentUserDepends
+    current_user: CurrentUserDepends,
+    resume_service: ResumeServiceDepends,
+    teams_service: TeamServiceDepends,
 ) -> CurrentUserResponse:
     stats = UserStatsResponse(
-        resumes=len(await resume_service.get_resumes_by_user_id(current_user.id, current_user.id))
+        resumes=len(await resume_service.get_resumes_by_user_id(current_user.id, current_user.id)),
+        teams=len(await teams_service.get_teams_by_user_id(current_user.id)),
     )
 
     return CurrentUserResponse(**current_user.__dict__, stats=stats)

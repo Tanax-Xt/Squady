@@ -15,6 +15,7 @@ import {
   ResumeExperienceCell,
   ResumePrivateIcon,
 } from "@/entities/resume";
+import { getCurrentUserVerifiedParticipantOrMentorWithPersonalData } from "@/entities/user";
 import { ResumeCardUserActions } from "@/features/resume/edit";
 import Group from "@/shared/ui/Group";
 import Badge from "@/shared/ui/badge";
@@ -42,6 +43,13 @@ const ResumeViewPage: React.FunctionComponent<{
     return notFound();
   }
 
+  const currentUser =
+    await getCurrentUserVerifiedParticipantOrMentorWithPersonalData();
+
+  if (!currentUser) {
+    return notFound();
+  }
+
   const resume = await getResume(resumeId);
 
   if (!resume) {
@@ -51,16 +59,14 @@ const ResumeViewPage: React.FunctionComponent<{
   return (
     <Page>
       <Bar>
-        <Button
-          asChild
-          variant="ghost"
-          className="text-muted-foreground max-md:text-base max-md:[&_svg:not([class*='size-'])]:size-5"
-        >
-          <Link href={back ?? "/resumes"}>
-            <ArrowLeftIcon />
-            <span>Назад</span>
-          </Link>
-        </Button>
+        <Bar.Start>
+          <Button asChild variant="ghost">
+            <Link href={back ?? "/resumes"}>
+              <ArrowLeftIcon />
+              <span>Назад</span>
+            </Link>
+          </Button>
+        </Bar.Start>
 
         <Bar.Center className="flex items-center justify-center gap-1.5">
           Резюме
@@ -68,7 +74,10 @@ const ResumeViewPage: React.FunctionComponent<{
         </Bar.Center>
 
         <Bar.End>
-          <ResumeCardUserActions resume={resume} />
+          <ResumeCardUserActions
+            resume={resume}
+            isCurrentUser={currentUser.id === resume.owner_id}
+          />
         </Bar.End>
       </Bar>
 

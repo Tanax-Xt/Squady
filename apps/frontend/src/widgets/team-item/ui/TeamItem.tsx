@@ -50,8 +50,8 @@ function TeamItem({ team }: { team: TeamResponse }) {
               length: TEAM_MEMBERS_MAX_COUNT - activeUsers.length,
             }).map((_, index) => (
               <AvatarRoot key={index}>
-                <AvatarFallback>
-                  <PlusIcon className="size-5" />
+                <AvatarFallback className="bg-muted text-muted-foreground ring-border">
+                  <PlusIcon className="size-4" />
                 </AvatarFallback>
               </AvatarRoot>
             ))}

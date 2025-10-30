@@ -1,6 +1,6 @@
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { ResumesMyPublicEmpty } from "@/entities/resume";
 import { getTeam } from "@/entities/team";
@@ -34,6 +34,14 @@ export async function TeamJoinPage({
     return notFound();
   }
 
+  const isCurrentUserAlreadyInTeam = !!team.users?.find(
+    (user) => user.id === currentUser.id,
+  );
+
+  if (isCurrentUserAlreadyInTeam) {
+    return redirect(`/teams/${team.id}`);
+  }
+
   const resumes = await getCurrentUserResumes();
   const publicResumes = resumes?.resumes.filter((resume) => resume.is_public);
 
@@ -41,11 +49,7 @@ export async function TeamJoinPage({
     <Page>
       <Bar>
         <Bar.Start>
-          <Button
-            asChild
-            variant="ghost"
-            className="text-muted-foreground max-md:text-base max-md:[&_svg:not([class*='size-'])]:size-5"
-          >
+          <Button asChild variant="ghost">
             <Link href={`/teams/${team.id}`}>
               <ArrowLeftIcon /> Назад
             </Link>

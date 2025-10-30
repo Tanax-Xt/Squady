@@ -9,13 +9,7 @@ import {
 } from "@/entities/team";
 import { TeamResponse } from "@/shared/api";
 import { Button } from "@/shared/ui/button";
-import {
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardRoot,
-  CardTitle,
-} from "@/shared/ui/card";
+import { CardContent, CardFooter, CardRoot } from "@/shared/ui/card";
 import { FieldGroup, FieldSet } from "@/shared/ui/field";
 import Spinner from "@/shared/ui/spinner";
 
@@ -28,10 +22,6 @@ function TeamEditForm({ team }: { team: TeamResponse }) {
     <form onSubmit={submit}>
       <FieldSet disabled={loading}>
         <CardRoot>
-          <CardHeader className="gap-0 border-b">
-            <CardTitle>Информация о команде</CardTitle>
-          </CardHeader>
-
           <CardContent>
             <FieldGroup>
               <Controller
@@ -54,7 +44,7 @@ function TeamEditForm({ team }: { team: TeamResponse }) {
             </FieldGroup>
           </CardContent>
 
-          <CardFooter className="border-t">
+          <CardFooter>
             <Button
               type="submit"
               disabled={!form.formState.isValid || !form.formState.isDirty}

@@ -20,11 +20,7 @@ const ResumeProfilePageLayout: React.FunctionComponent<
       <Bar>
         <Bar.Start>
           {!isMobile && !open && <Sidebar.Trigger />}
-          <Button
-            asChild
-            variant="ghost"
-            className="text-muted-foreground max-md:text-base max-md:[&_svg:not([class*='size-'])]:size-5"
-          >
+          <Button asChild variant="ghost">
             <Link href="/resumes">
               <ArrowLeftIcon />
               <span>Назад</span>
@@ -35,11 +31,7 @@ const ResumeProfilePageLayout: React.FunctionComponent<
         <Bar.Center>Личные данные</Bar.Center>
 
         <Bar.End>
-          <Button
-            asChild
-            variant="ghost"
-            className="text-muted-foreground max-md:text-base max-md:[&_svg:not([class*='size-'])]:size-5"
-          >
+          <Button asChild variant="ghost">
             <Link href="/resumes/profile/edit">Изменить</Link>
           </Button>
         </Bar.End>

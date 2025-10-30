@@ -1,8 +1,11 @@
+import { getTeamsMy } from "@/entities/team";
 import { getCurrentUser } from "@/entities/user";
 import { getUserProfileProgress, UserProfileProgress } from "@/widgets/profile";
+import { TeamsMy } from "@/widgets/team-item";
 
 const HomePage: React.FunctionComponent = async () => {
   const user = await getCurrentUser();
+  const teamsMy = await getTeamsMy();
 
   const { currentStep } = getUserProfileProgress(user);
 
@@ -16,7 +19,13 @@ const HomePage: React.FunctionComponent = async () => {
         !
       </h1>
 
-      {currentStep && <UserProfileProgress user={user} />}
+      <div className="flex flex-col gap-8">
+        {currentStep && <UserProfileProgress user={user} />}
+
+        {(currentStep === undefined || currentStep.id === "team") && (
+          <TeamsMy teamsMy={teamsMy} />
+        )}
+      </div>
     </>
   );
 };

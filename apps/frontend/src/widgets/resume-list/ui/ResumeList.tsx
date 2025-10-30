@@ -49,7 +49,7 @@ const ResumeList: React.FunctionComponent<ResumeListProps> = ({
           >
             <ResumeCard
               resume={resume}
-              actions={<ResumeCardUserActions resume={resume} />}
+              actions={<ResumeCardUserActions resume={resume} isCurrentUser />}
             />
           </motion.div>
         ))}

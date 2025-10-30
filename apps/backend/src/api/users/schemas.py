@@ -43,3 +43,4 @@ class UserStatsResponse(BaseSchema):
     """Represents the user stats details."""
 
     resumes: NonNegativeInt
+    teams: NonNegativeInt

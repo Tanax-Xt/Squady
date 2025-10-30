@@ -2,6 +2,7 @@ import { hasAnyPersonalData } from "@/entities/user";
 import { CurrentUserResponse, UserRole } from "@/shared/api";
 
 export type UserProfileProgressStep = {
+  id: string;
   href?: string;
   label: string;
   completed: (user: CurrentUserResponse) => boolean;
@@ -9,16 +10,19 @@ export type UserProfileProgressStep = {
 
 const SHARED_STEPS: UserProfileProgressStep[] = [
   {
+    id: "register",
     href: "/register",
     label: "Создать аккаунт",
     completed: (user) => Boolean(user),
   },
   {
+    id: "verify",
     href: "/settings/verify",
     label: "Подтвердить электронную почту",
     completed: ({ is_verified }) => is_verified,
   },
   {
+    id: "role",
     href: "/settings/role",
     label: "Выбрать роль",
     completed: ({ role }) => Boolean(role),
@@ -28,6 +32,7 @@ const SHARED_STEPS: UserProfileProgressStep[] = [
 const AGENT_STEPS: UserProfileProgressStep[] = [
   ...SHARED_STEPS,
   {
+    id: "verify-agent",
     label: "Подтвердить статус представителя",
     completed: ({ is_verified_agent }) => !!is_verified_agent,
   },
@@ -36,14 +41,22 @@ const AGENT_STEPS: UserProfileProgressStep[] = [
 const PARTICIPANT_MENTOR_STEPS: UserProfileProgressStep[] = [
   ...SHARED_STEPS,
   {
+    id: "personal",
     href: "/resumes/profile/edit",
     label: "Заполнить личные данные",
     completed: (user) => hasAnyPersonalData(user),
   },
   {
+    id: "resume",
     href: "/resumes/create",
     label: "Создать первое резюме",
     completed: (user) => user.stats.resumes > 0,
+  },
+  {
+    id: "team",
+    href: "/teams",
+    label: "Найти или создать команду",
+    completed: (user) => user.stats.teams > 0,
   },
 ] as const;
 

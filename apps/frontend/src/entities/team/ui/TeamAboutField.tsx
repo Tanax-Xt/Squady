@@ -38,6 +38,8 @@ function TeamAboutField<T extends FieldValues>({
         <InputGroupTextarea
           {...field}
           id="team-create-form-about"
+          rows={4}
+          className="min-h-24"
           placeholder="Опишите цели, миссию и основные направления деятельности вашей команды…"
           aria-invalid={fieldState.invalid}
         />
@@ -51,8 +53,8 @@ function TeamAboutField<T extends FieldValues>({
       </InputGroup>
 
       <FieldDescription className="!mt-2">
-        Укажите общую информацию о вашей команде и в каком соревновании
-        участвуете.
+        Расскажите о своей команде и укажите в каком соревновании вы собираетесь
+        участвовать.
       </FieldDescription>
 
       <Collapse>

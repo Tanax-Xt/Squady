@@ -1,5 +1,6 @@
 export { getResume } from "./api/cache";
 export { getResumeCacheTag } from "./api/tags";
+export { EDUCATION_TYPES, type EducationType } from "./config/education";
 export { compareAchievements } from "./lib/compareAchievements";
 export { compareAdditionalEducation } from "./lib/compareAdditionalEducation";
 export { compareExperiences } from "./lib/compareExperiences";

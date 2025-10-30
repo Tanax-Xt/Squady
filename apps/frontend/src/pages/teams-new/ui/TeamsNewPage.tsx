@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ResumesMyPublicEmpty } from "@/entities/resume";
 import { getCurrentUserResumes } from "@/entities/user";
 import { TeamCreateForm } from "@/features/team/create";
+import Bar from "@/shared/ui/bar";
 import { Button } from "@/shared/ui/button";
 import Page from "@/shared/ui/page";
 
@@ -13,14 +14,19 @@ async function TeamsNewPage() {
 
   return (
     <Page>
-      <Page.Content size="3xl">
-        <Button variant="link" className="mr-auto" asChild>
-          <Link href="/teams">
-            <ArrowLeftIcon />
-            Назад
-          </Link>
-        </Button>
+      <Bar>
+        <Bar.Start>
+          <Button variant="ghost" asChild>
+            <Link href="/teams">
+              <ArrowLeftIcon />
+              Назад
+            </Link>
+          </Button>
+        </Bar.Start>
+        <Bar.Center>Новая команда</Bar.Center>
+      </Bar>
 
+      <Page.Content size="3xl">
         {!!publicResumes?.length ? (
           <TeamCreateForm resumes={publicResumes} />
         ) : (

@@ -21,11 +21,7 @@ export const ResumeDuplicatePageBack: React.FunctionComponent<{
   }
 
   return (
-    <Button
-      variant="ghost"
-      className="text-muted-foreground max-md:text-base max-md:[&_svg:not([class*='size-'])]:size-5"
-      onClick={() => router.push(href)}
-    >
+    <Button variant="ghost" onClick={() => router.push(href)}>
       <ArrowLeftIcon />
       <span>Назад</span>
     </Button>

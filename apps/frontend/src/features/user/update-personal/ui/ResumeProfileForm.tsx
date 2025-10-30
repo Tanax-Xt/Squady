@@ -22,7 +22,7 @@ function ResumeProfileForm({
   const [form, submit, loading] = useResumeProfileForm({ defaultValues });
 
   return (
-    <form id="resume-profile-form" onSubmit={submit}>
+    <form id="resume-profile-form" className="w-full" onSubmit={submit}>
       <FieldSet disabled={loading}>
         <Controller
           control={form.control}

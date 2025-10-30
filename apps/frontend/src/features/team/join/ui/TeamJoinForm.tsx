@@ -11,7 +11,6 @@ import {
 import { Button } from "@/shared/ui/button";
 import {
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardRoot,
@@ -37,11 +36,8 @@ function TeamJoinForm({
     <form onSubmit={submit}>
       <FieldSet disabled={loading}>
         <CardRoot>
-          <CardHeader className="border-b">
+          <CardHeader>
             <CardTitle>Присоединиться к команде «{team.title}»</CardTitle>
-            <CardDescription>
-              Вы вошли в систему как {user.username}
-            </CardDescription>
           </CardHeader>
 
           <CardContent>
@@ -60,15 +56,15 @@ function TeamJoinForm({
             </FieldGroup>
           </CardContent>
 
-          <CardFooter className="border-t">
+          <CardFooter>
             <Button type="submit">
               {loading ? (
                 <>
                   <Spinner />
-                  Загрузка…
+                  Подача заявки на вступление…
                 </>
               ) : (
-                <>Присоединиться</>
+                <>Подать заявку на вступление</>
               )}
             </Button>
           </CardFooter>

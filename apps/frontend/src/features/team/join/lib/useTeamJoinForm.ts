@@ -1,6 +1,9 @@
+"use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import { CurrentUserResponse, TeamResponse } from "@/shared/api";
 
@@ -12,7 +15,6 @@ import {
 
 export const useTeamJoinForm = ({
   team,
-  user,
 }: {
   team: TeamResponse;
   user: CurrentUserResponse;
@@ -29,10 +31,13 @@ export const useTeamJoinForm = ({
 
   const submit = form.handleSubmit((values) => {
     startLoading(async () => {
-      await joinTeam(team.id, {
-        user_id: user.id,
+      const { status } = await joinTeam(team.id, {
         resume_id: values.resumeId,
       });
+
+      if (status === 409) {
+        toast.error("Вы уже подали заявку в эту команду!");
+      }
     });
   });
 

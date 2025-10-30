@@ -1,6 +1,6 @@
 import { TeamResponse } from "@/shared/api";
-import { TeamItem } from "@/widgets/team-item";
 
+import { TeamItem } from "./TeamItem";
 import { TeamsEmpty } from "./TeamsEmpty";
 
 function Teams({ teams }: { teams: TeamResponse[] | undefined }) {

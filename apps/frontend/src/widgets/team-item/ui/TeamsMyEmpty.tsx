@@ -13,7 +13,7 @@ import {
   EmptyTitle,
 } from "@/shared/ui/empty";
 
-function TeamsMyEmpty({ findTeamHref }: { findTeamHref: string }) {
+function TeamsMyEmpty() {
   return (
     <Empty className="border border-dashed">
       <EmptyMedia variant="icon">
@@ -29,7 +29,7 @@ function TeamsMyEmpty({ findTeamHref }: { findTeamHref: string }) {
       <EmptyContent>
         <div className="flex gap-2">
           <Button size="sm" variant="default" asChild>
-            <Link href={findTeamHref}>
+            <Link href="/teams#all">
               <SearchIcon />
               Найти команду
             </Link>

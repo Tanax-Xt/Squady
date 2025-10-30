@@ -13,16 +13,14 @@ const ResumeCreatePageLayout: React.FunctionComponent<
   return (
     <Page>
       <Bar>
-        <Button
-          asChild
-          variant="ghost"
-          className="text-muted-foreground max-md:text-base max-md:[&_svg:not([class*='size-'])]:size-5"
-        >
-          <Link href="/resumes">
-            <ArrowLeftIcon />
-            <span>Назад</span>
-          </Link>
-        </Button>
+        <Bar.Start>
+          <Button asChild variant="ghost">
+            <Link href="/resumes">
+              <ArrowLeftIcon />
+              <span>Назад</span>
+            </Link>
+          </Button>
+        </Bar.Start>
 
         <Bar.Center>Создание резюме</Bar.Center>
       </Bar>

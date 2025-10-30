@@ -9,7 +9,11 @@ import {
   getTeamCacheTag,
 } from "@/entities/team";
 import { USER_CACHE_USERS_ME_TAG } from "@/entities/user";
-import { client } from "@/shared/api";
+import {
+  ApplicationSendEmailRequest,
+  ApplicationUpdateRequest,
+  client,
+} from "@/shared/api";
 
 export async function deleteTeam(teamId: string) {
   const { response, error } = await client.DELETE("/teams/{team_id}", {
@@ -30,11 +34,16 @@ export async function deleteTeam(teamId: string) {
   redirect("/teams");
 }
 
-export async function kickMemberFromTeam(teamId: string, userId: string) {
-  const { response, error } = await client.DELETE(
-    "/teams/{team_id}/members/{user_id}",
+export async function updateTeamApplication(
+  teamId: string,
+  applicationId: string,
+  body: ApplicationUpdateRequest,
+) {
+  const { response, error } = await client.PATCH(
+    "/teams/{team_id}/applications/{application_id}/status",
     {
-      params: { path: { team_id: teamId, user_id: userId } },
+      params: { path: { team_id: teamId, application_id: applicationId } },
+      body,
     },
   );
 
@@ -49,4 +58,18 @@ export async function kickMemberFromTeam(teamId: string, userId: string) {
   revalidateTag(TEAMS_CACHE_TAG);
   revalidateTag(USER_CACHE_USERS_ME_TAG);
   revalidateTag(getTeamCacheTag(teamId));
+}
+
+export async function sendTeamInvite(
+  teamId: string,
+  body: ApplicationSendEmailRequest,
+) {
+  const { response } = await client.POST("/teams/{team_id}/applications/send", {
+    params: { path: { team_id: teamId } },
+    body,
+  });
+
+  return {
+    status: response.status,
+  };
 }

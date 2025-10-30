@@ -15,11 +15,7 @@ const SettingsVerifyPageLayout: React.FunctionComponent<
     <Page>
       <Bar>
         <Bar.Start>
-          <Button
-            asChild
-            variant="ghost"
-            className="text-muted-foreground max-md:text-base max-md:[&_svg:not([class*='size-'])]:size-5"
-          >
+          <Button asChild variant="ghost">
             <Link href="/settings">
               <ArrowLeftIcon />
               <span>Назад</span>

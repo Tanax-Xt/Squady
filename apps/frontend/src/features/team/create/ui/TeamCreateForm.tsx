@@ -10,14 +10,7 @@ import {
 } from "@/entities/team";
 import { ResumeResponse } from "@/shared/api";
 import { Button } from "@/shared/ui/button";
-import {
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardRoot,
-  CardTitle,
-} from "@/shared/ui/card";
+import { CardContent, CardFooter, CardRoot } from "@/shared/ui/card";
 import { FieldGroup, FieldSet } from "@/shared/ui/field";
 import { Separator } from "@/shared/ui/separator";
 import Spinner from "@/shared/ui/spinner";
@@ -31,13 +24,6 @@ function TeamCreateForm({ resumes }: { resumes: ResumeResponse[] }) {
     <form onSubmit={submit}>
       <FieldSet disabled={loading}>
         <CardRoot>
-          <CardHeader className="border-b">
-            <CardTitle>Новая команда</CardTitle>
-            <CardDescription>
-              Создайте команду и участвуйте в соревнованиях!
-            </CardDescription>
-          </CardHeader>
-
           <CardContent>
             <FieldGroup>
               <Controller
@@ -76,7 +62,7 @@ function TeamCreateForm({ resumes }: { resumes: ResumeResponse[] }) {
             </FieldGroup>
           </CardContent>
 
-          <CardFooter className="border-t">
+          <CardFooter>
             <Button
               type="submit"
               disabled={!form.formState.isDirty || !form.formState.isValid}

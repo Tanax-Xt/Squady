@@ -102,7 +102,7 @@ const ResumeGithubUrlForm: React.FunctionComponent<
           className="mt-4"
         >
           {loading && <Spinner />}
-          {loading ? "Импорт..." : "Импортировать"}
+          {loading ? "Импорт…" : "Импортировать"}
         </Button>
       </Form>
     </div>

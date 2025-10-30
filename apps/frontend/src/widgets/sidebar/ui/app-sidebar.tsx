@@ -1,27 +1,30 @@
 "use client";
 
 import {
-  CalendarRangeIcon,
   FileUserIcon,
-  HomeIcon,
+  LayoutDashboardIcon,
   LucideIcon,
-  ShieldHalfIcon,
+  UsersIcon,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
-import { CurrentUserResponse, UserRole } from "@/shared/api";
+import { CurrentUserResponse, TeamResponse, UserRole } from "@/shared/api";
 import ThemeRadioGroup from "@/shared/ui/ThemeRadioGroup";
 import Sidebar from "@/shared/ui/sidebar";
 
 import { NavMain } from "./nav-main";
-import { NavProjects } from "./nav-projects";
+import { NavTeams } from "./nav-teams";
 import { NavUser } from "./nav-user";
 
 export function AppSidebar({
   user,
+  teamsMy,
   ...props
-}: React.ComponentProps<typeof Sidebar> & { user?: CurrentUserResponse }) {
+}: React.ComponentProps<typeof Sidebar> & {
+  user?: CurrentUserResponse;
+  teamsMy: TeamResponse[] | undefined;
+}) {
   const pathname = usePathname();
   const sidebar = Sidebar.useContext();
 
@@ -43,18 +46,18 @@ export function AppSidebar({
   } = {
     navMain: [
       {
-        title: "Главная",
+        title: "Сводка",
         href: "/home",
-        icon: HomeIcon,
+        icon: LayoutDashboardIcon,
       },
+      // {
+      //   title: "Соревнования",
+      //   href: "/events",
+      //   icon: CalendarRangeIcon,
+      //   roles: ["mentor", "participant"],
+      // },
       {
-        title: "Соревнования",
-        href: "/events",
-        icon: CalendarRangeIcon,
-        roles: ["mentor", "participant"],
-      },
-      {
-        title: "Мои резюме",
+        title: "Резюме",
         badge: user?.stats.resumes,
         href: "/resumes",
         icon: FileUserIcon,
@@ -62,9 +65,9 @@ export function AppSidebar({
       },
       {
         title: "Команды",
-        badge: 0, // TODO
+        badge: user?.stats.teams,
         href: "/teams",
-        icon: ShieldHalfIcon,
+        icon: UsersIcon,
         roles: ["mentor", "participant"],
       },
     ],
@@ -95,16 +98,22 @@ export function AppSidebar({
   return (
     <Sidebar variant="floating" className="isolate" {...props}>
       <Sidebar.Header>
-        {!sidebar.isMobile && <Sidebar.Trigger />}
-        <h1 className="px-2 pt-2 text-xl font-semibold text-accent-foreground md:text-2xl">
+        <h1 className="px-2 pt-2 text-lg font-semibold text-accent-foreground md:text-xl">
           Squady
         </h1>
       </Sidebar.Header>
       <Sidebar.Separator className="mx-2 max-md:hidden" />
       <Sidebar.Content>
         <NavMain user={user} items={data.navMain} />
-        <Sidebar.Separator className="mx-2" />
-        <NavProjects projects={data.projects} />
+        {user &&
+          (user.role === "participant" || user.role === "mentor") &&
+          !!teamsMy?.length && (
+            <>
+              <Sidebar.Separator className="mx-2" />
+              <NavTeams teams={teamsMy} />
+            </>
+          )}
+        {/* <NavProjects projects={data.projects} /> */}
       </Sidebar.Content>
       <Sidebar.Footer>
         {user && (
