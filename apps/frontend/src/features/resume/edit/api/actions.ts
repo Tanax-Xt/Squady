@@ -74,6 +74,7 @@ export const deleteResume = async (resumeId: string) => {
   revalidateTag(getResumeCacheTag(resumeId));
   revalidateTag(USER_CACHE_USERS_ME_RESUMES_TAG);
   revalidateTag(USER_CACHE_USERS_ME_TAG);
+  redirect("/resumes");
 };
 
 export const createResume = async (values: ResumeFormValues) => {

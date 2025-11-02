@@ -145,6 +145,11 @@
     @apply isolate overflow-clip;
   }
 
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
   [data-sonner-toast] [data-close-button] {
     opacity: 0;
   }

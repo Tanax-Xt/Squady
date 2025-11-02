@@ -54,6 +54,9 @@ class TeamResponse(AuditBaseModel):
         users: Sequence[User],
         resumes: list[Resume],
     ) -> "TeamResponse":
-        return TeamResponse(
-            **team.__dict__, users=[MemberResponse.from_orm(users[i], resumes[i]) for i in range(len(users))]
-        )
+        try:
+            return TeamResponse(
+                **team.__dict__, users=[MemberResponse.from_orm(users[i], resumes[i]) for i in range(len(users))]
+            )
+        except Exception:
+            return TeamResponse(**team.__dict__, users=[])

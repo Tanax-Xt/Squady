@@ -2,20 +2,20 @@
 
 import Bar from "@/shared/ui/bar";
 import Page from "@/shared/ui/page";
-import Sidebar from "@/shared/ui/sidebar";
+import { SidebarTrigger, useSidebar } from "@/shared/ui/sidebar";
 
 export interface SettingsPageLayoutProps extends React.PropsWithChildren {}
 
 const SettingsPageLayout: React.FunctionComponent<SettingsPageLayoutProps> = ({
   children,
 }) => {
-  const { open, isMobile } = Sidebar.useContext();
+  const { open, isMobile } = useSidebar();
   return (
     <Page>
       <Bar>
         {(isMobile || !open) && (
           <Bar.Start>
-            <Sidebar.Trigger />
+            <SidebarTrigger />
           </Bar.Start>
         )}
         <Bar.Center>Настройки</Bar.Center>

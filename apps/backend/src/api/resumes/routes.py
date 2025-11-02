@@ -4,7 +4,13 @@ from fastapi import APIRouter, HTTPException, status
 
 from src.api.fields import EntityId
 from src.api.resumes.fields import ResumeItemTitle, ResumeSkill
-from src.api.resumes.schemas import ResumeCreateRequest, ResumeResponse, ResumeUpdateRequest
+from src.api.resumes.queries import ResumeQueryParamsDepends
+from src.api.resumes.schemas import (
+    ResumeCreateRequest,
+    ResumeResponse,
+    ResumeUpdateRequest,
+    ResumeWithUserResponse,
+)
 from src.api.resumes.service import ResumeServiceDepends
 from src.api.tags import Tag
 from src.api.users.me.deps import (
@@ -44,6 +50,23 @@ async def create_resume(
 
     db_resume = await service.create_resume(current_user.id, resume)
     return ResumeResponse.from_orm(db_resume)
+
+
+@router.get(
+    "",
+    status_code=status.HTTP_200_OK,
+    response_model=list[ResumeWithUserResponse],
+)
+async def get_resumes(
+    search_params: PaginationSearchParamsDepends,
+    current_user: CurrentUserVerifiedParticipantOrMentorWithPersonalDataDepends,
+    service: ResumeServiceDepends,
+    query_params: ResumeQueryParamsDepends,
+) -> list[ResumeWithUserResponse]:
+    return [
+        ResumeWithUserResponse.from_orm(resume)
+        for resume in await service.get_resumes(current_user.id, search_params, query_params)
+    ]
 
 
 @router.get(

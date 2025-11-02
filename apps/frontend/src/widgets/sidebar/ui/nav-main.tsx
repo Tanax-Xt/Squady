@@ -5,7 +5,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { CurrentUserResponse, UserRole } from "@/shared/api";
-import Sidebar from "@/shared/ui/sidebar";
+import {
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/shared/ui/sidebar";
 
 export function NavMain({
   user,
@@ -23,9 +30,9 @@ export function NavMain({
   const pathname = usePathname();
 
   return (
-    <Sidebar.Group>
-      <Sidebar.GroupLabel>Приложение</Sidebar.GroupLabel>
-      <Sidebar.Menu>
+    <SidebarGroup>
+      <SidebarGroupLabel>Приложение</SidebarGroupLabel>
+      <SidebarMenu>
         {items
           .filter(
             (item) =>
@@ -33,8 +40,8 @@ export function NavMain({
               (user?.role && item.roles?.includes(user.role)),
           )
           .map((item) => (
-            <Sidebar.MenuItem key={item.href}>
-              <Sidebar.MenuButton
+            <SidebarMenuItem key={item.href}>
+              <SidebarMenuButton
                 asChild
                 tooltip={item.title}
                 isActive={item.href === pathname}
@@ -43,13 +50,13 @@ export function NavMain({
                   <item.icon />
                   <span>{item.title}</span>
                 </Link>
-              </Sidebar.MenuButton>
+              </SidebarMenuButton>
               {!!item.badge && (
-                <Sidebar.MenuBadge>{item.badge}</Sidebar.MenuBadge>
+                <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
               )}
-            </Sidebar.MenuItem>
+            </SidebarMenuItem>
           ))}
-      </Sidebar.Menu>
-    </Sidebar.Group>
+      </SidebarMenu>
+    </SidebarGroup>
   );
 }

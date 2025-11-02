@@ -3,6 +3,7 @@
 import { UnplugIcon } from "lucide-react";
 import { useTransition } from "react";
 
+import { deleteTeam } from "@/features/team/manage";
 import { TeamResponse } from "@/shared/api";
 import {
   AlertDialogAction,
@@ -17,8 +18,6 @@ import {
 } from "@/shared/ui/alert-dialog";
 import { Button } from "@/shared/ui/button";
 import Spinner from "@/shared/ui/spinner";
-
-import { deleteTeam } from "../api/actions";
 
 export function TeamDeleteButton({ team }: { team: TeamResponse }) {
   const [deleting, startDeleting] = useTransition();

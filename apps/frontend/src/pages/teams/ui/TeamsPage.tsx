@@ -1,3 +1,4 @@
+import { getResumesSkills } from "@/entities/resume";
 import { getTeams, getTeamsMy } from "@/entities/team";
 import Bar from "@/shared/ui/bar";
 import Page from "@/shared/ui/page";
@@ -7,6 +8,7 @@ import { Teams, TeamsMy } from "@/widgets/team-item";
 async function TeamsPage() {
   const teams = await getTeams();
   const teamsMy = await getTeamsMy();
+  const skills = await getResumesSkills();
 
   return (
     <Page>
@@ -21,7 +23,7 @@ async function TeamsPage() {
 
         <div className="space-y-8">
           <TeamsMy teamsMy={teamsMy} />
-          <Teams teams={teams} />
+          <Teams teams={teams} skills={skills ?? []} />
         </div>
       </Page.Content>
     </Page>

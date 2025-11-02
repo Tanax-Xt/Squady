@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidateTag } from "next/cache";
-import { redirect } from "next/navigation";
 
 import {
   getTeamCacheTag,
@@ -31,5 +30,9 @@ export async function joinTeam(teamId: string, body: ApplicationCreateRequest) {
   revalidateTag(TEAMS_CACHE_TAG);
   revalidateTag(USER_CACHE_USERS_ME_TAG);
   revalidateTag(getTeamCacheTag(teamId));
-  redirect(`/teams/${teamId}`);
+
+  return {
+    error: null,
+    status: response.status,
+  };
 }

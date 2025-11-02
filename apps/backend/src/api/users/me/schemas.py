@@ -40,6 +40,7 @@ class CurrentUserForbiddenResponse(BaseSchema):
         "unverified",
         "not_mentor_or_participant",
         "no_personal_data",
+        "unverified_agent",
     ] = Field(
         ...,
         description=("The specific forbidden action for the current user."),
@@ -47,12 +48,14 @@ class CurrentUserForbiddenResponse(BaseSchema):
             "unverified",
             "not_mentor_or_participant",
             "no_personal_data",
+            "unverified_agent",
         ],
         json_schema_extra={
             "x-enum-descriptions": [
                 "You cannot do this until you are verified.",
                 "You cannot do this because you aren't a mentor or participant.",
                 "You cannot do this because you don't have personal data.",
+                "You cannot do this until you are verified as an agent.",
             ]
         },
     )
@@ -64,6 +67,7 @@ class CurrentUserForbiddenResponse(BaseSchema):
             "You cannot do this until you are verified.",
             "You cannot do this because you aren't a mentor or participant.",
             "You cannot do this because you don't have personal data.",
+            "You cannot do this until you are verified as an agent.",
         ],
     )
 

@@ -1,13 +1,12 @@
 from typing import Literal
 
-from pydantic import EmailStr
-
 from src.api.fields import EntityId
 from src.api.resumes.models import Resume
 from src.api.resumes.schemas import ResumeResponse
 from src.api.schemas import AuditBaseModel, BaseSchema
 from src.api.teams.application.enum import ApplicationStatusEnum
 from src.api.teams.application.models import ApplicationToTeam
+from src.api.users.fields import UserEmail
 from src.api.users.models import User
 from src.api.users.schemas import UserPersonalDataResponse
 
@@ -21,7 +20,7 @@ class ApplicationUpdateRequest(BaseSchema):
 
 
 class ApplicationSendEmailRequest(BaseSchema):
-    email: EmailStr
+    email: UserEmail
 
 
 class ApplicationResponse(AuditBaseModel):

@@ -2,19 +2,22 @@ from typing import Annotated, Any, Sequence
 from uuid import UUID
 
 from fastapi import Depends
-from sqlalchemy import Select, select
+from sqlalchemy import Select, and_, func, or_, select
 from sqlalchemy.orm import selectinload
 
-from src.api.resumes.models import Resume
+from src.api.resumes.models import Resume, Skill, resume_to_skill
+from src.api.resumes.repository import ResumeRepositoryDepends
 from src.api.teams.models import Team
+from src.api.teams.queries import TeamQueryParams
 from src.api.users.models import TeamToUser, User
 from src.db import SessionDepends
 from src.pagination import PaginationSearchParams
 
 
 class TeamRepository:
-    def __init__(self, session: SessionDepends) -> None:
+    def __init__(self, session: SessionDepends, resume_repository: ResumeRepositoryDepends) -> None:
         self.session = session
+        self.resume_repository = resume_repository
 
     async def create(self, team: Team, team_to_user: TeamToUser) -> Team:
         self.session.add(team)
@@ -36,15 +39,72 @@ class TeamRepository:
         await self.session.delete(team)
         await self.session.commit()
 
-    async def get_all(self, search_params: PaginationSearchParams | None) -> Sequence[Team]:
+    # async def get_all(self, search_params: PaginationSearchParams | None,
+    #                   query_params: TeamQueryParams | None = None) -> Sequence[Team]:
+    #     search_params = search_params or PaginationSearchParams.model_construct()
+    #     query_params = query_params or TeamQueryParams.model_construct()
+    #
+    #     stmt = select(Team)
+    #     stmt = stmt.filter(Team.title.icontains(search_params.q),
+    #                        Team.about.icontains(search_params.q)) if search_params.q else stmt
+    #     stmt = self._paginate(stmt, offset=search_params.offset, limit=search_params.limit)
+    #
+    #     result = await self.session.execute(stmt)
+    #
+    #     return result.scalars().all()
+
+    async def get_all(
+        self, search_params: PaginationSearchParams | None, query_params: TeamQueryParams | None = None
+    ) -> Sequence[Team]:
         search_params = search_params or PaginationSearchParams.model_construct()
+        query_params = query_params or TeamQueryParams.model_construct()
 
         stmt = select(Team)
-        stmt = stmt.filter(Team.title.icontains(search_params.q)) if search_params.q else stmt
+
+        stmt = (
+            stmt.filter(or_(Team.title.icontains(search_params.q), Team.about.icontains(search_params.q)))
+            if search_params.q
+            else stmt
+        )
+
+        exists_clauses = []
+
+        db_skills = await self.resume_repository.create_and_get_skills_by_names(query_params.skills)
+
+        skill_subq = (
+            select(1)
+            .select_from(TeamToUser)
+            .join(Resume, TeamToUser.resume_id == Resume.id)
+            .join(resume_to_skill, resume_to_skill.c.resume_id == Resume.id)
+            .join(Skill, resume_to_skill.c.skill_id == Skill.id)
+            .where(TeamToUser.team_id == Team.id)
+            .where(TeamToUser.resume_id.isnot(None))
+        )
+
+        skill_filters = []
+        if len(db_skills) > 0:
+            skill_filters.append(Skill.name.in_([skill.name for skill in db_skills]))
+
+        if len(skill_filters) > 0:
+            skill_subq = skill_subq.where(or_(*skill_filters))
+            exists_clauses.append(skill_subq.exists())
+
+        if query_params.education_types:
+            ed_subq = (
+                select(1)
+                .select_from(TeamToUser)
+                .join(Resume, TeamToUser.resume_id == Resume.id)
+                .where(TeamToUser.team_id == Team.id)
+                .where(TeamToUser.resume_id.isnot(None))
+                .where(func.jsonb_extract_path_text(Resume.education, "type").in_(query_params.education_types))
+            )
+            exists_clauses.append(ed_subq.exists())
+
+        if exists_clauses:
+            stmt = stmt.where(and_(*exists_clauses))
+
         stmt = self._paginate(stmt, offset=search_params.offset, limit=search_params.limit)
-
         result = await self.session.execute(stmt)
-
         return result.scalars().all()
 
     async def get_by_id(self, team_id: str | UUID) -> Team | None:

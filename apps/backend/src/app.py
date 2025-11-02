@@ -38,7 +38,8 @@ admin = Admin(
     app=app,
     engine=ENGINE,
     debug=settings.app.debug,
-    title=settings.app.title,
+    title=f"{settings.app.title} - Admin",
+    favicon_url="/favicon.ico",
     templates_dir="src/api/admin/templates",
     authentication_backend=admin_authentication_backend,
 )

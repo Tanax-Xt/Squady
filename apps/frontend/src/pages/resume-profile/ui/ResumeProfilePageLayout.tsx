@@ -6,20 +6,20 @@ import Link from "next/link";
 import Bar from "@/shared/ui/bar";
 import { Button } from "@/shared/ui/button";
 import Page from "@/shared/ui/page";
-import Sidebar from "@/shared/ui/sidebar";
+import { SidebarTrigger, useSidebar } from "@/shared/ui/sidebar";
 
 export interface ResumeProfilePageLayoutProps extends React.PropsWithChildren {}
 
 const ResumeProfilePageLayout: React.FunctionComponent<
   ResumeProfilePageLayoutProps
 > = ({ children }) => {
-  const { open, isMobile } = Sidebar.useContext();
+  const { open, isMobile } = useSidebar();
 
   return (
     <Page>
       <Bar>
         <Bar.Start>
-          {!isMobile && !open && <Sidebar.Trigger />}
+          {!isMobile && !open && <SidebarTrigger />}
           <Button asChild variant="ghost">
             <Link href="/resumes">
               <ArrowLeftIcon />

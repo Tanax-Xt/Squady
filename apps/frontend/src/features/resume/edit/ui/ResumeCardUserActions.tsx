@@ -2,6 +2,8 @@
 
 import {
   CopyPlusIcon,
+  ExternalLinkIcon,
+  FolderIcon,
   LinkIcon,
   LockIcon,
   LockOpenIcon,
@@ -9,11 +11,13 @@ import {
   PenLineIcon,
   Trash2Icon,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { startTransition, useActionState } from "react";
 import { toast } from "sonner";
 
 import { ResumeResponse } from "@/shared/api";
+import useDateTimeFormat from "@/shared/hooks/use-date-time-format";
 import {
   AlertDialogAction,
   AlertDialogCancel,
@@ -28,6 +32,7 @@ import { Button } from "@/shared/ui/button";
 import {
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuRoot,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -40,9 +45,23 @@ export const ResumeCardUserActions: React.FC<
   Pick<React.ComponentProps<typeof Button>, "variant"> & {
     resume: ResumeResponse;
     isCurrentUser?: boolean;
+    children?: React.ReactNode;
   }
-> = ({ resume, isCurrentUser, variant = "ghost" }) => {
+> = ({ resume, children, isCurrentUser, variant = "ghost" }) => {
   const router = useRouter();
+  const pathname = usePathname();
+  const isActive = pathname === `/resumes/${resume.id}`;
+
+  const updatedAt = useDateTimeFormat({
+    value: resume.updated_at,
+    locales: "ru",
+    options: {
+      day: "numeric",
+      month: "long",
+      hour: "2-digit",
+      minute: "2-digit",
+    },
+  });
 
   const [, startDeleteResume, deleting] = useActionState(
     deleteResume.bind(null, resume.id),
@@ -64,7 +83,7 @@ export const ResumeCardUserActions: React.FC<
   const copyLink = () => {
     if (window.isSecureContext) {
       navigator.clipboard.writeText(
-        `https://${window.location.host}/resumes/${resume.id}`,
+        `${process.env.NODE_ENV === "production" ? "https" : "http"}://${window.location.host}/resumes/${resume.id}`,
       );
       toast.success("Ссылка на резюме скопирована!");
     } else {
@@ -78,11 +97,38 @@ export const ResumeCardUserActions: React.FC<
     <AlertDialogRoot>
       <DropdownMenuRoot>
         <DropdownMenuTrigger asChild>
-          <Button size="icon" variant={variant} aria-label="Действия с резюме">
-            <MoreVerticalIcon />
-          </Button>
+          {children ? (
+            children
+          ) : (
+            <Button
+              size="icon"
+              variant={variant}
+              aria-label="Действия с резюме"
+            >
+              <MoreVerticalIcon />
+            </Button>
+          )}
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent>
+          <DropdownMenuLabel>Действия с резюме</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          {!isActive && (
+            <>
+              <DropdownMenuItem asChild>
+                <Link href={`/resumes/${resume.id}`}>
+                  <FolderIcon />
+                  Открыть
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href={`/resumes/${resume.id}`} target="_blank">
+                  <ExternalLinkIcon />
+                  Открыть в новой вкладке
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
           <DropdownMenuItem onSelect={copyLink}>
             <LinkIcon />
             Скопировать ссылку
@@ -94,16 +140,16 @@ export const ResumeCardUserActions: React.FC<
                 <PenLineIcon />
                 Редактировать
               </DropdownMenuItem>
-              <DropdownMenuItem onSelect={duplicate}>
-                <CopyPlusIcon />
-                Дублировать
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
               <DropdownMenuItem
                 onSelect={() => toggleResumeIsPublic(resume.id)}
               >
                 {resume.is_public ? <LockIcon /> : <LockOpenIcon />}
                 {resume.is_public ? "Сделать приватным" : "Сделать публичным"}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onSelect={duplicate}>
+                <CopyPlusIcon />
+                Дублировать
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <AlertDialogTrigger asChild>
@@ -114,6 +160,10 @@ export const ResumeCardUserActions: React.FC<
               </AlertDialogTrigger>
             </>
           )}
+          <DropdownMenuSeparator />
+          <DropdownMenuLabel className="text-xs! text-muted-foreground">
+            Обновлено {updatedAt}
+          </DropdownMenuLabel>
         </DropdownMenuContent>
       </DropdownMenuRoot>
       <AlertDialogContent>
@@ -124,7 +174,10 @@ export const ResumeCardUserActions: React.FC<
           <AlertDialogAction
             variant="destructive"
             disabled={deleting}
-            onClick={() => startTransition(startDeleteResume)}
+            onClick={(e) => {
+              e.preventDefault();
+              startTransition(startDeleteResume);
+            }}
           >
             {deleting && <Spinner />}
             Да

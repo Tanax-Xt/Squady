@@ -2,13 +2,13 @@ import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { getResumesSkills } from "@/entities/resume";
 import { getTeam } from "@/entities/team";
 import Bar from "@/shared/ui/bar";
 import { Button } from "@/shared/ui/button";
 import Page from "@/shared/ui/page";
 
 import { TeamRecruitmentPageContent } from "./TeamRecruitmentPageContent";
-import { getResumesSkills } from "../api/cache/getResumesSkills";
 
 export async function TeamRecruitmentPage({
   params,
@@ -38,7 +38,7 @@ export async function TeamRecruitmentPage({
         <Bar.Center>Подбор участников</Bar.Center>
       </Bar>
 
-      <TeamRecruitmentPageContent skills={skills} />
+      <TeamRecruitmentPageContent skills={skills} team={team} />
     </Page>
   );
 }

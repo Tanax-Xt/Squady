@@ -42,8 +42,16 @@ class ApiSettings(BaseModel):
     resume_hh_link_pattern: Pattern[str]
     resume_max_pdf_size: PositiveInt
 
+    resume_query_years_experience_min_count: NonNegativeInt
+    resume_query_years_experience_max_count: PositiveInt
+    resume_query_projects_min_count: NonNegativeInt
+    resume_query_projects_max_count: PositiveInt
+
     team_title_max_length: PositiveInt
     team_text_field_max_length: PositiveInt
+
+    event_item_max_length: PositiveInt
+    event_description_max_length: PositiveInt
 
     openrouter_api_key: str
     llm_model: str

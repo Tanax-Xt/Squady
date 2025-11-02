@@ -54,6 +54,24 @@ async def get_current_user_verified(current_user: CurrentUserDepends) -> User:
 CurrentUserVerifiedDepends = Annotated[User, Depends(get_current_user_verified)]
 
 
+async def get_current_user_verified_agent(current_user: CurrentUserVerifiedDepends) -> User:
+    if current_user.role != UserRole.agent or (
+        current_user.role == UserRole.agent and current_user.is_verified_agent is not True
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=CurrentUserForbiddenResponse(
+                subject="unverified_agent",
+                message="You cannot do this until you are verified as an agent.",
+            ).model_dump(),
+        )
+
+    return current_user
+
+
+CurrentUserVerifiedAgentDepends = Annotated[User, Depends(get_current_user_verified_agent)]
+
+
 async def get_current_user_verified_participant_or_mentor(current_user: CurrentUserVerifiedDepends) -> User:
     if current_user.role != UserRole.participant and current_user.role != UserRole.mentor:
         raise HTTPException(

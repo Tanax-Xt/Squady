@@ -21,6 +21,7 @@ export default {
     },
     serverActions: {
       bodySizeLimit: "50mb",
+      allowedOrigins: ["localhost", "localhost:80", "*.github.dev"],
     },
   },
   poweredByHeader: false,

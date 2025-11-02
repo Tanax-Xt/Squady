@@ -5,6 +5,7 @@ from fastapi import Depends
 
 from src.api.teams.enum import StatusEnum
 from src.api.teams.models import Team
+from src.api.teams.queries import TeamQueryParams
 from src.api.teams.repository import TeamRepositoryDepends
 from src.api.teams.schemas import TeamCreateRequest, TeamUpdateRequest
 from src.api.users.models import TeamToUser, User
@@ -34,8 +35,10 @@ class TeamService:
     async def get_team(self, team_id: str | UUID) -> Team | None:
         return await self.repository.get_by_id(team_id)
 
-    async def get_teams(self, search_params: PaginationSearchParams | None = None) -> Sequence[Team]:
-        return await self.repository.get_all(search_params)
+    async def get_teams(
+        self, search_params: PaginationSearchParams | None = None, query_params: TeamQueryParams | None = None
+    ) -> Sequence[Team]:
+        return await self.repository.get_all(search_params, query_params)
 
     async def get_team_members(self, team_id: str | UUID) -> Sequence[User]:
         return await self.repository.get_members(team_id)

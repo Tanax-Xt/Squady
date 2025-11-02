@@ -4,8 +4,14 @@ from uuid import UUID
 from fastapi import Depends
 
 from src.api.resumes.models import Resume
+from src.api.resumes.queries import ResumeQueryParams
 from src.api.resumes.repository import ResumeRepositoryDepends
-from src.api.resumes.schemas import ResumeCreateRequest, ResumeResponse, ResumesPaginationResponse, ResumeUpdateRequest
+from src.api.resumes.schemas import (
+    ResumeCreateRequest,
+    ResumeResponse,
+    ResumesPaginationResponse,
+    ResumeUpdateRequest,
+)
 from src.pagination import PaginationResponse, PaginationSearchParams
 
 
@@ -90,6 +96,14 @@ class ResumeService:
 
     async def get_skills_names(self, search_params: PaginationSearchParams | None = None) -> Sequence[str]:
         return await self.repository.get_skills_names_with_pagination(search_params)
+
+    async def get_resumes(
+        self,
+        user_id: str | UUID,
+        search_params: PaginationSearchParams | None = None,
+        query_params: ResumeQueryParams | None = None,
+    ) -> Sequence[Resume]:
+        return await self.repository.get_all_with_params(user_id, search_params, query_params)
 
 
 ResumeServiceDepends = Annotated[ResumeService, Depends(ResumeService)]

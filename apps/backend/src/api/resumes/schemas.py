@@ -14,7 +14,8 @@ from src.api.resumes.fields import (
 )
 from src.api.resumes.models import Resume
 from src.api.schemas import AuditBaseModel, BaseSchema
-from src.api.users.fields import UserAbout, UserBirthDate, UserCity, UserFullName, UserTelegram
+from src.api.users.enums import UserRole
+from src.api.users.fields import UserAbout, UserBirthDate, UserCity, UserEmail, UserFullName, UserTelegram, UserUsername
 from src.api.users.models import User
 from src.pagination import PaginationResponse
 from src.settings import settings
@@ -155,6 +156,50 @@ class ResumeResponse(AuditBaseModel):
             achievements=resume.achievements,  # type: ignore
             additional_education=resume.additional_education,  # type: ignore
             is_public=resume.is_public,
+            created_at=resume.created_at,
+            updated_at=resume.updated_at,
+        )
+
+
+class UserResponse(AuditBaseModel):
+    """Represents the public response data for a user."""
+
+    id: EntityId
+    username: UserUsername
+    email: UserEmail
+    role: UserRole | None
+    about: UserAbout | None
+    is_verified: bool
+    is_verified_agent: bool | None
+
+
+class ResumeWithUserResponse(AuditBaseModel):
+    id: EntityId
+    owner_id: EntityId
+    personal_data: ResumeUserPersonalDataResponse
+    role: ResumeItemTitle
+    skills: ResumeSkillsList
+    education: ResumeEducation
+    experience: ResumeExperiencesList | None
+    achievements: ResumeAchievementsList | None
+    additional_education: ResumeAdditionalEducationsList | None
+    is_public: bool = True
+    user: UserResponse
+
+    @classmethod
+    def from_orm(cls, resume: Resume) -> "ResumeWithUserResponse":
+        return cls(
+            id=resume.id,  # type: ignore
+            owner_id=resume.user_id,
+            personal_data=ResumeUserPersonalDataResponse.from_orm(resume.user),
+            role=resume.role.name,
+            skills=[skill.name for skill in resume.skills],
+            education=resume.education,  # type: ignore
+            experience=resume.experience,  # type: ignore
+            achievements=resume.achievements,  # type: ignore
+            additional_education=resume.additional_education,  # type: ignore
+            is_public=resume.is_public,
+            user=UserResponse(**resume.user.__dict__),
             created_at=resume.created_at,
             updated_at=resume.updated_at,
         )

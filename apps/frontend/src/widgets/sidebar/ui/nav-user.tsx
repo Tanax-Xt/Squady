@@ -1,36 +1,49 @@
+"use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { UserAvatar } from "@/entities/user";
 import { CurrentUserResponse } from "@/shared/api";
-import Sidebar from "@/shared/ui/sidebar";
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from "@/shared/ui/item";
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/shared/ui/sidebar";
 
 export function NavUser({ user }: { user: CurrentUserResponse }) {
   const pathname = usePathname();
+  const isActive = pathname?.includes("/settings");
 
   return (
-    <Sidebar.Menu>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton
-          asChild
-          size="lg"
-          className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-          isActive={pathname?.includes("/settings")}
-        >
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <SidebarMenuButton size="lg" isActive={isActive} asChild>
           <Link href="/settings">
-            <UserAvatar user={user} className="size-8 text-sm" />
-            <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">
-                {user.full_name?.split(" ").slice(0, 2).join(" ") ??
-                  user.username}
-              </span>
-              <span className="truncate font-normal text-muted-foreground">
-                {user.email}
-              </span>
-            </div>
+            <Item className="gap-2 p-0">
+              <ItemMedia className="mt-0.5">
+                <UserAvatar user={user} />
+              </ItemMedia>
+              <ItemContent className="gap-0">
+                <ItemTitle className="line-clamp-1">
+                  {user.full_name?.split(" ").slice(0, 2).join(" ") ??
+                    user.username}
+                </ItemTitle>
+                <ItemDescription className="line-clamp-1">
+                  {user.email}
+                </ItemDescription>
+              </ItemContent>
+            </Item>
           </Link>
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-    </Sidebar.Menu>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </SidebarMenu>
   );
 }

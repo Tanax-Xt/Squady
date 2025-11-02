@@ -1,18 +1,28 @@
 "use client";
 
-import { LockIcon } from "lucide-react";
-
-import Tooltip from "@/shared/ui/tooltip";
+import {
+  TooltipContent,
+  TooltipRoot,
+  TooltipTrigger,
+} from "@/shared/ui/tooltip";
 
 export const ResumePrivateIcon = () => {
   return (
-    <Tooltip>
-      <Tooltip.Trigger asChild>
-        <div className="flex items-center justify-center rounded-full bg-accent/75 p-1 text-accent-foreground/75">
-          <LockIcon className="size-2.5" strokeWidth={2.5} />
-        </div>
-      </Tooltip.Trigger>
-      <Tooltip.Content>Это резюме видно только вам</Tooltip.Content>
-    </Tooltip>
+    <TooltipRoot>
+      <TooltipTrigger asChild>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          className="size-3.5 text-muted-foreground"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M12 2a5 5 0 0 1 5 5v3a3 3 0 0 1 3 3v6a3 3 0 0 1 -3 3h-10a3 3 0 0 1 -3 -3v-6a3 3 0 0 1 3 -3v-3a5 5 0 0 1 5 -5m0 12a2 2 0 0 0 -1.995 1.85l-.005 .15a2 2 0 1 0 2 -2m0 -10a3 3 0 0 0 -3 3v3h6v-3a3 3 0 0 0 -3 -3" />
+        </svg>
+      </TooltipTrigger>
+      <TooltipContent>Это резюме видно только вам</TooltipContent>
+    </TooltipRoot>
   );
 };

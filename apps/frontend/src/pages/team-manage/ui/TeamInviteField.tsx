@@ -6,6 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { sendTeamInvite } from "@/features/team/manage";
 import Collapse from "@/shared/ui/Collapse";
 import {
   Field,
@@ -20,8 +21,6 @@ import {
   InputGroupInput,
 } from "@/shared/ui/input-group";
 import Spinner from "@/shared/ui/spinner";
-
-import { sendTeamInvite } from "../api/actions";
 
 export function TeamInviteField({ teamId }: { teamId: string }) {
   const form = useForm({

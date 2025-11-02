@@ -234,7 +234,8 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get?: never;
+    /** Get Resumes */
+    get: operations["get_resumes_resumes_get"];
     put?: never;
     /** Create Resume */
     post: operations["create_resume_resumes_post"];
@@ -489,6 +490,43 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/events": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Events */
+    get: operations["get_events_events_get"];
+    put?: never;
+    /** Create Event */
+    post: operations["create_event_events_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/events/{event_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Event */
+    get: operations["get_event_events__event_id__get"];
+    /** Update Event */
+    put: operations["update_event_events__event_id__put"];
+    post?: never;
+    /** Delete Event */
+    delete: operations["delete_event_events__event_id__delete"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -582,7 +620,7 @@ export interface components {
     /** ApplicationSendEmailRequest */
     ApplicationSendEmailRequest: {
       /**
-       * Email
+       * User email
        * Format: email
        */
       email: string;
@@ -763,6 +801,88 @@ export interface components {
       | "vocational_school"
       | "bachelor"
       | "master";
+    /** EventCreateRequest */
+    EventCreateRequest: {
+      /**
+       * Item
+       * @description Event item
+       */
+      title: string;
+      /**
+       * Description
+       * @description Event description
+       */
+      description: string;
+      /**
+       * Start Date
+       * Format: date
+       */
+      start_date: string;
+      /**
+       * End Date
+       * Format: date
+       */
+      end_date: string;
+      /**
+       * Item
+       * @description Event item
+       */
+      location: string;
+      format: components["schemas"]["EventType"];
+    };
+    /** EventResponse */
+    EventResponse: {
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /**
+       * Entity ID
+       * Format: uuid4
+       * @description Unique identifier for the entity in UUID4 format.
+       */
+      id: string;
+      /**
+       * Entity ID
+       * Format: uuid4
+       * @description Unique identifier for the entity in UUID4 format.
+       */
+      agent_id: string;
+      /**
+       * Item
+       * @description Event item
+       */
+      title: string;
+      /** Description */
+      description: string;
+      /**
+       * Start Date
+       * Format: date
+       */
+      start_date: string;
+      /**
+       * End Date
+       * Format: date
+       */
+      end_date: string;
+      /**
+       * Item
+       * @description Event item
+       */
+      location: string;
+      format: components["schemas"]["EventType"];
+    };
+    /**
+     * EventType
+     * @enum {string}
+     */
+    EventType: "offline" | "online" | "hybrid";
     /** ExperienceItem */
     ExperienceItem: {
       /**
@@ -1046,6 +1166,57 @@ export interface components {
       /** Telegram */
       telegram: string | null;
     };
+    /** ResumeWithUserResponse */
+    ResumeWithUserResponse: {
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /**
+       * Entity ID
+       * Format: uuid4
+       * @description Unique identifier for the entity in UUID4 format.
+       */
+      id: string;
+      /**
+       * Entity ID
+       * Format: uuid4
+       * @description Unique identifier for the entity in UUID4 format.
+       */
+      owner_id: string;
+      personal_data: components["schemas"]["ResumeUserPersonalDataResponse"];
+      /**
+       * Title
+       * @description Resume item title
+       */
+      role: string;
+      /**
+       * List of skills
+       * @description List of resume skills
+       */
+      skills: string[];
+      education: components["schemas"]["ResumeEducation"];
+      /** Experience */
+      experience: components["schemas"]["ExperienceItem"][] | null;
+      /** Achievements */
+      achievements: components["schemas"]["AchievementItem"][] | null;
+      /** Additional Education */
+      additional_education:
+        | components["schemas"]["AdditionalEducationItem"][]
+        | null;
+      /**
+       * Is Public
+       * @default true
+       */
+      is_public: boolean;
+      user: components["schemas"]["UserResponse"];
+    };
     /** ResumesPaginationResponse */
     ResumesPaginationResponse: {
       /** Resumes */
@@ -1321,6 +1492,9 @@ export type CurrentUserUsernameUpdateRequest =
 export type CurrentUserVerifyRequest =
   components["schemas"]["CurrentUserVerifyRequest"];
 export type EducationType = components["schemas"]["EducationType"];
+export type EventCreateRequest = components["schemas"]["EventCreateRequest"];
+export type EventResponse = components["schemas"]["EventResponse"];
+export type EventType = components["schemas"]["EventType"];
 export type ExperienceItem = components["schemas"]["ExperienceItem"];
 export type HttpValidationError = components["schemas"]["HTTPValidationError"];
 export type MemberResponse = components["schemas"]["MemberResponse"];
@@ -1339,6 +1513,8 @@ export type ResumeResponse = components["schemas"]["ResumeResponse"];
 export type ResumeUpdateRequest = components["schemas"]["ResumeUpdateRequest"];
 export type ResumeUserPersonalDataResponse =
   components["schemas"]["ResumeUserPersonalDataResponse"];
+export type ResumeWithUserResponse =
+  components["schemas"]["ResumeWithUserResponse"];
 export type ResumesPaginationResponse =
   components["schemas"]["ResumesPaginationResponse"];
 export type StatusEnum = components["schemas"]["StatusEnum"];
@@ -2614,6 +2790,65 @@ export interface operations {
       };
     };
   };
+  get_resumes_resumes_get: {
+    parameters: {
+      query?: {
+        q?: string | null;
+        offset?: number;
+        limit?: number;
+        /** @description List of resume skills */
+        skills?: string[] | null;
+        /** @description List of education types */
+        education_types?: components["schemas"]["EducationType"][] | null;
+        /** @description Years experience count */
+        experience_years_from?: number | null;
+        /** @description Years experience count */
+        experience_years_to?: number | null;
+        /** @description Projects count */
+        projects_count_from?: number | null;
+        /** @description Projects count */
+        projects_count_to?: number | null;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ResumeWithUserResponse"][];
+        };
+      };
+      /** @description Failed to verify credentials */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description User not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   create_resume_resumes_post: {
     parameters: {
       query?: never;
@@ -3086,6 +3321,10 @@ export interface operations {
         q?: string | null;
         offset?: number;
         limit?: number;
+        /** @description List of resume skills */
+        skills?: string[] | null;
+        /** @description List of education types */
+        education_types?: components["schemas"]["EducationType"][] | null;
       };
       header?: never;
       path?: never;
@@ -3649,6 +3888,206 @@ export interface operations {
       };
       /** @description User already in team */
       409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_events_events_get: {
+    parameters: {
+      query?: {
+        q?: string | null;
+        offset?: number;
+        limit?: number;
+        /** @description Event date */
+        start_date?: string | null;
+        /** @description Event date */
+        end_date?: string | null;
+        /** @description Event formats */
+        format?: components["schemas"]["EventType"][] | null;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["EventResponse"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  create_event_events_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["EventCreateRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["EventResponse"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_event_events__event_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        event_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["EventResponse"];
+        };
+      };
+      /** @description Event not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  update_event_events__event_id__put: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        event_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["EventCreateRequest"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Сannot edit a event that does not belong to the current user */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Event not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  delete_event_events__event_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        event_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Сannot delete a event that does not belong to the current user */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Event not found */
+      404: {
         headers: {
           [name: string]: unknown;
         };

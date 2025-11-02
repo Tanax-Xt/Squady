@@ -26,7 +26,14 @@ function TeamsMy({ teamsMy }: { teamsMy: TeamResponse[] | undefined }) {
 
       <div className="mt-4 flex flex-col gap-4">
         {!!teamsMy?.length ? (
-          teamsMy.map((teamMy) => <TeamItem key={teamMy.id} team={teamMy} />)
+          teamsMy
+            ?.sort((a, b) => {
+              return (
+                Date.parse(b.updated_at).valueOf() -
+                Date.parse(a.updated_at).valueOf()
+              );
+            })
+            .map((teamMy) => <TeamItem key={teamMy.id} team={teamMy} />)
         ) : (
           <TeamsMyEmpty />
         )}

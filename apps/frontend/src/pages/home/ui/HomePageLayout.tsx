@@ -2,21 +2,21 @@
 
 import Bar from "@/shared/ui/bar";
 import Page from "@/shared/ui/page";
-import Sidebar from "@/shared/ui/sidebar";
+import { SidebarTrigger, useSidebar } from "@/shared/ui/sidebar";
 
 export interface HomePageLayoutProps extends React.PropsWithChildren {}
 
 const HomePageLayout: React.FunctionComponent<HomePageLayoutProps> = ({
   children,
 }) => {
-  const { open, isMobile } = Sidebar.useContext();
+  const { open, isMobile } = useSidebar();
 
   return (
     <Page>
       <Bar>
         {(isMobile || !open) && (
           <Bar.Start>
-            <Sidebar.Trigger />
+            <SidebarTrigger />
           </Bar.Start>
         )}
         <Bar.Center showAfterScrolled>Главная</Bar.Center>

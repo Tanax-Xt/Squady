@@ -1,13 +1,11 @@
+"use server";
+
 import { ArrowLeftIcon } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import {
-  getTeam,
-  getTeamApplications,
-  TEAM_MEMBERS_MAX_COUNT,
-} from "@/entities/team";
+import { getTeam, getTeamApplications } from "@/entities/team";
 import { getCurrentUserVerifiedParticipantOrMentorWithPersonalData } from "@/entities/user";
 import { TeamEditForm } from "@/features/team/edit";
 import Bar from "@/shared/ui/bar";
@@ -66,14 +64,11 @@ export async function TeamManagePage({
         <TeamEditForm team={team} />
         <TeamInvitationsCard joinUrl={joinUrl} teamId={team.id} />
         <TeamActiveMembersCard team={team} members={team.users} />
-        {applications?.length &&
-          applications.length < TEAM_MEMBERS_MAX_COUNT && (
-            <TeamInCheckMembersCard
-              team={team}
-              applications={applications}
-              joinUrl={joinUrl}
-            />
-          )}
+        <TeamInCheckMembersCard
+          team={team}
+          applications={applications}
+          joinUrl={joinUrl}
+        />
         <TeamDeleteButton team={team} />
       </Page.Content>
     </Page>

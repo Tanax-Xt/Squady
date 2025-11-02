@@ -14,6 +14,7 @@ class PostgresSettings(BaseModel):
     path: str
     pool_size: int
     max_overflow: int
+    max_total_fetch: int
 
     @computed_field  # type: ignore[prop-decorator]
     @property

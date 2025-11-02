@@ -59,7 +59,10 @@ export function TeamMemberItem({
           {member.id === team.leader_id && (
             <TooltipRoot>
               <TooltipTrigger>
-                <CrownIcon className="size-4 flex-shrink-0 text-yellow-600" />
+                <CrownIcon
+                  className="size-4 flex-shrink-0 text-yellow-600"
+                  fill="currentColor"
+                />
               </TooltipTrigger>
               <TooltipContent>Лидер команды</TooltipContent>
             </TooltipRoot>
@@ -71,7 +74,7 @@ export function TeamMemberItem({
         </ItemDescription>
       </ItemContent>
       <ItemActions>
-        <span className="me-2 truncate text-muted-foreground max-lg:sr-only">
+        <span className="me-2 truncate font-medium text-muted-foreground max-lg:sr-only">
           {resume.role}
         </span>
 

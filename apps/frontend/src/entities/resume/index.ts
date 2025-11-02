@@ -1,5 +1,5 @@
-export { getResume } from "./api/cache";
-export { getResumeCacheTag } from "./api/tags";
+export { getResume, getResumesSkills } from "./api/cache";
+export { getResumeCacheTag, RESUMES_SKILLS_CACHE_TAG } from "./api/tags";
 export { EDUCATION_TYPES, type EducationType } from "./config/education";
 export { compareAchievements } from "./lib/compareAchievements";
 export { compareAdditionalEducation } from "./lib/compareAdditionalEducation";

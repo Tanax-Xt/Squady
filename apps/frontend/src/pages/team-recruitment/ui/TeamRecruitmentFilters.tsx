@@ -13,6 +13,7 @@ import {
   getEducationTypeDisplayName,
 } from "@/entities/resume";
 import { EducationType } from "@/shared/api";
+import { env } from "@/shared/config/client";
 import { Button } from "@/shared/ui/button";
 import { CardContent, CardRoot, CardTitle } from "@/shared/ui/card";
 import { Checkbox } from "@/shared/ui/checkbox";
@@ -44,6 +45,8 @@ export type TeamRecruitmentFiltersProps = {
   setSelectedEducationTypes: Dispatch<SetStateAction<EducationType[]>>;
   searchQuery: string;
   setSearchQuery: Dispatch<SetStateAction<string>>;
+  searchQ: string;
+  setSearchQ: Dispatch<SetStateAction<string>>;
   onReset?: VoidFunction;
 };
 
@@ -56,6 +59,7 @@ export function TeamRecruitmentFilters({
   selectedSkills,
   setSelectedSkills,
   selectedEducationTypes,
+  setSearchQ,
   setSelectedEducationTypes,
   searchQuery,
   setSearchQuery,
@@ -193,8 +197,12 @@ export function TeamRecruitmentFilters({
             <Slider
               value={experienceRange}
               onValueChange={setExperienceRange}
-              min={0}
-              max={50}
+              min={
+                env.NEXT_PUBLIC_SQUADY_API_RESUME_QUERY_YEARS_EXPERIENCE_MIN_COUNT
+              }
+              max={
+                env.NEXT_PUBLIC_SQUADY_API_RESUME_QUERY_YEARS_EXPERIENCE_MAX_COUNT
+              }
               step={1}
             />
           </Field>
@@ -212,8 +220,8 @@ export function TeamRecruitmentFilters({
             <Slider
               value={projectsRange}
               onValueChange={setProjectsRange}
-              min={0}
-              max={10}
+              min={env.NEXT_PUBLIC_SQUADY_API_RESUME_QUERY_PROJECTS_MIN_COUNT}
+              max={env.NEXT_PUBLIC_SQUADY_API_RESUME_QUERY_PROJECTS_MAX_COUNT}
               step={1}
             />
           </Field>
@@ -226,8 +234,15 @@ export function TeamRecruitmentFilters({
         onClick={() => {
           setSelectedSkills([]);
           setSelectedEducationTypes(Array.from(EDUCATION_TYPES));
-          setExperienceRange([0, 50]);
-          setProjectsRange([0, 10]);
+          setExperienceRange([
+            env.NEXT_PUBLIC_SQUADY_API_RESUME_QUERY_YEARS_EXPERIENCE_MIN_COUNT,
+            env.NEXT_PUBLIC_SQUADY_API_RESUME_QUERY_YEARS_EXPERIENCE_MAX_COUNT,
+          ]);
+          setProjectsRange([
+            env.NEXT_PUBLIC_SQUADY_API_RESUME_QUERY_PROJECTS_MIN_COUNT,
+            env.NEXT_PUBLIC_SQUADY_API_RESUME_QUERY_PROJECTS_MAX_COUNT,
+          ]);
+          setSearchQ("");
           onReset?.();
         }}
       >

@@ -1,7 +1,13 @@
 import { CodeIcon, MoreHorizontalIcon, TrophyIcon } from "lucide-react";
 import Link from "next/link";
 
-import Sidebar from "@/shared/ui/sidebar";
+import {
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/shared/ui/sidebar";
 
 export function NavProjects({
   projects,
@@ -13,26 +19,26 @@ export function NavProjects({
   }[];
 }) {
   return (
-    <Sidebar.Group>
-      <Sidebar.GroupLabel>Мои соревнования</Sidebar.GroupLabel>
-      <Sidebar.Menu>
+    <SidebarGroup>
+      <SidebarGroupLabel>Мои соревнования</SidebarGroupLabel>
+      <SidebarMenu>
         {projects.map((item) => (
-          <Sidebar.MenuItem key={item.name}>
-            <Sidebar.MenuButton asChild tooltip={item.name}>
+          <SidebarMenuItem key={item.name}>
+            <SidebarMenuButton asChild tooltip={item.name}>
               <Link href={item.href}>
                 {item.type === "olymp" ? <TrophyIcon /> : <CodeIcon />}
                 <span>{item.name}</span>
               </Link>
-            </Sidebar.MenuButton>
-          </Sidebar.MenuItem>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         ))}
-        <Sidebar.MenuItem>
-          <Sidebar.MenuButton tooltip="Показать ещё">
+        <SidebarMenuItem>
+          <SidebarMenuButton tooltip="Показать ещё">
             <MoreHorizontalIcon />
             <span>Показать ещё</span>
-          </Sidebar.MenuButton>
-        </Sidebar.MenuItem>
-      </Sidebar.Menu>
-    </Sidebar.Group>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    </SidebarGroup>
   );
 }

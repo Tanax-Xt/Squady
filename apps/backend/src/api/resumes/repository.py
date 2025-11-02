@@ -2,15 +2,18 @@ from typing import Annotated, Any, Sequence, cast
 from uuid import UUID
 
 from fastapi import Depends
-from sqlalchemy import Select, func, select
+from sqlalchemy import Select, case, distinct, func, select, text
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import selectinload
 
+from src.api.resumes.filter_utils import _experience_years_from_json
 from src.api.resumes.models import Resume, Role, Skill
+from src.api.resumes.queries import ResumeQueryParams
 from src.api.users.models import TeamToUser
 from src.db import SessionDepends
 from src.pagination import PaginationSearchParams
+from src.settings import settings
 
 
 class ResumeRepository:
@@ -98,14 +101,14 @@ class ResumeRepository:
 
         return role
 
-    async def create_and_get_skills_by_names(self, names: list[str]) -> Sequence[Skill]:
+    async def create_and_get_skills_by_names(self, names: list[str] | None) -> Sequence[Skill]:
         try:
-            stmt = insert(Skill).values([{"name": name} for name in names])
+            stmt = insert(Skill).values([{"name": name} for name in names])  # type: ignore
             stmt = stmt.on_conflict_do_nothing(index_elements=[func.lower(Skill.name)])
             await self.session.execute(stmt)
             await self.session.commit()
 
-            statement = select(Skill).where(func.lower(Skill.name).in_([name.lower() for name in names]))
+            statement = select(Skill).where(func.lower(Skill.name).in_([name.lower() for name in names]))  # type: ignore
             result = await self.session.execute(statement)
             existing: Sequence[Skill] = result.scalars().all()
 
@@ -167,6 +170,96 @@ class ResumeRepository:
         )
         result_out = await self.session.execute(stmt)
         return result_out.scalars().one_or_none()
+
+    async def get_all_with_params(
+        self,
+        user_id: str | UUID,
+        search_params: PaginationSearchParams | None = None,
+        query_params: ResumeQueryParams | None = None,
+    ) -> Sequence[Resume]:
+        search_params = search_params or PaginationSearchParams.model_construct()
+        query_params = query_params or ResumeQueryParams.model_construct()
+
+        base_stmt = select(Resume).where(Resume.user_id != user_id, Resume.is_public)
+
+        if query_params.skills:
+            db_skills = await self.create_and_get_skills_by_names(query_params.skills)
+            skills = [skill.name for skill in db_skills]
+            base_stmt = (
+                base_stmt.join(Resume.skills)
+                .where(Skill.name.in_(skills))
+                .group_by(Resume.id)
+                .having(func.count(distinct(Skill.id)) == len(skills))
+            )
+
+        if query_params.education_types:
+            base_stmt = base_stmt.where(
+                func.jsonb_extract_path_text(Resume.education, "type").in_(query_params.education_types)
+            )
+
+        experience_array = case(
+            (func.jsonb_typeof(Resume.experience) == "array", Resume.experience), else_=text("'[]'::jsonb")
+        )
+
+        if query_params.projects_count_from is not None:
+            base_stmt = base_stmt.where(func.jsonb_array_length(experience_array) >= query_params.projects_count_from)
+
+        if query_params.projects_count_to is not None:
+            base_stmt = base_stmt.where(func.jsonb_array_length(experience_array) <= query_params.projects_count_to)
+
+        base_stmt = base_stmt.options(selectinload(Resume.role), selectinload(Resume.skills), selectinload(Resume.user))
+
+        needs_post_filter = (
+            query_params.experience_years_from is not None or query_params.experience_years_to is not None
+        )
+
+        if search_params.q:
+            base_stmt = self._filter(base_stmt, q=search_params.q)
+
+        if not needs_post_filter:
+            stmt = self._paginate(base_stmt, offset=search_params.offset, limit=search_params.limit)
+            result = await self.session.execute(stmt)
+            return result.scalars().unique().all()
+
+        desired_count = search_params.offset + search_params.limit
+        accumulated: list[Resume] = []
+        fetch_offset = 0
+        batch_size = search_params.limit
+        total_fetched = 0
+
+        while len(accumulated) < desired_count and total_fetched < settings.postgres.max_total_fetch:
+            stmt = base_stmt.limit(batch_size).offset(fetch_offset)
+            result = await self.session.execute(stmt)
+            batch = result.scalars().unique().all()
+            if not batch:
+                break
+
+            total_fetched += len(batch)
+            fetch_offset += len(batch)
+
+            for r in batch:
+                exp_json = r.experience or []
+                years = _experience_years_from_json(exp_json)
+                projects_count = len(exp_json)
+
+                ok_year_from = True
+                ok_year_to = True
+                if query_params.experience_years_from is not None:
+                    ok_year_from = years >= float(query_params.experience_years_from)
+                if query_params.experience_years_to is not None:
+                    ok_year_to = years <= float(query_params.experience_years_to)
+
+                ok_projects_from = True
+                ok_projects_to = True
+                if query_params.projects_count_from is not None:
+                    ok_projects_from = projects_count >= int(query_params.projects_count_from)
+                if query_params.projects_count_to is not None:
+                    ok_projects_to = projects_count <= int(query_params.projects_count_to)
+
+                if ok_year_from and ok_year_to and ok_projects_from and ok_projects_to:
+                    accumulated.append(r)
+
+        return accumulated[search_params.offset : search_params.offset + search_params.limit]
 
     def _filter[T: Any](self, statement: Select[T], *, q: str | None = None) -> Select[T]:
         if not q:

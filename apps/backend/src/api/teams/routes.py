@@ -3,6 +3,7 @@ from fastapi import APIRouter, HTTPException, status
 from src.api.fields import EntityId
 from src.api.resumes.service import ResumeServiceDepends
 from src.api.tags import Tag
+from src.api.teams.queries import TeamQueryParamsDepends
 from src.api.teams.schemas import MemberResponse, TeamAddUserRequest, TeamCreateRequest, TeamResponse, TeamUpdateRequest
 from src.api.teams.service import TeamServiceDepends
 from src.api.users.me.deps import (
@@ -57,11 +58,14 @@ async def create_team(
 )
 async def get_teams(
     search_params: PaginationSearchParamsDepends,
+    query_params: TeamQueryParamsDepends,
     service: TeamServiceDepends,
     user: CurrentUserVerifiedDepends,
 ) -> list[TeamResponse]:
-    teams = await service.get_teams(search_params)
+    teams = await service.get_teams(search_params, query_params)
     data = await service.get_teams_with_members_and_resumes([team.id for team in teams])
+
+    print(data)
 
     return [
         TeamResponse.from_orm(
@@ -70,6 +74,11 @@ async def get_teams(
             data.get(team_id, {}).get("resumes", []),
         )
         for team_id in data
+        if (
+            data.get(team_id, {}).get("team") is not None
+            and all([user is not None for user in data.get(team_id, {}).get("users", [])])
+            and all([resume is not None for resume in data.get(team_id, {}).get("resumes", [])])
+        )
     ]
 
 

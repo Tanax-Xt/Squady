@@ -1,32 +1,54 @@
 "use client";
 
 import {
+  CalendarRangeIcon,
   FileUserIcon,
   LayoutDashboardIcon,
+  LifeBuoyIcon,
   LucideIcon,
   UsersIcon,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
-import { CurrentUserResponse, TeamResponse, UserRole } from "@/shared/api";
+import {
+  CurrentUserResponse,
+  ResumeResponse,
+  TeamResponse,
+  UserRole,
+} from "@/shared/api";
 import ThemeRadioGroup from "@/shared/ui/ThemeRadioGroup";
-import Sidebar from "@/shared/ui/sidebar";
+import { Separator } from "@/shared/ui/separator";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarSeparator,
+  useSidebar,
+} from "@/shared/ui/sidebar";
 
+import { NavEvents } from "./nav-events";
 import { NavMain } from "./nav-main";
+import { NavResumes } from "./nav-resumes";
 import { NavTeams } from "./nav-teams";
 import { NavUser } from "./nav-user";
 
 export function AppSidebar({
   user,
+  resumes,
   teamsMy,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
-  user?: CurrentUserResponse;
+  user: CurrentUserResponse;
+  resumes: ResumeResponse[] | undefined;
   teamsMy: TeamResponse[] | undefined;
 }) {
   const pathname = usePathname();
-  const sidebar = Sidebar.useContext();
+  const sidebar = useSidebar();
 
   useEffect(() => {
     if (sidebar.open && sidebar.isMobile) {
@@ -50,12 +72,6 @@ export function AppSidebar({
         href: "/home",
         icon: LayoutDashboardIcon,
       },
-      // {
-      //   title: "Соревнования",
-      //   href: "/events",
-      //   icon: CalendarRangeIcon,
-      //   roles: ["mentor", "participant"],
-      // },
       {
         title: "Резюме",
         badge: user?.stats.resumes,
@@ -69,6 +85,12 @@ export function AppSidebar({
         href: "/teams",
         icon: UsersIcon,
         roles: ["mentor", "participant"],
+      },
+      {
+        title: "События",
+        href: "/events",
+        icon: CalendarRangeIcon,
+        roles: ["mentor", "participant", "agent"],
       },
     ],
     projects: [
@@ -96,34 +118,44 @@ export function AppSidebar({
   };
 
   return (
-    <Sidebar variant="floating" className="isolate" {...props}>
-      <Sidebar.Header>
-        <h1 className="px-2 pt-2 text-lg font-semibold text-accent-foreground md:text-xl">
-          Squady
-        </h1>
-      </Sidebar.Header>
-      <Sidebar.Separator className="mx-2 max-md:hidden" />
-      <Sidebar.Content>
+    <Sidebar variant="floating" {...props}>
+      <SidebarHeader className="flex flex-row items-center justify-between p-4">
+        <span className="text-xl font-semibold">Squady</span>
+        <ThemeRadioGroup className="bg-sidebar has-focus-visible:ring-sidebar-ring" />
+      </SidebarHeader>
+
+      <Separator />
+
+      <SidebarContent>
         <NavMain user={user} items={data.navMain} />
-        {user &&
-          (user.role === "participant" || user.role === "mentor") &&
-          !!teamsMy?.length && (
-            <>
-              <Sidebar.Separator className="mx-2" />
-              <NavTeams teams={teamsMy} />
-            </>
-          )}
-        {/* <NavProjects projects={data.projects} /> */}
-      </Sidebar.Content>
-      <Sidebar.Footer>
-        {user && (
+
+        {(user.role === "participant" || user.role === "mentor") && (
           <>
-            <NavUser user={user} />
-            <Sidebar.Separator />
+            <NavResumes resumes={resumes} />
+            <NavTeams user={user} teams={teamsMy} />
+            <NavEvents />
           </>
         )}
-        <ThemeRadioGroup className="bg-sidebar has-focus-visible:ring-sidebar-ring" />
-      </Sidebar.Footer>
+      </SidebarContent>
+
+      <Separator />
+
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton className="text-accent-foreground/75">
+              <LifeBuoyIcon />
+              Помощь
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+
+        <div className="-mx-2">
+          <SidebarSeparator className="mx-0" />
+        </div>
+
+        <NavUser user={user} />
+      </SidebarFooter>
     </Sidebar>
   );
 }

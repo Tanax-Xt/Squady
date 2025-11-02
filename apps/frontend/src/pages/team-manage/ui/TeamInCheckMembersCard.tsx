@@ -4,6 +4,8 @@ import { CheckIcon, LinkIcon, UsersIcon, XIcon } from "lucide-react";
 import { Fragment, useTransition } from "react";
 import { toast } from "sonner";
 
+import { TEAM_MEMBERS_MAX_COUNT } from "@/entities/team";
+import { updateTeamApplication } from "@/features/team/manage";
 import { ApplicationResponse, TeamResponse } from "@/shared/api";
 import { Button } from "@/shared/ui/button";
 import { ButtonGroup } from "@/shared/ui/button-group";
@@ -22,9 +24,8 @@ import {
   EmptyTitle,
 } from "@/shared/ui/empty";
 import { ItemContent, ItemGroup, ItemSeparator } from "@/shared/ui/item";
+import Spinner from "@/shared/ui/spinner";
 import { TeamMemberItem } from "@/widgets/team-item";
-
-import { updateTeamApplication } from "../api/actions";
 
 export function TeamInCheckMembersCard({
   team,
@@ -50,7 +51,8 @@ export function TeamInCheckMembersCard({
     (application) => application.status === "sent",
   );
 
-  const [resolving, setResolving] = useTransition();
+  const [rejecting, setRejecting] = useTransition();
+  const [accepting, setAccepting] = useTransition();
 
   return (
     <CardRoot>
@@ -68,7 +70,21 @@ export function TeamInCheckMembersCard({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {!!pendingApplications.length ? (
+        {team.users.filter((user) => user.status === "active").length >=
+        TEAM_MEMBERS_MAX_COUNT ? (
+          <Empty className="border border-dashed">
+            <EmptyMedia variant="icon">
+              <UsersIcon />
+            </EmptyMedia>
+            <EmptyHeader>
+              <EmptyTitle>Команда полная</EmptyTitle>
+              <EmptyDescription>
+                В команде может быть максимум {TEAM_MEMBERS_MAX_COUNT}{" "}
+                участников.
+              </EmptyDescription>
+            </EmptyHeader>
+          </Empty>
+        ) : !!pendingApplications.length ? (
           <ItemGroup>
             {pendingApplications.map((pendingApplication, index) => (
               <Fragment key={pendingApplication.id}>
@@ -84,7 +100,7 @@ export function TeamInCheckMembersCard({
                       <Button
                         size="sm"
                         onClick={() =>
-                          setResolving(async () => {
+                          setAccepting(async () => {
                             await updateTeamApplication(
                               team.id,
                               pendingApplication.id,
@@ -92,20 +108,21 @@ export function TeamInCheckMembersCard({
                                 status: "accepted",
                               },
                             );
+                            toast.success("Заявка на вступление принята!");
                           })
                         }
-                        disabled={resolving}
+                        disabled={accepting || rejecting}
                         variant="outline"
                         className="rounded-s-full !text-success"
                       >
-                        <CheckIcon />
+                        {accepting ? <Spinner /> : <CheckIcon />}
                         <span className="max-lg:sr-only">Принять</span>
                       </Button>
 
                       <Button
                         size="sm"
                         onClick={() =>
-                          setResolving(async () => {
+                          setRejecting(async () => {
                             await updateTeamApplication(
                               team.id,
                               pendingApplication.id,
@@ -113,13 +130,14 @@ export function TeamInCheckMembersCard({
                                 status: "rejected",
                               },
                             );
+                            toast.success("Заявка на вступление отклонена!");
                           })
                         }
-                        disabled={resolving}
+                        disabled={accepting || rejecting}
                         variant="outline"
                         className="rounded-e-full !text-destructive"
                       >
-                        <XIcon />
+                        {rejecting ? <Spinner /> : <XIcon />}
                         <span className="max-lg:sr-only">Отклонить</span>
                       </Button>
                     </ButtonGroup>

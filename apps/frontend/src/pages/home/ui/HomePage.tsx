@@ -22,9 +22,10 @@ const HomePage: React.FunctionComponent = async () => {
       <div className="flex flex-col gap-8">
         {currentStep && <UserProfileProgress user={user} />}
 
-        {(currentStep === undefined || currentStep.id === "team") && (
-          <TeamsMy teamsMy={teamsMy} />
-        )}
+        {(currentStep === undefined || currentStep.id === "team") &&
+          (user.role === "participant" || user.role === "mentor") && (
+            <TeamsMy teamsMy={teamsMy} />
+          )}
       </div>
     </>
   );

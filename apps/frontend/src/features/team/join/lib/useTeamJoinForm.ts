@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -27,6 +28,8 @@ export const useTeamJoinForm = ({
     },
   });
 
+  const router = useRouter();
+
   const [loading, startLoading] = useTransition();
 
   const submit = form.handleSubmit((values) => {
@@ -37,6 +40,11 @@ export const useTeamJoinForm = ({
 
       if (status === 409) {
         toast.error("Вы уже подали заявку в эту команду!");
+      } else {
+        router.push(`/teams/${team.id}`);
+        toast.success(
+          "Заявка на вступление подана! Ожидайте одобрения лидером.",
+        );
       }
     });
   });

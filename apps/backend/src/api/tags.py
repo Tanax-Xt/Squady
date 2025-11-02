@@ -6,3 +6,4 @@ class Tag(StrEnum):
     USERS = "Users"
     RESUMES = "Resumes"
     TEAMS = "Teams"
+    EVENTS = "Events"
