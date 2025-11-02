@@ -49,7 +49,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 12,
         "w": 4,
         "x": 0,
         "y": 0
@@ -131,8 +131,8 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
-        "w": 7,
+        "h": 12,
+        "w": 20,
         "x": 4,
         "y": 0
       },
@@ -208,6 +208,106 @@
       "fieldConfig": {
         "defaults": {
           "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": 1,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red"
+              },
+              {
+                "color": "green",
+                "value": 0.8
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 11,
+        "x": 0,
+        "y": 12
+      },
+      "id": 18,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "sum by(handler) (http_requests_total{job=\"$app_name\", status=~\"2.*\", handler!=\"/metrics\"}) / sum by(handler) (http_requests_total{job=\"$app_name\", handler!=\"/metrics\"})",
+          "interval": "",
+          "legendFormat": "{{handler}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Percent of 2xx Requests",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
             "mode": "continuous-GrYlRd"
           },
           "mappings": [],
@@ -228,10 +328,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 15,
+        "h": 14,
         "w": 13,
         "x": 11,
-        "y": 0
+        "y": 12
       },
       "id": 6,
       "options": {
@@ -339,110 +439,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
+        "h": 12,
         "w": 11,
         "x": 0,
-        "y": 6
-      },
-      "id": 18,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "exemplar": true,
-          "expr": "sum by(handler) (http_requests_total{job=\"$app_name\", status=~\"2.*\", handler!=\"/metrics\"}) / sum by(handler) (http_requests_total{job=\"$app_name\", handler!=\"/metrics\"})",
-          "interval": "",
-          "legendFormat": "{{handler}}",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Percent of 2xx Requests",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "axisSoftMax": 1,
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "area"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "red"
-              },
-              {
-                "color": "green",
-                "value": 0.8
-              }
-            ]
-          },
-          "unit": "percentunit"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 11,
-        "x": 0,
-        "y": 15
+        "y": 23
       },
       "id": 21,
       "options": {
@@ -542,7 +542,7 @@
         "h": 9,
         "w": 13,
         "x": 11,
-        "y": 15
+        "y": 26
       },
       "id": 20,
       "options": {
@@ -641,7 +641,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 24
+        "y": 35
       },
       "id": 8,
       "options": {
@@ -764,7 +764,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 24
+        "y": 35
       },
       "id": 10,
       "options": {
@@ -900,7 +900,7 @@
         "h": 8,
         "w": 8,
         "x": 16,
-        "y": 24
+        "y": 35
       },
       "id": 12,
       "options": {
