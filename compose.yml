@@ -520,9 +520,9 @@ services:
         target: /var/lib/grafana
     networks:
       - squady-network
-    configs:
-      - source: grafana-config
-        target: /etc/grafana/grafana.ini
+#    configs:
+#      - source: grafana-config
+#        target: /etc/grafana/grafana.ini
     depends_on:
       prometheus:
         restart: false
