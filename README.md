@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./docs/assets/logo.png" alt="logo" width="96" height="96" />
+  <img src="./docs/assets/logo.svg" alt="logo" width="96" height="96" />
 </p>
 
 <h1 align="center">
@@ -7,7 +7,7 @@
 </h1>
 
 <p align="center">
-  Веб-приложение для удобного подбора команды для совместного участия в олимпиадах, хакатонах и других проектах.
+  Платформа для формирования команд, поиска участников и управления проектами в интеллектуальных соревнованиях.
 </p>
 
 <p align="center">
