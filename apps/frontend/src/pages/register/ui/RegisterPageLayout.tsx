@@ -1,3 +1,5 @@
+"use client";
+
 import Bar from "@/shared/ui/bar";
 import Page from "@/shared/ui/page";
 

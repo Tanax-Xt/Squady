@@ -1,3 +1,5 @@
+"use client";
+
 import { RegisterForm } from "@/features/auth/register";
 
 const RegisterPage: React.FunctionComponent = () => {
