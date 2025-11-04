@@ -16,7 +16,7 @@ import { DateRange } from "react-day-picker";
 import { ru } from "react-day-picker/locale";
 
 import { EVENT_FORMAT_OPTIONS, EventItem, getEvents } from "@/entities/event";
-import { EventResponse } from "@/shared/api";
+import { CurrentUserResponse, EventResponse } from "@/shared/api";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import useTimeZone from "@/shared/hooks/use-time-zone";
 import Badge from "@/shared/ui/badge";
@@ -71,7 +71,11 @@ function useDebounce<T>(value: T, delay: number) {
   return debouncedValue;
 }
 
-export function EventsPageContent() {
+export function EventsPageContent({
+  currentUser,
+}: {
+  currentUser?: CurrentUserResponse;
+}) {
   const isMobile = useIsMobile();
   const timeZone = useTimeZone();
 
@@ -178,6 +182,7 @@ export function EventsPageContent() {
                 disabled={{ before: new Date() }}
                 onSelect={setDateRange}
                 timeZone={timeZone ?? undefined}
+                defaultMonth={dateRange?.from}
                 numberOfMonths={isMobile ? 1 : 2}
               />
             </PopoverContent>
@@ -289,17 +294,21 @@ export function EventsPageContent() {
             <EmptyHeader>
               <EmptyTitle>На платформе ещё нет событий</EmptyTitle>
               <EmptyDescription>
-                Будьте первыми, кто создат событие.
+                {currentUser?.role === "agent"
+                  ? "Будьте первыми, кто создаст событие."
+                  : "Представили олимпиад ещё не создали ни одного события."}
               </EmptyDescription>
             </EmptyHeader>
-            <EmptyContent>
-              <Button size="sm" variant="outline" asChild>
-                <Link href="/events/new">
-                  <CalendarPlusIcon />
-                  Создать событие
-                </Link>
-              </Button>
-            </EmptyContent>
+            {currentUser?.role === "agent" && (
+              <EmptyContent>
+                <Button size="sm" variant="outline" asChild>
+                  <Link href="/events/new">
+                    <CalendarPlusIcon />
+                    Создать событие
+                  </Link>
+                </Button>
+              </EmptyContent>
+            )}
           </Empty>
         )}
       </ItemGroup>

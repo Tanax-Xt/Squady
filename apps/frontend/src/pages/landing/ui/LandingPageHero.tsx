@@ -12,7 +12,7 @@ interface LandingPageHeroProps {}
 
 const LandingPageHero: React.FunctionComponent<LandingPageHeroProps> = () => {
   return (
-    <section className="relative z-10 flex h-full flex-col items-center justify-center px-4 py-16">
+    <section className="relative z-10 flex h-full flex-col items-center justify-center py-16">
       <hgroup className="space-y-4 text-center text-balance">
         <h1 className="text-5xl leading-none font-bold tracking-tighter md:text-6xl lg:text-7xl">
           Найди свою команду для{" "}
@@ -45,10 +45,10 @@ const LandingPageHero: React.FunctionComponent<LandingPageHeroProps> = () => {
       </hgroup>
 
       <div className="mt-8 flex w-full flex-wrap items-center justify-center gap-2">
-        <Button asChild>
+        <Button className="rounded-full" asChild>
           <Link href="/register">Найти команду</Link>
         </Button>
-        <Button variant="outline" asChild>
+        <Button variant="outline" className="rounded-full" asChild>
           <Link href="/register">
             <span>Посмотреть события</span>
             <ArrowRightIcon />

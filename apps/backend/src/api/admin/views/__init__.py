@@ -3,9 +3,17 @@ __all__ = [
     "RoleAdminModelView",
     "SkillAdminModelView",
     "UserAdminModelView",
+    "EventAdminModelView",
+    "TeamToUserAdminModelView",
+    "TeamAdminModelView",
+    "ApplicationAdminModelView",
 ]
 
+from src.api.admin.views.application import ApplicationAdminModelView
+from src.api.admin.views.event import EventAdminModelView
 from src.api.admin.views.resume import ResumeAdminModelView
 from src.api.admin.views.role import RoleAdminModelView
 from src.api.admin.views.skill import SkillAdminModelView
+from src.api.admin.views.team import TeamAdminModelView
+from src.api.admin.views.team_to_user import TeamToUserAdminModelView
 from src.api.admin.views.user import UserAdminModelView

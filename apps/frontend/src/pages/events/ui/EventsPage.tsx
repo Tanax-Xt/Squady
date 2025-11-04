@@ -30,7 +30,7 @@ export async function EventsPage() {
       </Bar>
 
       <Page.Content size="3xl">
-        <EventsPageContent />
+        <EventsPageContent currentUser={currentUser} />
       </Page.Content>
     </Page>
   );

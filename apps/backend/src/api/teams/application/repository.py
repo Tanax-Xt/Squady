@@ -1,13 +1,16 @@
+from datetime import date, datetime, time, timedelta
 from typing import Annotated, Any, Sequence
 from uuid import UUID
 
 from fastapi import Depends
-from sqlalchemy import Row, Select, select
+from sqlalchemy import Row, Select, case, func, select
 from sqlalchemy.orm import selectinload
 
 from src.api.resumes.models import Resume
 from src.api.teams.application.enum import ApplicationStatusEnum
 from src.api.teams.application.models import ApplicationToTeam
+from src.api.teams.application.queries import ApplicationQueryParams
+from src.api.teams.application.schemas import ApplicationMetricsItem, ApplicationMetricsResponse
 from src.api.users.models import User
 from src.db import SessionDepends
 from src.pagination import PaginationSearchParams
@@ -59,6 +62,116 @@ class ApplicationToTeamRepository:
         )
         result = await self.session.execute(stmt)
         return bool(result.scalars().one_or_none())
+
+    async def get_metrics(
+        self, team_id: str | UUID, params: ApplicationQueryParams | None = None
+    ) -> ApplicationMetricsResponse:
+        params = params or ApplicationQueryParams.model_construct()
+
+        date_col = func.date(ApplicationToTeam.updated_at).label("date")
+
+        sent_sum = func.sum(case((ApplicationToTeam.status == ApplicationStatusEnum.sent, 1), else_=0)).label("sent")
+        accepted_sum = func.sum(case((ApplicationToTeam.status == ApplicationStatusEnum.accepted, 1), else_=0)).label(
+            "accepted"
+        )
+        rejected_sum = func.sum(case((ApplicationToTeam.status == ApplicationStatusEnum.rejected, 1), else_=0)).label(
+            "rejected"
+        )
+        total_count = func.count().label("total")
+
+        stmt = (
+            select(date_col, sent_sum, accepted_sum, rejected_sum, total_count)
+            .select_from(ApplicationToTeam)
+            .where(ApplicationToTeam.team_id == team_id)
+        )
+
+        if params.status:
+            stmt = stmt.where(ApplicationToTeam.status.in_(params.status))
+
+        if params.start_date is not None:
+            dt_start = datetime.combine(params.start_date, time.min)
+            stmt = stmt.where(ApplicationToTeam.updated_at >= dt_start)
+        if params.end_date is not None:
+            dt_end_exclusive = datetime.combine(params.end_date + timedelta(days=1), time.min)
+            stmt = stmt.where(ApplicationToTeam.updated_at < dt_end_exclusive)
+
+        stmt = stmt.group_by(date_col).order_by(date_col)
+
+        result = await self.session.execute(stmt)
+        rows = result.all()
+
+        per_date: dict[date, dict[str, int]] = {}
+        dates_list: list[date] = []
+        for r in rows:
+            d = r.date
+            sent = int(r.sent or 0)
+            accepted = int(r.accepted or 0)
+            rejected = int(r.rejected or 0)
+            total = int(r.total or 0)
+            per_date[d] = {"sent": sent, "accepted": accepted, "rejected": rejected, "total": total}
+            dates_list.append(d)
+
+        items: list[ApplicationMetricsItem] = []
+        sum_sent = sum_accepted = sum_rejected = sum_total = 0
+
+        if params.start_date is not None and params.end_date is not None:
+            start_date = params.start_date
+            end_date = params.end_date
+            num_days = (end_date - start_date).days + 1
+            for i in range(num_days):
+                d = start_date + timedelta(days=i)
+                counts = per_date.get(d, {"sent": 0, "accepted": 0, "rejected": 0, "total": 0})
+                items.append(
+                    ApplicationMetricsItem(
+                        date=d,
+                        sent=counts["sent"],
+                        accepted=counts["accepted"],
+                        rejected=counts["rejected"],
+                        total=counts["total"],
+                    )
+                )
+                sum_sent += counts["sent"]
+                sum_accepted += counts["accepted"]
+                sum_rejected += counts["rejected"]
+                sum_total += counts["total"]
+        else:
+            if dates_list:
+                start_date = params.start_date or min(dates_list)
+                end_date = params.end_date or max(dates_list)
+                for d in sorted(dates_list):
+                    counts = per_date[d]
+                    items.append(
+                        ApplicationMetricsItem(
+                            date=d,
+                            sent=counts["sent"],
+                            accepted=counts["accepted"],
+                            rejected=counts["rejected"],
+                            total=counts["total"],
+                        )
+                    )
+                    sum_sent += counts["sent"]
+                    sum_accepted += counts["accepted"]
+                    sum_rejected += counts["rejected"]
+                    sum_total += counts["total"]
+            else:
+                today = date.today()
+                start_date = today
+                end_date = today
+                items = []
+                sum_sent = sum_accepted = sum_rejected = sum_total = 0
+
+        response = ApplicationMetricsResponse(
+            team_id=team_id,  # type: ignore
+            start_date=start_date,
+            end_date=end_date,
+            metrics=items,
+            sent=sum_sent,
+            accepted=sum_accepted,
+            rejected=sum_rejected,
+            total=sum_total,
+        )
+
+        return response
 
     def _paginate[T: Any](self, statement: Select[T], *, offset: int, limit: int) -> Select[T]:
         return statement.offset(offset).limit(limit)

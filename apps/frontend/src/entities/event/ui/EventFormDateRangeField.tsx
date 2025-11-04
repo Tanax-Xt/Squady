@@ -80,6 +80,7 @@ export function EventFormDateRangeField<T extends FieldValues>({
             disabled={disabled || { before: new Date() }}
             onSelect={setDateRange}
             timeZone={timeZone ?? undefined}
+            defaultMonth={dateRange?.from}
             numberOfMonths={isMobile ? 1 : 2}
           />
         </PopoverContent>

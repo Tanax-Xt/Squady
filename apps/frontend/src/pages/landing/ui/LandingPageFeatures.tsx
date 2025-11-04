@@ -88,7 +88,7 @@ const LandingPageFeatures: React.FunctionComponent<
   LandingPageFeaturesProps
 > = () => {
   return (
-    <section className="px-4 py-16">
+    <section className="py-16">
       <h2 className="mb-8 text-center text-4xl leading-none font-bold tracking-tighter">
         Возможности платформы
       </h2>

@@ -1,11 +1,14 @@
 from fastapi import APIRouter, HTTPException, status
+from fastapi.responses import StreamingResponse
 
 from src.api.fields import EntityId
 from src.api.resumes.service import ResumeServiceDepends
 from src.api.teams.application.enum import ApplicationStatusEnum
 from src.api.teams.application.mailings import ApplicationToTeamMailingServiceDepends
+from src.api.teams.application.queries import ApplicationQueryParamsDepends
 from src.api.teams.application.schemas import (
     ApplicationCreateRequest,
+    ApplicationMetricsResponse,
     ApplicationResponse,
     ApplicationSendEmailRequest,
     ApplicationUpdateRequest,
@@ -179,3 +182,64 @@ async def send_application(
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="User already in team")
 
     await mail_service.send_application_message(user_to_send.email, team)
+
+
+@router.get(
+    "/metrics",
+    response_model=ApplicationMetricsResponse,
+    responses={
+        status.HTTP_403_FORBIDDEN: dict(
+            description="Only team owner can get metrics",
+        ),
+        status.HTTP_404_NOT_FOUND: dict(
+            description="Team or user not found",
+        ),
+    },
+)
+async def get_application_metrics(
+    team_id: EntityId,
+    query_params: ApplicationQueryParamsDepends,
+    service: ApplicationToTeamServiceDepends,
+    team_service: TeamServiceDepends,
+    user: CurrentUserVerifiedParticipantOrMentorWithPersonalDataDepends,
+) -> ApplicationMetricsResponse:
+    team = await team_service.get_team(team_id)
+    if team is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Team not found")
+
+    if user.id != team.leader_id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only team owner can get metrics")
+
+    return await service.get_metrics_by_team_id(team_id, query_params)
+
+
+@router.get(
+    "/metrics/file",
+    responses={
+        status.HTTP_403_FORBIDDEN: dict(
+            description="Only team owner can get metrics",
+        ),
+        status.HTTP_404_NOT_FOUND: dict(
+            description="Team or user not found",
+        ),
+    },
+)
+async def get_application_metrics_file(
+    team_id: EntityId,
+    query_params: ApplicationQueryParamsDepends,
+    service: ApplicationToTeamServiceDepends,
+    team_service: TeamServiceDepends,
+    user: CurrentUserVerifiedParticipantOrMentorWithPersonalDataDepends,
+) -> StreamingResponse:
+    team = await team_service.get_team(team_id)
+    if team is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Team not found")
+
+    if user.id != team.leader_id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only team owner can get metrics")
+
+    payload = await service.get_metrics_by_team_id(team_id, query_params)
+    filename = f"metrics_{payload.team_id}_{payload.start_date}_{payload.end_date}.csv"
+    headers = {"Content-Disposition": f'attachment; filename="{filename}"'}
+
+    return StreamingResponse(service.metrics_to_csv_stream(payload.metrics), media_type="text/csv", headers=headers)

@@ -13,6 +13,8 @@ import { Button } from "@/shared/ui/button";
 import Page from "@/shared/ui/page";
 
 import { TeamActiveMembersCard } from "./TeamActiveMembersCard";
+import { TeamApplicationMetrics } from "./TeamApplicationMetrics";
+import { TeamApplicationMetricsInvites } from "./TeamApplicationMetricsInvites";
 import { TeamDeleteButton } from "./TeamDeleteButton";
 import { TeamInCheckMembersCard } from "./TeamInCheckMembersCard";
 import { TeamInvitationsCard } from "./TeamInvitationsCard";
@@ -69,6 +71,8 @@ export async function TeamManagePage({
           applications={applications}
           joinUrl={joinUrl}
         />
+        <TeamApplicationMetrics team={team} />
+        <TeamApplicationMetricsInvites team={team} />
         <TeamDeleteButton team={team} />
       </Page.Content>
     </Page>

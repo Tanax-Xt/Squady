@@ -48,6 +48,10 @@ admin.add_view(views.UserAdminModelView)
 admin.add_view(views.ResumeAdminModelView)
 admin.add_view(views.RoleAdminModelView)
 admin.add_view(views.SkillAdminModelView)
+admin.add_view(views.TeamAdminModelView)
+admin.add_view(views.TeamToUserAdminModelView)
+admin.add_view(views.ApplicationAdminModelView)
+admin.add_view(views.EventAdminModelView)
 
 if not settings.app.debug:
     from prometheus_fastapi_instrumentator import Instrumentator

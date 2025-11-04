@@ -8,6 +8,7 @@ import {
   LucideIcon,
   UsersIcon,
 } from "lucide-react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
@@ -64,7 +65,6 @@ export function AppSidebar({
       icon: LucideIcon;
       roles?: UserRole[];
     }[];
-    projects: { name: string; href: string; type: "olymp" | "hack" }[];
   } = {
     navMain: [
       {
@@ -91,28 +91,6 @@ export function AppSidebar({
         href: "/events",
         icon: CalendarRangeIcon,
         roles: ["mentor", "participant", "agent"],
-      },
-    ],
-    projects: [
-      {
-        name: "Финал НТО АБП 2025",
-        href: "/events/4",
-        type: "olymp",
-      },
-      {
-        name: "Финал PROD 2025",
-        href: "/events/3",
-        type: "olymp",
-      },
-      {
-        name: "Хакатон PROD 2024",
-        href: "/events/2",
-        type: "hack",
-      },
-      {
-        name: "Финал НТО АБП 2024",
-        href: "/events/1",
-        type: "olymp",
       },
     ],
   };
@@ -143,9 +121,15 @@ export function AppSidebar({
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton className="text-accent-foreground/75">
-              <LifeBuoyIcon />
-              Помощь
+            <SidebarMenuButton
+              className="text-accent-foreground/75"
+              isActive={pathname === "/help"}
+              asChild
+            >
+              <Link href="/docs/help">
+                <LifeBuoyIcon />
+                Помощь
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

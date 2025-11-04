@@ -83,7 +83,7 @@ async def get_teams(
 
 
 @router.get(
-    "/my",
+    "/my/",
     response_model=list[TeamResponse],
 )
 async def get_my_teams(

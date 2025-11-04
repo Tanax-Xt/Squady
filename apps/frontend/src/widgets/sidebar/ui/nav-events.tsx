@@ -40,7 +40,7 @@ export function NavEvents() {
       <SidebarGroupLabel>Мои события</SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
-          {[1, 2, 3].map((_, index) => (
+          {[].map((_, index) => (
             <EventSidebarMenuItem key={index} />
           ))}
           <SidebarMenuButton className="text-accent-foreground/75" asChild>

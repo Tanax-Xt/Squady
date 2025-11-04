@@ -1,6 +1,15 @@
 import type { NextConfig } from "next";
 
-export default {
+import createMDX from "@next/mdx";
+import slug from "rehype-slug";
+
+const withMDX = createMDX({
+  options: {
+    rehypePlugins: [slug],
+  },
+});
+
+const nextConfig: NextConfig = {
   output: "standalone",
   reactStrictMode: true,
   logging: {
@@ -9,6 +18,7 @@ export default {
       hmrRefreshes: true,
     },
   },
+  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -26,4 +36,6 @@ export default {
   },
   poweredByHeader: false,
   transpilePackages: ["@t3-oss/env-nextjs", "@t3-oss/env-core"],
-} as const satisfies NextConfig;
+};
+
+export default withMDX(nextConfig);

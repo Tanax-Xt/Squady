@@ -367,7 +367,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/teams/my": {
+  "/teams/my/": {
     parameters: {
       query?: never;
       header?: never;
@@ -375,7 +375,7 @@ export interface paths {
       cookie?: never;
     };
     /** Get My Teams */
-    get: operations["get_my_teams_teams_my_get"];
+    get: operations["get_my_teams_teams_my__get"];
     put?: never;
     post?: never;
     delete?: never;
@@ -490,6 +490,40 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/teams/{team_id}/applications/metrics": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Application Metrics */
+    get: operations["get_application_metrics_teams__team_id__applications_metrics_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/teams/{team_id}/applications/metrics/file": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Application Metrics File */
+    get: operations["get_application_metrics_file_teams__team_id__applications_metrics_file_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/events": {
     parameters: {
       query?: never;
@@ -588,6 +622,51 @@ export interface components {
        * @description Unique identifier for the entity in UUID4 format.
        */
       resume_id: string;
+    };
+    /** ApplicationMetricsItem */
+    ApplicationMetricsItem: {
+      /**
+       * Date
+       * Format: date
+       */
+      date: string;
+      /** Sent */
+      sent: number;
+      /** Accepted */
+      accepted: number;
+      /** Rejected */
+      rejected: number;
+      /** Total */
+      total: number;
+    };
+    /** ApplicationMetricsResponse */
+    ApplicationMetricsResponse: {
+      /**
+       * Entity ID
+       * Format: uuid4
+       * @description Unique identifier for the entity in UUID4 format.
+       */
+      team_id: string;
+      /**
+       * Start Date
+       * Format: date
+       */
+      start_date: string;
+      /**
+       * End Date
+       * Format: date
+       */
+      end_date: string;
+      /** Metrics */
+      metrics: components["schemas"]["ApplicationMetricsItem"][];
+      /** Sent */
+      sent: number;
+      /** Accepted */
+      accepted: number;
+      /** Rejected */
+      rejected: number;
+      /** Total */
+      total: number;
     };
     /** ApplicationResponse */
     ApplicationResponse: {
@@ -1465,6 +1544,10 @@ export type AdditionalEducationItem =
   components["schemas"]["AdditionalEducationItem"];
 export type ApplicationCreateRequest =
   components["schemas"]["ApplicationCreateRequest"];
+export type ApplicationMetricsItem =
+  components["schemas"]["ApplicationMetricsItem"];
+export type ApplicationMetricsResponse =
+  components["schemas"]["ApplicationMetricsResponse"];
 export type ApplicationResponse = components["schemas"]["ApplicationResponse"];
 export type ApplicationSendEmailRequest =
   components["schemas"]["ApplicationSendEmailRequest"];
@@ -3399,7 +3482,7 @@ export interface operations {
       };
     };
   };
-  get_my_teams_teams_my_get: {
+  get_my_teams_teams_my__get: {
     parameters: {
       query?: never;
       header?: never;
@@ -3888,6 +3971,110 @@ export interface operations {
       };
       /** @description User already in team */
       409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_application_metrics_teams__team_id__applications_metrics_get: {
+    parameters: {
+      query?: {
+        /** @description Application date */
+        start_date?: string | null;
+        /** @description Application date */
+        end_date?: string | null;
+        /** @description Application statuses */
+        status?: components["schemas"]["ApplicationStatusEnum"][] | null;
+      };
+      header?: never;
+      path: {
+        team_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ApplicationMetricsResponse"];
+        };
+      };
+      /** @description Only team owner can get metrics */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Team or user not found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_application_metrics_file_teams__team_id__applications_metrics_file_get: {
+    parameters: {
+      query?: {
+        /** @description Application date */
+        start_date?: string | null;
+        /** @description Application date */
+        end_date?: string | null;
+        /** @description Application statuses */
+        status?: components["schemas"]["ApplicationStatusEnum"][] | null;
+      };
+      header?: never;
+      path: {
+        team_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": unknown;
+        };
+      };
+      /** @description Only team owner can get metrics */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Team or user not found */
+      404: {
         headers: {
           [name: string]: unknown;
         };

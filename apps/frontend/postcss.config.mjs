@@ -1,3 +1,3 @@
 export default {
-  plugins: ["@tailwindcss/postcss"],
+  plugins: ["@csstools/postcss-light-dark-function", "@tailwindcss/postcss"],
 };

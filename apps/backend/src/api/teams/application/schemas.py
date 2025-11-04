@@ -1,4 +1,7 @@
+from datetime import date
 from typing import Literal
+
+from pydantic import NonNegativeInt
 
 from src.api.fields import EntityId
 from src.api.resumes.models import Resume
@@ -41,3 +44,22 @@ class ApplicationResponse(AuditBaseModel):
             updated_at=application.updated_at,
             status=application.status,
         )
+
+
+class ApplicationMetricsItem(BaseSchema):
+    date: date
+    sent: NonNegativeInt
+    accepted: NonNegativeInt
+    rejected: NonNegativeInt
+    total: NonNegativeInt
+
+
+class ApplicationMetricsResponse(BaseSchema):
+    team_id: EntityId
+    start_date: date
+    end_date: date
+    metrics: list[ApplicationMetricsItem]
+    sent: NonNegativeInt
+    accepted: NonNegativeInt
+    rejected: NonNegativeInt
+    total: NonNegativeInt

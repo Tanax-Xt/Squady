@@ -11,5 +11,5 @@ export async function logout() {
 
   revalidateTag(USER_CACHE_USERS_ME_TAG);
 
-  redirect(`/login`);
+  redirect("/");
 }
