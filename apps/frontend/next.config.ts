@@ -18,7 +18,7 @@ const nextConfig: NextConfig = {
       hmrRefreshes: true,
     },
   },
-  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+  pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
   eslint: {
     ignoreDuringBuilds: true,
   },
