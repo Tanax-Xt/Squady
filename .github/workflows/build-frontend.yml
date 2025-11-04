@@ -33,7 +33,7 @@ jobs:
 
           docker build \
             -f Dockerfile.prod \
-            --build-arg API_URL=http://nginx/api/ \
+            --build-arg API_URL=http://backend:8000/api/ \
             --build-arg NEXT_PUBLIC_SQUADY_API_USER_USERNAME_MIN_LENGTH="$SQUADY_API_USER_USERNAME_MIN_LENGTH" \
             --build-arg NEXT_PUBLIC_SQUADY_API_USER_USERNAME_MAX_LENGTH="$SQUADY_API_USER_USERNAME_MAX_LENGTH" \
             --build-arg NEXT_PUBLIC_SQUADY_API_USER_USERNAME_PATTERN="$SQUADY_API_USER_USERNAME_PATTERN" \

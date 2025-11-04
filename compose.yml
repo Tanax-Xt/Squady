@@ -161,7 +161,7 @@ services:
       - PORT=3000
       - HOSTNAME=0.0.0.0
       # frontend server environment
-      - API_URL=http://nginx/api/
+      - API_URL=http://backend:8000/api/
       - SESSION_SECRET=${SQUADY_SESSION_SECRET}
       - SESSION_COOKIE_NAME=${SQUADY_SESSION_COOKIE_NAME}
     depends_on:
@@ -179,7 +179,7 @@ services:
     build:
       args:
         # frontend server environment
-        - API_URL=http://nginx-staging/api/
+        - API_URL=http://backend-staging:8000/api/
         - SESSION_SECRET=${SQUADY_SESSION_SECRET}
         - SESSION_COOKIE_NAME=${SQUADY_SESSION_COOKIE_NAME}
         # frontend client environment
@@ -230,7 +230,7 @@ services:
       - PORT=3000
       - HOSTNAME=0.0.0.0
       # frontend server environment
-      - API_URL=http://nginx-staging/api/
+      - API_URL=http://backend-staging:8000/api/
       - SESSION_SECRET=${SQUADY_SESSION_SECRET}
       - SESSION_COOKIE_NAME=${SQUADY_SESSION_COOKIE_NAME}
     depends_on:
@@ -254,7 +254,7 @@ services:
         required: true
     environment:
       # frontend server environment
-      - API_URL=http://nginx-dev/api/
+      - API_URL=http://backend-dev:8000/api/
       - SESSION_SECRET=${SQUADY_SESSION_SECRET}
       - SESSION_COOKIE_NAME=${SQUADY_SESSION_COOKIE_NAME}
       # frontend client environment
